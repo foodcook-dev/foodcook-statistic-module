@@ -1,4 +1,4 @@
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ResponseError from '@/libs/responseError';
@@ -30,9 +30,9 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <HashRouter>
         <Pages />
-      </BrowserRouter>
+      </HashRouter>
     </QueryClientProvider>
   );
 }

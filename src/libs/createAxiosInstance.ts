@@ -2,7 +2,7 @@ import axios from 'axios';
 import { PATH } from '@/constants/apiPath';
 import { Instance } from '@/types/api';
 import ResponseError from '@/libs/responseError';
-import { createFormData, createSearchParams } from '@/libs/utils';
+import { createSearchParams } from '@/libs/utils';
 // import { decryption } from '@/libs/hash';
 
 const instance = axios.create({
