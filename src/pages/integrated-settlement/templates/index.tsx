@@ -113,10 +113,7 @@ const gridOptions: GridOptions = {
 export default function IntegratedSettlement() {
   return (
     <div className="w-screen">
-      <div className="p-8 bg-gray-100 border-b border-gray-300">
-        <p>Integrated Settlement Page</p>
-      </div>
-      <div className="w-full flex flex-col p-8 gap-6">
+      <div className="w-full flex flex-col gap-6">
         <div className="w-full flex justify-between gap-4">
           <div className="flex gap-2">
             <div className="relative w-72">

@@ -123,10 +123,7 @@ const gridOptions: GridOptions = {
 export default function ConsignmentSettlement() {
   return (
     <div className="w-screen">
-      <div className="p-8 bg-gray-100 border-b border-gray-300">
-        <p>Consignment Settlement Page</p>
-      </div>
-      <div className="w-full flex flex-col p-8 gap-6">
+      <div className="w-full flex flex-col gap-6">
         <div className="flex items-center gap-4">
           <span className="text-lg font-bold text-gray-800">매입사</span>
           <ComboboxTemp />
