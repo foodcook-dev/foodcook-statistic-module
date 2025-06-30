@@ -1,9 +1,9 @@
 export const DATE_RANGE_OPTIONS = {
-  THIS_WEEK: '이번주',
-  LAST_WEEK: '지난주',
-  LAST_7_DAYS: '지난 7일',
-  THIS_MONTH: '이번달',
-  LAST_MONTH: '지난달',
-  THIS_YEAR: '이번 년도',
-  LAST_YEAR: '지난 년도',
+  THIS_WEEK: '이번 주',
+  LAST_WEEK: '지난 주',
+  LAST_7_DAYS: '최근 7일간',
+  THIS_MONTH: '이번 달',
+  LAST_MONTH: '지난 달',
+  THIS_YEAR: '올해',
+  LAST_YEAR: '작년',
 };
