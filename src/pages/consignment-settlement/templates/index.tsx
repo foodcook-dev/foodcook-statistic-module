@@ -1,7 +1,12 @@
+import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
+import { startOfMonth } from 'date-fns';
 import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { TEMP_ROW, TEMP_INFO, TEMP_BADGE } from '../structure';
 import { ComboboxTemp } from '@/components/modules/combobox';
+import { DateRangePicker } from '@/components/modules/date-range-picker';
+import { Button } from '@/components/atoms/button';
 import {
   createBadgeRenderer,
   createNumericColumn,
@@ -121,30 +126,41 @@ const gridOptions: GridOptions = {
 };
 
 export default function ConsignmentSettlement() {
+  const today = new Date();
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: startOfMonth(today),
+    to: today,
+  });
+
   return (
-    <div className="w-screen">
-      <div className="w-full flex flex-col gap-6">
-        <div className="flex items-center gap-4">
-          <span className="text-lg font-bold text-gray-800">매입사</span>
-          <ComboboxTemp />
+    <div className="w-full flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <ComboboxTemp />
+        <div className="flex items-center gap-2">
+          <DateRangePicker
+            date={dateRange}
+            onDateSelect={({ from, to }) => setDateRange({ from, to })}
+            contentAlign="end"
+          />
+          <Button className="text-sm">조회</Button>
         </div>
-        <div className="flex flex-col border-t border-gray-300 text-sm text-gray-900">
-          {TEMP_INFO.map((row, index) => (
-            <div key={index} className="flex items-center border-b border-gray-300 bg-white p-3">
-              <div className="flex w-1/2">
-                <div className="font-semibold w-1/4">{row.label1}</div>
-                <div className="w-3/4">{row.value1}</div>
-              </div>
-              <div className="flex w-1/2">
-                <div className="font-semibold w-1/4">{row.label2}</div>
-                <div className="w-3/4">{row.value2}</div>
-              </div>
+      </div>
+      <div className="flex flex-col border-t border-gray-300 text-sm text-gray-900">
+        {TEMP_INFO.map((row, index) => (
+          <div key={index} className="flex items-center border-b border-gray-300 bg-white p-3">
+            <div className="flex w-1/2">
+              <div className="font-semibold w-1/4">{row.label1}</div>
+              <div className="w-3/4">{row.value1}</div>
             </div>
-          ))}
-        </div>
-        <div className="w-full h-[435px]">
-          <AgGridReact rowData={TEMP_ROW} gridOptions={gridOptions} />
-        </div>
+            <div className="flex w-1/2">
+              <div className="font-semibold w-1/4">{row.label2}</div>
+              <div className="w-3/4">{row.value2}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="w-full h-[435px]">
+        <AgGridReact rowData={TEMP_ROW} gridOptions={gridOptions} />
       </div>
     </div>
   );

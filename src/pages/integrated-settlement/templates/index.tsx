@@ -1,9 +1,12 @@
+import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
+import { startOfMonth } from 'date-fns';
 import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
-import { Search } from 'lucide-react';
-import { Input } from '@/components/atoms/input';
-import { Button } from '@/components/atoms/button';
 import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
+import { DateRangePicker } from '@/components/modules/date-range-picker';
+import { Button } from '@/components/atoms/button';
+
 import { TEMP_ROW, TEMP_TYPE_BADGE, TEMP_PAYMENT_BADGE } from '../structure';
 
 import './index.css';
@@ -111,21 +114,23 @@ const gridOptions: GridOptions = {
 };
 
 export default function IntegratedSettlement() {
+  const today = new Date();
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: startOfMonth(today),
+    to: today,
+  });
+
   return (
-    <div className="w-screen">
-      <div className="w-full flex flex-col gap-6">
-        <div className="w-full flex justify-between gap-4">
-          <div className="flex gap-2">
-            <div className="relative w-72">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input placeholder="Search" className="pl-8 border border-gray-300" />
-            </div>
-            <Button className="border border-gray-300 text-sm">검색</Button>
-          </div>
-        </div>
-        <div className="w-full h-[700px]">
-          <AgGridReact rowData={TEMP_ROW} gridOptions={gridOptions} />
-        </div>
+    <div className="w-full flex flex-col gap-6">
+      <div className="flex gap-2">
+        <DateRangePicker
+          date={dateRange}
+          onDateSelect={({ from, to }) => setDateRange({ from, to })}
+        />
+        <Button className="text-sm">조회</Button>
+      </div>
+      <div className="w-full h-[700px]">
+        <AgGridReact rowData={TEMP_ROW} gridOptions={gridOptions} />
       </div>
     </div>
   );

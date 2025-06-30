@@ -5,7 +5,7 @@ export default function BaseLayout() {
   return (
     <>
       <Suspense fallback={null}>
-        <section className="w-[calc(100vw-256px)] flex flex-col">
+        <section className="flex flex-col">
           <Outlet />
         </section>
       </Suspense>
