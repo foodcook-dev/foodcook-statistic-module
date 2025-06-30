@@ -4,7 +4,9 @@ import { startOfMonth } from 'date-fns';
 import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { TEMP_ROW, TEMP_INFO, TEMP_BADGE } from '../structure';
-import { ComboboxTemp } from '@/components/modules/combobox';
+import ComboboxType1 from '@/components/modules/combobox/type1';
+import ComboboxType2 from '@/components/modules/combobox/type2';
+import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import { Button } from '@/components/atoms/button';
 import {
@@ -132,10 +134,53 @@ export default function ConsignmentSettlement() {
     to: today,
   });
 
+  const [selectedValue, setSelectedValue] = useState<{ id: string; 매입사: string }>();
+
+  const tempData = [
+    {
+      id: '0001',
+      name: '강철',
+      type: '월 결제',
+    },
+    {
+      id: '0002',
+      name: '싱싱',
+      type: '월 결제',
+    },
+    {
+      id: '0003',
+      name: '초인유통',
+      type: '15일 결제',
+    },
+    {
+      id: '0004',
+      name: '유나팩',
+      type: '말일 결제',
+    },
+    {
+      id: '0005',
+      name: '동원에프엔비',
+      type: '선금 지급',
+    },
+  ];
+
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <ComboboxTemp />
+        <div className="flex flex-col items-center gap-2">
+          <ComboboxType1 />
+          <ComboboxType2 />
+          <DataSelector
+            className="w-[300px]"
+            data={tempData}
+            placeholder={'매입사를 선택해주세요'}
+            label="매입사"
+            value={selectedValue?.매입사}
+            onSelect={(value, displayValue) => {
+              setSelectedValue({ id: value, 매입사: displayValue });
+            }}
+          />
+        </div>
         <div className="flex items-center gap-2">
           <DateRangePicker
             date={dateRange}

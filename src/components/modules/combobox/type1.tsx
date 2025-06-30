@@ -36,7 +36,7 @@ const frameworks = [
     label: '동원에프엔비',
   },
 ];
-export function ComboboxTemp() {
+export default function ComboboxType1() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
   return (
@@ -46,7 +46,7 @@ export function ComboboxTemp() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="border border-gray-300 w-[250px] justify-between"
+          className="border border-gray-300 w-[300px] justify-between"
         >
           {value ? (
             frameworks.find((framework) => framework.value === value)?.label
@@ -56,7 +56,7 @@ export function ComboboxTemp() {
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0">
+      <PopoverContent className="w-[300px] p-0">
         <Command>
           <CommandInput placeholder="Search..." className="h-9" />
           <CommandList>
