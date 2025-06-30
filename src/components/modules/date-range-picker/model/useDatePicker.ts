@@ -63,14 +63,20 @@ export const useDatePicker = ({ onDateSelect }: DatePickerProps) => {
     {
       label: DATE_RANGE_OPTIONS.THIS_MONTH,
       start: startOfMonth(today),
-      end: endOfMonth(today),
+      // end: endOfMonth(today),
+      end: today,
     },
     {
       label: DATE_RANGE_OPTIONS.LAST_MONTH,
       start: startOfMonth(subDays(today, today.getDate())),
       end: endOfMonth(subDays(today, today.getDate())),
     },
-    { label: DATE_RANGE_OPTIONS.THIS_YEAR, start: startOfYear(today), end: endOfYear(today) },
+    {
+      label: DATE_RANGE_OPTIONS.THIS_YEAR,
+      start: startOfYear(today),
+      // end: endOfYear(today),
+      end: today,
+    },
     {
       label: DATE_RANGE_OPTIONS.LAST_YEAR,
       start: startOfYear(subDays(today, 365)),
