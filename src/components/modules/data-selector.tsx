@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/atoms/dialog';
-import CustomFilter from '@/components/modules/custom-filter';
+import CustomFilter from '@/components/modules/select-filter';
 import { createBadgeRenderer } from '@/libs/table-format';
 import { TEMP_PAYMENT_BADGE } from '@/pages/integrated-settlement/structure';
 
@@ -45,26 +45,27 @@ export default function DataSelector({
 
   const columnDefs: ColDef[] = [
     { headerName: 'ID', field: 'id', flex: 0.3, cellStyle: { textAlign: 'center' } },
-    { headerName: '매입사명', field: 'name', flex: 1, filter: 'agTextColumnFilter' },
+    {
+      headerName: '매입사명',
+      field: 'name',
+      headerClass: '',
+      flex: 1,
+      filter: 'agTextColumnFilter',
+    },
     {
       field: 'type',
       flex: 0.5,
       headerName: '결제일',
+      sortable: false,
       filter: CustomFilter,
       floatingFilter: false,
-      filterParams: {
-        valueGetter: (obj: any) => {
-          return console.log(obj.data.statusEnum);
-        },
-        hideCompleteByDefault: true,
-      },
       cellRenderer: paymentRenderer,
       cellStyle: { textAlign: 'center' },
     },
   ];
 
   const gridOptions: GridOptions = {
-    defaultColDef: { headerClass: 'centered' },
+    defaultColDef: { headerClass: 'centered', resizable: false },
     columnDefs: columnDefs,
   };
 
@@ -95,7 +96,7 @@ export default function DataSelector({
             {triggerText}
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-[600px] max-h-[80vh]">
+        <DialogContent className="w-[650px] max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>{label} 선택</DialogTitle>
           </DialogHeader>
@@ -105,7 +106,6 @@ export default function DataSelector({
               rowData={data}
               onRowClicked={onRowClicked}
               rowSelection="single"
-              defaultColDef={{ flex: 1 }}
               components={{ customFilter: CustomFilter }}
             />
             {data.length === 0 && (

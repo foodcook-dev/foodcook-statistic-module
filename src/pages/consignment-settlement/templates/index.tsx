@@ -174,7 +174,7 @@ export default function ConsignmentSettlement() {
             className="w-[300px]"
             data={tempData}
             placeholder={'매입사를 선택해주세요'}
-            label="매입사"
+            label="위탁매입사"
             value={selectedValue?.매입사}
             onSelect={(value, displayValue) => {
               setSelectedValue({ id: value, 매입사: displayValue });
