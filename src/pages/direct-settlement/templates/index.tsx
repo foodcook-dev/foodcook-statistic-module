@@ -7,11 +7,7 @@ import { TEMP_ROW, TEMP_INFO, TEMP_BADGE } from '../structure';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import { Button } from '@/components/atoms/button';
-import {
-  createBadgeRenderer,
-  createNumericColumn,
-  getNegativeValueStyle,
-} from '@/libs/table-format';
+import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
 
 const statusRenderer = createBadgeRenderer(TEMP_BADGE);
 
@@ -26,63 +22,10 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   { headerName: '처리일자', pinned: 'left', field: 'processDate' },
   {
-    headerName: '매출정보',
-    wrapHeaderText: true,
-    autoHeaderHeight: true,
-    headerStyle: { backgroundColor: '#ff7b54' },
-    children: [
-      createNumericColumn('cardSales', '카드 매출액', {
-        columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
-      }),
-      createNumericColumn('virtualAccountSales', '가상계좌 매출액', {
-        columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
-      }),
-      createNumericColumn('pointSales', '포인트 매출액', {
-        columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
-      }),
-      createNumericColumn('chargeSales', '충전금 매출액', {
-        columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
-      }),
-      createNumericColumn('salesAmount', '매출액', {
-        cellStyle: getNegativeValueStyle,
-      }),
-    ],
-  },
-  {
     headerName: '매입정보',
     headerStyle: { backgroundColor: 'rgb(255 133 98)' },
     children: [
-      createNumericColumn('taxablePurchase', '매입 과세액', {
-        columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
-      }),
-      createNumericColumn('taxFreePurchase', '매입 면세액', {
-        columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
-      }),
       createNumericColumn('purchaseAmount', '매입액', {
-        cellStyle: (params) => {
-          const baseStyle = { backgroundColor: 'rgb(255 247 220)' };
-          return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
-        },
-      }),
-    ],
-  },
-  {
-    headerName: '정산정보',
-    headerStyle: { backgroundColor: 'rgb(255 147 117)' },
-    children: [
-      createNumericColumn('commissionRate', '정산 수수료(%)', {
-        columnGroupShow: 'open',
-        cellStyle: { textAlign: 'right' },
-      }),
-      createNumericColumn('appFee', '앱 수수료', { columnGroupShow: 'open' }),
-      createNumericColumn('otherFee', '기타 수수료', { columnGroupShow: 'open' }),
-      createNumericColumn('expectedSettlement', '정산 예정액', {
         cellStyle: (params) => {
           const baseStyle = { backgroundColor: 'rgb(255 247 220)' };
           return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
@@ -123,7 +66,7 @@ const gridOptions: GridOptions = {
   },
 };
 
-export default function ConsignmentSettlement() {
+export default function DirectSettlement() {
   const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>({
     from: startOfMonth(today),
@@ -133,31 +76,19 @@ export default function ConsignmentSettlement() {
   const [selectedValue, setSelectedValue] = useState<{ id: string; 매입사: string }>();
 
   const tempData = [
-    {
-      id: '0001',
-      name: '강철',
-      type: '월 결제',
-    },
-    {
-      id: '0002',
-      name: '싱싱',
-      type: '월 결제',
-    },
-    {
-      id: '0003',
-      name: '초인유통',
-      type: '15일 결제',
-    },
-    {
-      id: '0004',
-      name: '유나팩',
-      type: '말일 결제',
-    },
-    {
-      id: '0005',
-      name: '동원에프엔비',
-      type: '선금 지급',
-    },
+    { id: '0000', name: '오뚜기', type: '월 결제' },
+    { id: '0001', name: '푸른덕산', type: '15일 결제' },
+    { id: '0002', name: '씨제이프레시웨이', type: '선금 지급' },
+    { id: '0003', name: '웹발주', type: '매입시 지급' },
+    { id: '0004', name: '세천팜', type: '주 결제' },
+    { id: '0005', name: '더조은푸드', type: '월 결제' },
+    { id: '0006', name: '축성농장', type: '15일 결제' },
+    { id: '0007', name: '디엠푸드빌', type: '선금 지급' },
+    { id: '0008', name: '다미에프엔비', type: '매입시 지급' },
+    { id: '0009', name: '원진', type: '주 결제' },
+    { id: '0010', name: '해든나라', type: '월 결제' },
+    { id: '0011', name: '합천식품', type: '15일 결제' },
+    { id: '0012', name: '굿프렌즈', type: '선금 지급' },
   ];
 
   return (
@@ -168,7 +99,7 @@ export default function ConsignmentSettlement() {
             className="w-[300px]"
             data={tempData}
             placeholder={'매입사를 선택해주세요'}
-            label="위탁매입사"
+            label="직매입사"
             value={selectedValue?.매입사}
             onSelect={(value, displayValue) => {
               setSelectedValue({ id: value, 매입사: displayValue });

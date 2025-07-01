@@ -153,7 +153,8 @@ export const TEMP_TYPE_BADGE = {
 
 export const TEMP_PAYMENT_BADGE = {
   '15일 결제': 'badge-green',
-  '말일 결제': 'badge-red',
+  '주 결제': 'badge-orange',
   '월 결제': 'badge-peach',
   '선금 지급': 'badge-blue-light',
+  '매입시 지급': 'badge-blue',
 };

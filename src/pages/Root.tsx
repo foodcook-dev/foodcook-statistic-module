@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import BaseLayout from '@/routes/BaseLayout';
 
 import IntegratedSettlement from './integrated-settlement/templates';
+import DirectSettlement from './direct-settlement/templates';
 import ConsignmentSettlement from './consignment-settlement/templates';
 
 export default function Root() {
@@ -14,6 +15,7 @@ export default function Root() {
       <Route element={<BaseLayout />}>
         <Route path="/" element={<ConsignmentSettlement />} />
         <Route path="/integrated" element={<IntegratedSettlement />} />
+        <Route path="/direct" element={<DirectSettlement />} />
         <Route path="/consignment" element={<ConsignmentSettlement />} />
       </Route>
       {/* <Route path="/*" element={<RestrictRoute allow={isSignIn} redirect="/signIn" />}>

@@ -9,8 +9,6 @@ import { Button } from '@/components/atoms/button';
 
 import { TEMP_ROW, TEMP_TYPE_BADGE, TEMP_PAYMENT_BADGE } from '../structure';
 
-import './index.css';
-
 const typeRenderer = createBadgeRenderer(TEMP_TYPE_BADGE);
 const paymentRenderer = createBadgeRenderer(TEMP_PAYMENT_BADGE);
 
