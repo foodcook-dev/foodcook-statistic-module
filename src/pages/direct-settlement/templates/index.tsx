@@ -1,10 +1,10 @@
 import { AgGridReact } from 'ag-grid-react';
-import { BUYER_INFO } from '../structure';
 import { useDirectSettlement } from '../hooks/useDirectSettlement';
 import { companyColumnDefs, gridOptions } from '../config/grid-config';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import { groupIntoPairs } from '@/libs/utils';
+import { BUYER_INFO } from '../structure';
 
 export default function DirectSettlement() {
   const { dateRange, selectedBuyer, setDateRange, setSelectedBuyer, buyerInfo, buyerDetails } =

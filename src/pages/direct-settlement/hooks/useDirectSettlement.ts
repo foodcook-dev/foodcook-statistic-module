@@ -12,13 +12,10 @@ interface SelectedBuyer {
 interface UseDirectSettlementReturn {
   dateRange: DateRange;
   selectedBuyer: SelectedBuyer;
-
   setDateRange: (dateRange: DateRange) => void;
   setSelectedBuyer: (buyer: SelectedBuyer) => void;
-
   buyerInfo: any;
   buyerDetails: any;
-
   isBuyerInfoLoading: boolean;
   isBuyerDetailsLoading: boolean;
 }
