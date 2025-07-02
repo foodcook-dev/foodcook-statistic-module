@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type GridOptions } from 'ag-grid-community';
+import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/atoms/input';
 import { Button } from '@/components/atoms/button';
 import {
@@ -12,10 +13,10 @@ import {
 } from '@/components/atoms/dialog';
 import CustomFilter from '@/components/modules/select-filter';
 import { createBadgeRenderer } from '@/libs/table-format';
+import createAxios from '@/libs/createAxiosInstance';
 import { TEMP_PAYMENT_BADGE } from '@/pages/integrated-settlement/structure';
 
 type DataSelectorProps = {
-  data: any[];
   placeholder?: string;
   label: string;
   value?: string;
@@ -28,7 +29,6 @@ type DataSelectorProps = {
 };
 
 export default function DataSelector({
-  data = [],
   placeholder = '',
   label,
   value = '',
@@ -41,13 +41,22 @@ export default function DataSelector({
 }: DataSelectorProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const bodyResponse = useQuery({
+    queryKey: ['stock', 'header'],
+    queryFn: () =>
+      createAxios({
+        method: 'get',
+        endpoint: `/purchase/buy_companies/`,
+      }),
+  });
+
   const paymentRenderer = createBadgeRenderer(TEMP_PAYMENT_BADGE);
 
   const columnDefs: ColDef[] = [
-    { headerName: 'ID', field: 'id', flex: 0.3, cellStyle: { textAlign: 'center' } },
+    { headerName: 'ID', field: 'buy_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
     {
       headerName: '매입사명',
-      field: 'name',
+      field: 'b_nm',
       headerClass: '',
       flex: 1,
       filter: 'agTextColumnFilter',
@@ -72,9 +81,8 @@ export default function DataSelector({
   const onRowClicked = (event: any) => {
     const { data: item } = event;
 
-    const selectedValue = item[valueKey] || item.id || item.name || item;
-
-    const displayValue = item[displayKey] || item.name || item.title || item.id || String(item);
+    const selectedValue = item[valueKey];
+    const displayValue = item[displayKey];
 
     onSelect(selectedValue, displayValue);
     setIsDialogOpen(false);
@@ -103,12 +111,12 @@ export default function DataSelector({
           <div className="h-96 w-full">
             <AgGridReact
               gridOptions={gridOptions}
-              rowData={data}
+              rowData={bodyResponse.data}
               onRowClicked={onRowClicked}
               rowSelection="single"
               components={{ customFilter: CustomFilter }}
             />
-            {data.length === 0 && (
+            {bodyResponse.data?.length === 0 && (
               <div className="text-center py-8 text-gray-500">데이터가 없습니다.</div>
             )}
           </div>

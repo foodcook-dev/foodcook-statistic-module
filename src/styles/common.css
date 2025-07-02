@@ -1,8 +1,6 @@
 @import 'tw-animate-css';
 @import 'tailwindcss';
 
-/* @custom-variant dark (&:is(.dark *)); */
-
 body {
   --ag-value-change-value-highlight-background-color: rgba(207, 233, 79, 0.639);
 }

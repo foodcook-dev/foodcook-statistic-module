@@ -166,7 +166,7 @@ export default function ConsignmentSettlement() {
         <div className="flex flex-col items-center gap-2">
           <DataSelector
             className="w-[300px]"
-            data={tempData}
+            // data={tempData}
             placeholder={'매입사를 선택해주세요'}
             label="위탁매입사"
             value={selectedValue?.매입사}
