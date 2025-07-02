@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type GridOptions } from 'ag-grid-community';
 import { useQuery } from '@tanstack/react-query';
+import createAxios from '@/libs/createAxiosInstance';
 import { Input } from '@/components/atoms/input';
 import { Button } from '@/components/atoms/button';
 import {
@@ -12,13 +13,11 @@ import {
   DialogTrigger,
 } from '@/components/atoms/dialog';
 import CustomFilter from '@/components/modules/select-filter';
-import { createBadgeRenderer } from '@/libs/table-format';
-import createAxios from '@/libs/createAxiosInstance';
-import { TEMP_PAYMENT_BADGE } from '@/pages/integrated-settlement/structure';
 
 type DataSelectorProps = {
   placeholder?: string;
   label: string;
+  endpoint: string; // API 엔드포인트
   value?: string;
   onSelect: (value: any, displayValue: string) => void;
   valueKey?: string; // 실제 값으로 사용할 키 (기본값: 'id')
@@ -26,6 +25,7 @@ type DataSelectorProps = {
   triggerText?: string; // 선택 버튼 텍스트 (기본값: '선택')
   className?: string;
   disabled?: boolean;
+  columnDefs: ColDef[]; // 그리드 컬럼 정의
 };
 
 export default function DataSelector({
@@ -38,6 +38,8 @@ export default function DataSelector({
   triggerText = '선택',
   className = '',
   disabled = false,
+  endpoint,
+  columnDefs,
 }: DataSelectorProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -46,34 +48,11 @@ export default function DataSelector({
     queryFn: () =>
       createAxios({
         method: 'get',
-        endpoint: `/purchase/buy_companies/`,
+        endpoint,
       }),
   });
 
-  const paymentRenderer = createBadgeRenderer(TEMP_PAYMENT_BADGE);
-
-  const columnDefs: ColDef[] = [
-    { headerName: 'ID', field: 'buy_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
-    {
-      headerName: '매입사명',
-      field: 'b_nm',
-      headerClass: '',
-      flex: 1,
-      filter: 'agTextColumnFilter',
-    },
-    {
-      field: 'type',
-      flex: 0.5,
-      headerName: '결제일',
-      sortable: false,
-      filter: CustomFilter,
-      floatingFilter: false,
-      cellRenderer: paymentRenderer,
-      cellStyle: { textAlign: 'center' },
-    },
-  ];
-
-  const gridOptions: GridOptions = {
+  const defaultGridOptions: GridOptions = {
     defaultColDef: { headerClass: 'centered', resizable: false },
     columnDefs: columnDefs,
   };
@@ -110,7 +89,7 @@ export default function DataSelector({
           </DialogHeader>
           <div className="h-96 w-full">
             <AgGridReact
-              gridOptions={gridOptions}
+              gridOptions={defaultGridOptions}
               rowData={bodyResponse.data}
               onRowClicked={onRowClicked}
               rowSelection="single"

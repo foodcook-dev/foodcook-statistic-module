@@ -164,16 +164,15 @@ export default function ConsignmentSettlement() {
     <div className="w-full flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div className="flex flex-col items-center gap-2">
-          <DataSelector
+          {/* <DataSelector
             className="w-[300px]"
-            // data={tempData}
             placeholder={'매입사를 선택해주세요'}
             label="위탁매입사"
             value={selectedValue?.매입사}
             onSelect={(value, displayValue) => {
               setSelectedValue({ id: value, 매입사: displayValue });
             }}
-          />
+          /> */}
         </div>
         <div className="flex items-center gap-2">
           <DateRangePicker

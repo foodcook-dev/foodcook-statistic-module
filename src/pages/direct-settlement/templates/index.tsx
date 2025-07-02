@@ -1,7 +1,7 @@
 import { AgGridReact } from 'ag-grid-react';
 import { BUYER_INFO } from '../structure';
 import { useDirectSettlement } from '../hooks/useDirectSettlement';
-import { gridOptions } from '../config/tableConfig';
+import { companyColumnDefs, gridOptions } from '../config/grid-config';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import { groupIntoPairs } from '@/libs/utils';
@@ -19,8 +19,10 @@ export default function DirectSettlement() {
             className="w-[300px]"
             placeholder="매입사를 선택해주세요"
             label="직매입사"
+            endpoint="/purchase/buy_companies/"
             valueKey="buy_company_id"
             displayKey="b_nm"
+            columnDefs={companyColumnDefs}
             value={selectedBuyer?.name}
             onSelect={(value, displayValue) => setSelectedBuyer({ id: value, name: displayValue })}
           />

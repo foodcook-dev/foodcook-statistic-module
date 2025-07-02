@@ -1,6 +1,31 @@
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
+import CustomFilter from '@/components/modules/select-filter';
 import { TEMP_BADGE } from '../structure';
+import { TEMP_PAYMENT_BADGE } from '@/pages/integrated-settlement/structure';
+
+const paymentRenderer = createBadgeRenderer(TEMP_PAYMENT_BADGE);
+
+export const companyColumnDefs: ColDef[] = [
+  { headerName: 'ID', field: 'buy_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
+  {
+    headerName: '매입사명',
+    field: 'b_nm',
+    headerClass: '',
+    flex: 1,
+    filter: 'agTextColumnFilter',
+  },
+  {
+    field: 'type',
+    flex: 0.5,
+    headerName: '결제일',
+    sortable: false,
+    filter: CustomFilter,
+    floatingFilter: false,
+    cellRenderer: paymentRenderer,
+    cellStyle: { textAlign: 'center' },
+  },
+];
 
 const statusRenderer = createBadgeRenderer(TEMP_BADGE);
 
