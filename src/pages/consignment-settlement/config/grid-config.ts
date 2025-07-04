@@ -92,11 +92,11 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     ],
   },
   {
-    headerName: '지급정보',
+    headerName: '결제정보',
     headerStyle: { backgroundColor: 'rgb(255 131 100)' },
     children: [
-      createNumericColumn('discount_amount', '지급 차감액[할인]'),
-      createNumericColumn('payment_amount', '지급 완료액', {
+      createNumericColumn('discount_amount', '결제 차감액[할인]'),
+      createNumericColumn('payment_amount', '결제 완료액', {
         cellStyle: { backgroundColor: 'rgb(255 247 220)' },
       }),
       createNumericColumn('invoice_total', '계산서발행 총액'),
@@ -119,24 +119,26 @@ export const gridOptions: GridOptions = {
 
   rowModelType: 'infinite',
   cacheBlockSize: 50,
-  cacheOverflowSize: 2, // 캐시 오버플로우 크기
-  maxConcurrentDatasourceRequests: 1, // 동시 요청 수를 1로 줄임
-  infiniteInitialRowCount: 1, // 초기 행 수를 1로 설정
-  maxBlocksInCache: 10, // 캐시에 유지할 최대 블록 수
+  cacheOverflowSize: 2,
+  maxConcurrentDatasourceRequests: 1,
+  infiniteInitialRowCount: 1,
+  maxBlocksInCache: 10,
+
+  onColumnGroupOpened: (event) => {
+    event.api.autoSizeAllColumns();
+  },
 
   onModelUpdated: (event) => {
     setTimeout(() => {
-      if (event.api) event.api.autoSizeAllColumns();
+      if (event.api) {
+        const firstRowNode = event.api.getDisplayedRowAtIndex(0);
+        const hasRealData =
+          firstRowNode && firstRowNode.data && Object.keys(firstRowNode.data).length > 0;
+
+        if (hasRealData) {
+          event.api.autoSizeAllColumns();
+        }
+      }
     });
-  },
-  onRowDataUpdated: (event) => {
-    setTimeout(() => {
-      if (event.api) event.api.autoSizeAllColumns();
-    }, 100);
-  },
-  onFirstDataRendered: (event) => {
-    setTimeout(() => {
-      if (event.api) event.api.autoSizeAllColumns();
-    }, 100);
   },
 };

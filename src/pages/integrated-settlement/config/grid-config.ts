@@ -56,11 +56,11 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     ],
   },
   {
-    headerName: '지급정보',
+    headerName: '결제정보',
     headerStyle: { backgroundColor: 'rgb(255 131 100)' },
     children: [
-      createNumericColumn('discountAmount', '지급 차감액[할인]'),
-      createNumericColumn('paymentAmount', '지급 완료액', {
+      createNumericColumn('discountAmount', '결제 차감액[할인]'),
+      createNumericColumn('paymentAmount', '결제 완료액', {
         cellStyle: { backgroundColor: 'rgb(255 247 220)' },
       }),
       createNumericColumn('invoiceTotal', '계산서발행 총액'),
@@ -84,7 +84,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     filter: 'agDateColumnFilter',
     cellStyle: { textAlign: 'right' },
   },
-  createNumericColumn('productStockAmount', '상품재고액'),
+  createNumericColumn('productStockAmount', '상품재고액(전일자 기준)'),
   { headerName: '전자 세금계산서', field: 'taxInvoiceEmail', filter: 'agTextColumnFilter' },
   { headerName: '비고', field: 'note' },
 ];
@@ -101,26 +101,24 @@ export const gridOptions: GridOptions = {
   infiniteInitialRowCount: 1,
   maxBlocksInCache: 10,
 
-  onGridReady: (event) => {
-    event.api.autoSizeAllColumns();
-  },
+  // onGridReady: (event) => {
+  //   event.api.autoSizeAllColumns();
+  // },
   onColumnGroupOpened: (event) => {
     event.api.autoSizeAllColumns();
   },
 
   onModelUpdated: (event) => {
     setTimeout(() => {
-      if (event.api) event.api.autoSizeAllColumns();
+      if (event.api) {
+        const firstRowNode = event.api.getDisplayedRowAtIndex(0);
+        const hasRealData =
+          firstRowNode && firstRowNode.data && Object.keys(firstRowNode.data).length > 0;
+
+        if (hasRealData) {
+          event.api.autoSizeAllColumns();
+        }
+      }
     });
-  },
-  onRowDataUpdated: (event) => {
-    setTimeout(() => {
-      if (event.api) event.api.autoSizeAllColumns();
-    }, 100);
-  },
-  onFirstDataRendered: (event) => {
-    setTimeout(() => {
-      if (event.api) event.api.autoSizeAllColumns();
-    }, 100);
   },
 };

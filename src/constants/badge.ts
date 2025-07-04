@@ -7,7 +7,7 @@ export const STATUS_BADGE = {
   전기이월: 'badge-blue',
   반품: 'badge-red',
   매입: 'badge-dark',
-  지급: 'badge-green',
+  결제: 'badge-green',
 };
 
 export const PAYMENT_BADGE = {
