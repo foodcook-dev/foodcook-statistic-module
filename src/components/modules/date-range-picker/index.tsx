@@ -42,13 +42,13 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
               id="date"
               ref={ref}
               variant="outline"
-              className="w-[235px] flex justify-between"
+              className="w-[230px] flex justify-between hover:border-[rgb(255,103,57)] group"
               onClick={handleTogglePopover}
               suppressHydrationWarning
               {...props}
             >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              <span>
+              <CalendarIcon className="h-4 w-4 group-hover:text-[rgb(255,103,57)] transition-colors duration-200" />
+              <span className="group-hover:text-[rgb(255,103,57)] transition-colors duration-200">
                 {date?.from && date?.to ? (
                   <>
                     <span>{formatWithTz(date.from, 'yyyy-MM-dd')}</span>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type GridOptions } from 'ag-grid-community';
+import { SearchIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/createAxiosInstance';
 import { Input } from '@/components/atoms/input';
@@ -35,7 +36,6 @@ export default function DataSelector({
   onSelect,
   valueKey = 'id',
   displayKey = 'name',
-  triggerText = '선택',
   className = '',
   disabled = false,
   endpoint,
@@ -79,8 +79,14 @@ export default function DataSelector({
       />
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button type="button" variant="outline" className="whitespace-nowrap" disabled={disabled}>
-            {triggerText}
+          <Button
+            type="button"
+            // variant="outline"
+            className="whitespace-nowrap bg-[rgb(255,103,57)] text-white border-[rgb(255,103,57)] hover:bg-[rgb(230,93,47)] hover:border-[rgb(230,93,47)]"
+            disabled={disabled}
+          >
+            <SearchIcon className="inline-block" />
+            선택
           </Button>
         </DialogTrigger>
         <DialogContent className="w-[650px] max-h-[80vh]">
