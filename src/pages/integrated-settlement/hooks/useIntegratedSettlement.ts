@@ -4,6 +4,7 @@ import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
 import createAxios from '@/libs/createAxiosInstance';
+import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state-storage';
 
 type UseIntegratedSettlementReturn = {
   gridRef: React.RefObject<AgGridReact | null>;
@@ -13,6 +14,7 @@ type UseIntegratedSettlementReturn = {
 };
 
 export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
+  const STORAGE_KEY = STORAGE_KEYS.INTEGRATED_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -57,14 +59,14 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
 
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
-      event.api.sizeColumnsToFit();
+      initializeColumnStateManagement(STORAGE_KEY, event.api);
 
       if (dateRange.from && dateRange.to) {
         const dataSource = createDataSource();
         event.api.setGridOption('datasource', dataSource);
       }
     },
-    [dateRange.from, dateRange.to, createDataSource],
+    [dateRange.from, dateRange.to, createDataSource, STORAGE_KEY],
   );
 
   useEffect(() => {

@@ -53,7 +53,7 @@ export default function DataSelector({
   });
 
   const defaultGridOptions: GridOptions = {
-    defaultColDef: { headerClass: 'centered', resizable: false },
+    defaultColDef: { headerClass: 'centered' },
     columnDefs: columnDefs,
   };
 

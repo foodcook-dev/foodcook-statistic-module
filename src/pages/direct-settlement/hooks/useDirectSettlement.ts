@@ -5,6 +5,7 @@ import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/createAxiosInstance';
+import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state-storage';
 
 type SelectedBuyer = {
   id: string;
@@ -23,6 +24,7 @@ type UseDirectSettlementReturn = {
 };
 
 export const useDirectSettlement = (): UseDirectSettlementReturn => {
+  const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -81,14 +83,14 @@ export const useDirectSettlement = (): UseDirectSettlementReturn => {
 
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
-      event.api.sizeColumnsToFit();
+      initializeColumnStateManagement(STORAGE_KEY, event.api);
 
       if (selectedBuyer.id && dateRange.from && dateRange.to) {
         const dataSource = createDataSource();
         event.api.setGridOption('datasource', dataSource);
       }
     },
-    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource],
+    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource, STORAGE_KEY],
   );
 
   useEffect(() => {
