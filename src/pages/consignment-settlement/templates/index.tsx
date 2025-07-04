@@ -8,12 +8,13 @@ import { PARTNER_INFO } from '../structure';
 
 export default function ConsignmentSettlement() {
   const {
+    gridRef,
     dateRange,
     selectedPartner,
+    partnerInfo,
     setDateRange,
     setSelectedPartner,
-    partnerInfo,
-    partnerDetails,
+    onGridReady,
   } = useConsignmentSettlement();
 
   return (
@@ -68,7 +69,7 @@ export default function ConsignmentSettlement() {
             </div>
           </div>
         ) : (
-          <AgGridReact rowData={partnerDetails} gridOptions={gridOptions} />
+          <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
         )}
       </div>
     </div>

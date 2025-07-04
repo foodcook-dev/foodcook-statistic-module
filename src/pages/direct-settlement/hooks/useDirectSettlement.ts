@@ -1,33 +1,34 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/createAxiosInstance';
 
-interface SelectedBuyer {
+type SelectedBuyer = {
   id: string;
   name: string;
-}
+};
 
-interface UseDirectSettlementReturn {
+type UseDirectSettlementReturn = {
+  gridRef: React.RefObject<AgGridReact | null>;
   dateRange: DateRange;
   selectedBuyer: SelectedBuyer;
+  buyerInfo: any;
+  isBuyerInfoLoading: boolean;
   setDateRange: (dateRange: DateRange) => void;
   setSelectedBuyer: (buyer: SelectedBuyer) => void;
-  buyerInfo: any;
-  buyerDetails: any;
-  isBuyerInfoLoading: boolean;
-  isBuyerDetailsLoading: boolean;
-}
+  onGridReady: (event: GridReadyEvent) => void;
+};
 
 export const useDirectSettlement = (): UseDirectSettlementReturn => {
+  const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
-
   const [dateRange, setDateRange] = useState<DateRange>({
     from: startOfMonth(today),
     to: today,
   });
-
   const [selectedBuyer, setSelectedBuyer] = useState<SelectedBuyer>({
     id: '',
     name: '',
@@ -43,28 +44,68 @@ export const useDirectSettlement = (): UseDirectSettlementReturn => {
     enabled: !!selectedBuyer.id,
   });
 
-  const buyerDetailResponse = useQuery({
-    queryKey: ['details', selectedBuyer.id, dateRange.from, dateRange.to],
-    queryFn: () =>
-      createAxios({
-        method: 'get',
-        endpoint: `/purchase/buy_companies/${selectedBuyer.id}/details/`,
-        params: {
-          start_date: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-          end_date: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        },
-      }),
-    enabled: !!selectedBuyer.id && !!dateRange.from && !!dateRange.to,
-  });
+  const createDataSource = useCallback((): IDatasource => {
+    return {
+      getRows: async (params: IGetRowsParams) => {
+        if (!selectedBuyer.id || !dateRange.from || !dateRange.to) {
+          params.failCallback();
+          return;
+        }
+
+        try {
+          const page = Math.floor(params.startRow / 50) + 1;
+          const size = 50;
+
+          const response = await createAxios({
+            method: 'get',
+            endpoint: `/purchase/buy_companies/${selectedBuyer.id}/details/`,
+            params: {
+              start_date: format(dateRange.from, 'yyyy-MM-dd'),
+              end_date: format(dateRange.to, 'yyyy-MM-dd'),
+              page,
+              size,
+            },
+          });
+
+          const rowsThisBlock = response?.items || [];
+          const totalRows = response?.total || 0;
+
+          params.successCallback(rowsThisBlock, totalRows);
+        } catch (error) {
+          console.error('Failed to fetch data:', error);
+          params.failCallback();
+        }
+      },
+    };
+  }, [selectedBuyer.id, dateRange.from, dateRange.to]);
+
+  const onGridReady = useCallback(
+    (event: GridReadyEvent) => {
+      event.api.sizeColumnsToFit();
+
+      if (selectedBuyer.id && dateRange.from && dateRange.to) {
+        const dataSource = createDataSource();
+        event.api.setGridOption('datasource', dataSource);
+      }
+    },
+    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource],
+  );
+
+  useEffect(() => {
+    if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
+      const dataSource = createDataSource();
+      gridRef.current.api.setGridOption('datasource', dataSource);
+    }
+  }, [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource]);
 
   return {
+    gridRef,
     dateRange,
     selectedBuyer,
-    setDateRange,
-    setSelectedBuyer,
     buyerInfo: buyerInfoResponse.data,
     isBuyerInfoLoading: buyerInfoResponse.isLoading,
-    buyerDetails: buyerDetailResponse.data,
-    isBuyerDetailsLoading: buyerDetailResponse.isLoading,
+    setDateRange,
+    setSelectedBuyer,
+    onGridReady,
   };
 };

@@ -7,8 +7,15 @@ import { groupIntoPairs } from '@/libs/utils';
 import { BUYER_INFO } from '../structure';
 
 export default function DirectSettlement() {
-  const { dateRange, selectedBuyer, setDateRange, setSelectedBuyer, buyerInfo, buyerDetails } =
-    useDirectSettlement();
+  const {
+    gridRef,
+    dateRange,
+    selectedBuyer,
+    buyerInfo,
+    setDateRange,
+    setSelectedBuyer,
+    onGridReady,
+  } = useDirectSettlement();
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -60,7 +67,7 @@ export default function DirectSettlement() {
             </div>
           </div>
         ) : (
-          <AgGridReact rowData={buyerDetails} gridOptions={gridOptions} />
+          <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
         )}
       </div>
     </div>

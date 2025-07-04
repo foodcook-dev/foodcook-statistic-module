@@ -7,6 +7,9 @@ import { createSearchParams } from '@/libs/utils';
 
 const instance = axios.create({
   baseURL: PATH.base,
+  headers: {
+    'ngrok-skip-browser-warning': 'true',
+  },
 });
 
 instance.interceptors.request.use(
