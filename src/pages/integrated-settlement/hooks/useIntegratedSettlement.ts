@@ -36,7 +36,7 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
 
           const response = await createAxios({
             method: 'get',
-            endpoint: `/purchase/buy_companies/details/`,
+            endpoint: `/integrate/integrate_companies/`,
             params: {
               start_date: format(dateRange.from, 'yyyy-MM-dd'),
               end_date: format(dateRange.to, 'yyyy-MM-dd'),
