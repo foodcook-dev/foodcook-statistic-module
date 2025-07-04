@@ -3,7 +3,7 @@ import { useConsignmentSettlement } from '../hooks/useConsignmentSettlement';
 import { companyColumnDefs, gridOptions } from '../config/grid-config';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
-import { groupIntoPairs } from '@/libs/utils';
+import InfoTable from '@/components/modules/info-table';
 import { PARTNER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-state-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state-storage';
@@ -53,19 +53,7 @@ export default function ConsignmentSettlement() {
           gridApi={gridRef.current?.api}
         />
       </div>
-      <div className="flex flex-col border-t border-gray-300 text-sm text-gray-900">
-        {groupIntoPairs(PARTNER_INFO, 2).map((rowPair, index) => (
-          <div key={index} className="flex items-center border-b border-gray-300 bg-white p-3">
-            {rowPair.map((item, itemIndex) => (
-              <div key={itemIndex} className="flex w-1/2">
-                <div className="font-semibold w-1/4">{item.label}</div>
-                <div className="w-3/4">{partnerInfo?.[item.value] || '-'}</div>
-              </div>
-            ))}
-            {rowPair.length === 1 && <div className="flex w-1/2"></div>}
-          </div>
-        ))}
-      </div>
+      <InfoTable data={PARTNER_INFO} info={partnerInfo} />
       <div className="w-full h-[500px]">
         {!selectedPartner?.id ? (
           <div className="flex items-center justify-center h-full bg-gray-50 border border-gray-200 rounded-lg">
