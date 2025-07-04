@@ -44,20 +44,6 @@ export const useConsignmentSettlement = (): UseDirectSettlementReturn => {
     enabled: !!selectedPartner.id,
   });
 
-  const partnerDetailResponse = useQuery({
-    queryKey: ['details', selectedPartner.id, dateRange.from, dateRange.to],
-    queryFn: () =>
-      createAxios({
-        method: 'get',
-        endpoint: `/partner/partner_companies/${selectedPartner.id}/details/`,
-        params: {
-          start_date: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-          end_date: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-        },
-      }),
-    enabled: !!selectedPartner.id && !!dateRange.from && !!dateRange.to,
-  });
-
   const createDataSource = useCallback((): IDatasource => {
     return {
       getRows: async (params: IGetRowsParams) => {

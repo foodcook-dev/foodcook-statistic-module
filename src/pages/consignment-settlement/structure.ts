@@ -8,7 +8,7 @@ export const PARTNER_INFO = [
   { label: '관리자 메모', value: 'memo' },
 ];
 
-export const TEMP_BADGE = {
+export const TYPE_BADGE = {
   전기이월: 'badge-blue',
   반품: 'badge-red',
   매입: 'badge-dark',
