@@ -25,7 +25,16 @@ export default function IntegratedSettlement() {
         />
       </div>
       <div className="w-full h-[600px]">
+        {/* {!selectedBuyer?.id ? (
+          <div className="flex items-center justify-center h-full bg-gray-50 border border-gray-200 rounded-lg">
+            <div className="text-center">
+              <p className="text-gray-500 text-lg font-medium">매입사를 선택해주세요</p>
+              <p className="text-gray-400 text-sm mt-2">조회할 매입사를 선택해주시기 바랍니다.</p>
+            </div>
+          </div>
+        ) : ( */}
         <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
+        {/* )} */}
       </div>
     </div>
   );
