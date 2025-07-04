@@ -5,10 +5,9 @@ import {
   getNegativeValueStyle,
 } from '@/libs/table-format';
 import CustomFilter from '@/components/modules/select-filter';
-import { TYPE_BADGE } from '../structure';
-import { TEMP_PAYMENT_BADGE } from '@/pages/integrated-settlement/structure';
+import { STATUS_BADGE, PAYMENT_BADGE } from '@/constants/badge';
 
-const paymentRenderer = createBadgeRenderer(TEMP_PAYMENT_BADGE);
+const paymentRenderer = createBadgeRenderer(PAYMENT_BADGE);
 
 export const companyColumnDefs: ColDef[] = [
   { headerName: 'ID', field: 'partner_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
@@ -31,7 +30,7 @@ export const companyColumnDefs: ColDef[] = [
   },
 ];
 
-const statusRenderer = createBadgeRenderer(TYPE_BADGE);
+const statusRenderer = createBadgeRenderer(STATUS_BADGE);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: 'ID', field: 'detail_id', pinned: 'left', cellStyle: { textAlign: 'center' } },

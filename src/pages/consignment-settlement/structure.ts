@@ -7,10 +7,3 @@ export const PARTNER_INFO = [
   { label: '예금주', value: 'bank_holder' },
   { label: '관리자 메모', value: 'memo' },
 ];
-
-export const TYPE_BADGE = {
-  전기이월: 'badge-blue',
-  반품: 'badge-red',
-  매입: 'badge-dark',
-  지급: 'badge-green',
-};
