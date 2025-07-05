@@ -1,7 +1,9 @@
 import { HashRouter } from 'react-router-dom';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import ResponseError from '@/libs/responseError';
+import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -22,11 +24,13 @@ export default function App() {
     }),
   });
 
-  // useEffect(() => {
-  //   window.onbeforeunload = function pushRefresh() {
-  //     window.scrollTo(0, 0);
-  //   };
-  // }, []);
+  useEffect(() => {
+    const token = getTokenFromUrl();
+    if (token) {
+      setTokenToStorage(token);
+      console.log('토큰이 URL에서 추출되어 저장되었습니다:', token);
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

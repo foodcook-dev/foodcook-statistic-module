@@ -2,19 +2,28 @@ import axios from 'axios';
 import { PATH } from '@/constants/apiPath';
 import { Instance } from '@/types/api';
 import ResponseError from '@/libs/responseError';
-import { createSearchParams } from '@/libs/utils';
+import { createSearchParams, getCurrentToken } from '@/libs/utils';
 // import { decryption } from '@/libs/hash';
 
 const instance = axios.create({
   baseURL: PATH.base,
+  headers: {
+    'ngrok-skip-browser-warning': 'true',
+  },
 });
 
 instance.interceptors.request.use(
   (config) => {
     const newConfig = { ...config };
 
-    // TODO: 추후 토큰 처리 로직 수정 필요
+    // iframe URL 파라미터에서 토큰을 가져와서 사용
+    const token = getCurrentToken();
 
+    if (token) {
+      newConfig.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // TODO: 추후 기존 토큰 처리 로직으로 대체 가능
     // const encryptedUserData = localStorage.getItem('userData');
     // let accessToken = '';
 

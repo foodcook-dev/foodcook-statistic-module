@@ -14,6 +14,15 @@
   font-weight: 500;
 }
 
+.centered {
+  .ag-header-cell-comp-wrapper {
+    justify-content: center !important;
+  }
+  .ag-header-cell-label {
+    justify-content: center !important;
+  }
+}
+
 .badge {
   padding: 6px;
   border-radius: 4px;
@@ -45,13 +54,4 @@
 }
 .badge-green {
   background-color: #00ab36;
-}
-
-.centered {
-  .ag-header-cell-comp-wrapper {
-    justify-content: center !important;
-  }
-  .ag-header-cell-label {
-    justify-content: center !important;
-  }
 }

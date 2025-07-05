@@ -87,20 +87,22 @@ const SelectFilter = (props: SelectFilterProps) => {
           </label>
         ))}
       </div>
-      <div className="mt-[8px] pt-[8px] border-t border-gray-200">
-        <div className="flex justify-end">
-          <Button
-            onClick={handleClear}
-            className="h-[30px] text-xs bg-gray-500 text-white rounded hover:bg-gray-600"
-          >
-            초기화
-          </Button>
+      {uniqueValues.length === 0 ? (
+        <div className="text-sm text-gray-500 text-center py-6">
+          해당열에 데이터가 없어
+          <br />
+          필터를 설정할 수 없습니다.
         </div>
-      </div>
-
-      {uniqueValues.length === 0 && (
-        <div className="text-sm text-gray-500 text-center py-4">
-          필터를 적용 할 데이터가 없습니다.
+      ) : (
+        <div className="mt-[8px] pt-[8px] border-t border-gray-200">
+          <div className="flex justify-end">
+            <Button
+              onClick={handleClear}
+              className="h-[30px] text-xs bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              초기화
+            </Button>
+          </div>
         </div>
       )}
     </div>
