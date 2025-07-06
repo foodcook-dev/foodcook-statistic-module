@@ -6,7 +6,7 @@ import ColumnStateResetButton from '@/components/modules/column-state-reset-butt
 import { STORAGE_KEYS } from '@/libs/column-state-storage';
 
 export default function IntegratedSettlement() {
-  const { gridRef, dateRange, setDateRange, onGridReady } = useIntegratedSettlement();
+  const { gridRef, dateRange, setDateRange, onGridReady, error } = useIntegratedSettlement();
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -24,17 +24,15 @@ export default function IntegratedSettlement() {
           gridApi={gridRef.current?.api}
         />
       </div>
-      <div className="w-full h-[600px]">
-        {/* {!selectedBuyer?.id ? (
-          <div className="flex items-center justify-center h-full bg-gray-50 border border-gray-200 rounded-lg">
-            <div className="text-center">
-              <p className="text-gray-500 text-lg font-medium">매입사를 선택해주세요</p>
-              <p className="text-gray-400 text-sm mt-2">조회할 매입사를 선택해주시기 바랍니다.</p>
+      <div className="w-full h-[600px] relative">
+        <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="text-center bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+              <p className="text-gray-700 text-lg font-medium">{error}</p>
             </div>
           </div>
-        ) : ( */}
-        <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
-        {/* )} */}
+        )}
       </div>
     </div>
   );
