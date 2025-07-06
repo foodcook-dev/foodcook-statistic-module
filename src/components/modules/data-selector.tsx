@@ -44,12 +44,13 @@ export default function DataSelector({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const bodyResponse = useQuery({
-    queryKey: ['stock', 'header'],
+    queryKey: ['dataSelector', endpoint],
     queryFn: () =>
       createAxios({
         method: 'get',
         endpoint,
       }),
+    enabled: isDialogOpen,
   });
 
   const defaultGridOptions: GridOptions = {
