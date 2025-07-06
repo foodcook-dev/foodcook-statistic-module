@@ -11,6 +11,7 @@ type UseIntegratedSettlementReturn = {
   dateRange: DateRange;
   setDateRange: (dateRange: DateRange) => void;
   onGridReady: (event: GridReadyEvent) => void;
+  error: string | null;
 };
 
 export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
@@ -21,6 +22,7 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     from: startOfMonth(today),
     to: today,
   });
+  const [error, setError] = useState<string | null>(null);
 
   const createDataSource = useCallback((): IDatasource => {
     return {
@@ -49,8 +51,9 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
           const totalRows = response?.total || 0;
 
           params.successCallback(rowsThisBlock, totalRows);
-        } catch (error) {
-          console.error('Failed to fetch data:', error);
+        } catch (e: any) {
+          console.error('Failed to fetch data:', e);
+          setError(e.error);
           params.failCallback();
         }
       },
@@ -70,6 +73,7 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
   );
 
   useEffect(() => {
+    setError(null);
     if (gridRef.current?.api && dateRange.from && dateRange.to) {
       const dataSource = createDataSource();
       gridRef.current.api.setGridOption('datasource', dataSource);
@@ -81,5 +85,6 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     dateRange,
     setDateRange,
     onGridReady,
+    error,
   };
 };
