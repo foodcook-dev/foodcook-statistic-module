@@ -29,7 +29,7 @@ export default function IntegratedSettlement() {
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="text-center bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-              <p className="text-gray-700 text-lg font-medium">{error}</p>
+              <p className="text-gray-700 text-sm font-medium">{error}</p>
             </div>
           </div>
         )}

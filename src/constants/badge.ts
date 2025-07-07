@@ -1,6 +1,6 @@
 export const TYPE_BADGE = {
-  직매입: 'badge-blue',
-  '위탁매입(수수료)': 'badge-orange',
+  buy: { className: 'badge-blue', text: '직매입' },
+  partner: { className: 'badge-orange', text: '위탁매입' },
 };
 
 export const STATUS_BADGE = {
