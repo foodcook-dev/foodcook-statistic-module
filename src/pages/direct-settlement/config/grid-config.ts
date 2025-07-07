@@ -13,6 +13,10 @@ export const companyColumnDefs: ColDef[] = [
     headerClass: '',
     flex: 1,
     filter: 'agTextColumnFilter',
+    filterParams: {
+      filterOptions: ['contains'],
+      maxNumConditions: 0,
+    },
   },
   {
     field: 'type',
@@ -73,7 +77,7 @@ export const columnDefs: (ColDef | ColGroupDef)[] = [
 
 export const gridOptions: GridOptions = {
   defaultColGroupDef: { headerClass: 'centered' },
-  defaultColDef: { headerClass: 'centered' },
+  defaultColDef: { headerClass: 'centered', sortable: false, floatingFilter: false },
   columnDefs: columnDefs,
 
   rowModelType: 'infinite',

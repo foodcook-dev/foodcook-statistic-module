@@ -8,16 +8,23 @@ const paymentRenderer = createBadgeRenderer(PAYMENT_BADGE);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: 'ID', field: 'company_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
-  { headerName: '매입사명', field: 'b_nm', pinned: 'left', filter: 'agTextColumnFilter' },
+  {
+    headerName: '매입사명',
+    field: 'b_nm',
+    pinned: 'left',
+    filter: 'agTextColumnFilter',
+    filterParams: {
+      filterOptions: ['contains'],
+      maxNumConditions: 0,
+    },
+  },
   {
     field: 'type',
     headerName: '매입 유형',
-    sortable: false,
     filter: SelectFilter,
     filterParams: {
       mappingStructure: TYPE_BADGE,
     },
-    floatingFilter: false,
     cellRenderer: typeRenderer,
     cellStyle: { textAlign: 'center' },
   },
@@ -27,7 +34,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     cellRenderer: paymentRenderer,
     cellStyle: { textAlign: 'center' },
   },
-  { headerName: '사업자번호', field: 'b_no', filter: 'agTextColumnFilter' },
+  { headerName: '사업자번호', field: 'b_no' },
   createNumericColumn('previous_balance', '전기이월액'),
   createNumericColumn('sales_amount', '매출액', { headerStyle: { backgroundColor: '#ff7b54' } }),
   {
@@ -96,7 +103,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
 
 export const gridOptions: GridOptions = {
   defaultColGroupDef: { headerClass: 'centered' },
-  defaultColDef: { headerClass: 'centered' },
+  defaultColDef: { headerClass: 'centered', sortable: false, floatingFilter: false },
   columnDefs: columnDefs,
 
   rowModelType: 'infinite',
@@ -106,9 +113,6 @@ export const gridOptions: GridOptions = {
   infiniteInitialRowCount: 1,
   maxBlocksInCache: 10,
 
-  // onGridReady: (event) => {
-  //   event.api.autoSizeAllColumns();
-  // },
   onColumnGroupOpened: (event) => {
     event.api.autoSizeAllColumns();
   },
