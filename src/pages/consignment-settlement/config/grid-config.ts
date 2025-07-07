@@ -5,9 +5,9 @@ import {
   getNegativeValueStyle,
 } from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
-import { STATUS_BADGE, PAYMENT_BADGE } from '@/constants/badge';
+import { STATUS, PAYMENT } from '@/constants/badge';
 
-const paymentRenderer = createBadgeRenderer(PAYMENT_BADGE);
+const paymentRenderer = createBadgeRenderer(PAYMENT);
 
 export const companyColumnDefs: ColDef[] = [
   { headerName: 'ID', field: 'partner_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
@@ -17,6 +17,10 @@ export const companyColumnDefs: ColDef[] = [
     headerClass: '',
     flex: 1,
     filter: 'agTextColumnFilter',
+    filterParams: {
+      filterOptions: ['contains'],
+      maxNumConditions: 0,
+    },
   },
   {
     field: 'type',
@@ -30,7 +34,7 @@ export const companyColumnDefs: ColDef[] = [
   },
 ];
 
-const statusRenderer = createBadgeRenderer(STATUS_BADGE);
+const statusRenderer = createBadgeRenderer(STATUS);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: 'ID', field: 'detail_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
@@ -38,6 +42,8 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     headerName: '전표상태',
     field: 'type',
     pinned: 'left',
+    filter: SelectFilter,
+    filterParams: { structure: STATUS },
     cellStyle: { textAlign: 'center' },
     cellRenderer: statusRenderer,
   },
@@ -114,7 +120,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
 
 export const gridOptions: GridOptions = {
   defaultColGroupDef: { headerClass: 'centered' },
-  defaultColDef: { headerClass: 'centered' },
+  defaultColDef: { headerClass: 'centered', sortable: false, floatingFilter: false },
   columnDefs: columnDefs,
 
   rowModelType: 'infinite',
