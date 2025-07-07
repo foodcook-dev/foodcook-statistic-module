@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type GridOptions } from 'ag-grid-community';
 import { SearchIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import createAxios from '@/libs/createAxiosInstance';
+import createAxios from '@/libs/create-axios-instance';
 import { Input } from '@/components/atoms/input';
 import { Button } from '@/components/atoms/button';
 import {

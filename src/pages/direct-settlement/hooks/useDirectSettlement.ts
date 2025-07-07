@@ -4,8 +4,8 @@ import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import createAxios from '@/libs/createAxiosInstance';
-import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state-storage';
+import createAxios from '@/libs/create-axios-instance';
+import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 
 type SelectedBuyer = {
   id: string;

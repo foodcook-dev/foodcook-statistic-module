@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { PATH } from '@/constants/apiPath';
+import { PATH } from '@/constants/api-path';
 import { Instance } from '@/types/api';
-import ResponseError from '@/libs/responseError';
+import ResponseError from '@/libs/response-error';
 import { createSearchParams, getCurrentToken } from '@/libs/utils';
 // import { decryption } from '@/libs/hash';
 
