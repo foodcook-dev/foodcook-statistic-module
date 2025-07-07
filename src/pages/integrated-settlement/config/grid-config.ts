@@ -85,7 +85,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     cellStyle: { textAlign: 'right' },
   },
   {
-    headerName: '최종 결제일',
+    headerName: '최종 지급일',
     field: 'last_payment_date',
     cellStyle: { textAlign: 'right' },
   },
