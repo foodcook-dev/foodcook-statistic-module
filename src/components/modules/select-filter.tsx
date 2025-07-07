@@ -8,11 +8,19 @@ type SelectFilterState = {
   selectedValues: Array<string>;
 };
 
+type StructureType = {
+  [key: string]: {
+    className: string;
+    text: string;
+  };
+};
+
 type SelectFilterProps = {
   api: any;
   onModelChange: (model: SelectFilterState | null) => void;
   getValue: (node: any) => any;
   model?: SelectFilterState | null;
+  mappingStructure?: StructureType;
 };
 
 const SelectFilter = (props: SelectFilterProps) => {
@@ -70,6 +78,11 @@ const SelectFilter = (props: SelectFilterProps) => {
     updateModel([]);
   };
 
+  const getDisplayValue = (value: string) => {
+    const mapping = props?.mappingStructure;
+    return mapping?.[value]?.text || value;
+  };
+
   return (
     <div className="p-[8px] min-w-[200px] max-h-[300px] overflow-y-auto bg-white">
       <div className="space-y-2">
@@ -83,7 +96,7 @@ const SelectFilter = (props: SelectFilterProps) => {
               onCheckedChange={(checked) => handleChange(value, checked as boolean)}
               className="w-4 h-4"
             />
-            <span className="text-xs text-gray-900">{value}</span>
+            <span className="text-xs text-gray-900">{getDisplayValue(value)}</span>
           </label>
         ))}
       </div>

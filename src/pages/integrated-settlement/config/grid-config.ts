@@ -1,6 +1,7 @@
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
 import { TYPE_BADGE, PAYMENT_BADGE } from '@/constants/badge';
+import SelectFilter from '@/components/modules/select-filter';
 
 const typeRenderer = createBadgeRenderer(TYPE_BADGE);
 const paymentRenderer = createBadgeRenderer(PAYMENT_BADGE);
@@ -11,6 +12,12 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   {
     field: 'type',
     headerName: '매입 유형',
+    sortable: false,
+    filter: SelectFilter,
+    filterParams: {
+      mappingStructure: TYPE_BADGE,
+    },
+    floatingFilter: false,
     cellRenderer: typeRenderer,
     cellStyle: { textAlign: 'center' },
   },

@@ -4,7 +4,7 @@ import {
   createNumericColumn,
   getNegativeValueStyle,
 } from '@/libs/table-format';
-import CustomFilter from '@/components/modules/select-filter';
+import SelectFilter from '@/components/modules/select-filter';
 import { STATUS_BADGE, PAYMENT_BADGE } from '@/constants/badge';
 
 const paymentRenderer = createBadgeRenderer(PAYMENT_BADGE);
@@ -23,7 +23,7 @@ export const companyColumnDefs: ColDef[] = [
     flex: 0.5,
     headerName: '결제일',
     sortable: false,
-    filter: CustomFilter,
+    filter: SelectFilter,
     floatingFilter: false,
     cellRenderer: paymentRenderer,
     cellStyle: { textAlign: 'center' },
