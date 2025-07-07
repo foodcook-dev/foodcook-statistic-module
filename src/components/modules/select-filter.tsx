@@ -20,7 +20,7 @@ type SelectFilterProps = {
   onModelChange: (model: SelectFilterState | null) => void;
   getValue: (node: any) => any;
   model?: SelectFilterState | null;
-  mappingStructure?: StructureType;
+  structure?: StructureType;
 };
 
 const SelectFilter = (props: SelectFilterProps) => {
@@ -28,15 +28,20 @@ const SelectFilter = (props: SelectFilterProps) => {
   const [uniqueValues, setUniqueValues] = useState<string[]>([]);
 
   useEffect(() => {
-    const values: string[] = [];
-    props.api.forEachNode((node: any) => {
-      const value = props.getValue(node);
-      if (value !== null && value !== undefined && value !== '' && !values.includes(value)) {
-        values.push(String(value));
-      }
-    });
-    setUniqueValues(values.sort());
-  }, [props.api, props.getValue]);
+    if (props.structure) {
+      const structureKeys = Object.keys(props.structure).sort();
+      setUniqueValues(structureKeys);
+    } else {
+      const values: string[] = [];
+      props.api.forEachNode((node: any) => {
+        const value = props.getValue(node);
+        if (value !== null && value !== undefined && value !== '' && !values.includes(value)) {
+          values.push(String(value));
+        }
+      });
+      setUniqueValues(values.sort());
+    }
+  }, [props.api, props.getValue, props.structure]);
 
   useEffect(() => {
     setSelectedData(props.model?.selectedValues || []);
@@ -79,7 +84,7 @@ const SelectFilter = (props: SelectFilterProps) => {
   };
 
   const getDisplayValue = (value: string) => {
-    const mapping = props?.mappingStructure;
+    const mapping = props?.structure;
     return mapping?.[value]?.text || value;
   };
 

@@ -1,10 +1,10 @@
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
-import { TYPE_BADGE, PAYMENT_BADGE } from '@/constants/badge';
+import { TYPE, PAYMENT } from '@/constants/badge';
 import SelectFilter from '@/components/modules/select-filter';
 
-const typeRenderer = createBadgeRenderer(TYPE_BADGE);
-const paymentRenderer = createBadgeRenderer(PAYMENT_BADGE);
+const typeRenderer = createBadgeRenderer(TYPE);
+const paymentRenderer = createBadgeRenderer(PAYMENT);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: 'ID', field: 'company_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
@@ -12,6 +12,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     headerName: '매입사명',
     field: 'b_nm',
     pinned: 'left',
+    sortable: true,
     filter: 'agTextColumnFilter',
     filterParams: {
       filterOptions: ['contains'],
@@ -22,9 +23,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     field: 'type',
     headerName: '매입 유형',
     filter: SelectFilter,
-    filterParams: {
-      mappingStructure: TYPE_BADGE,
-    },
+    filterParams: { structure: TYPE },
     cellRenderer: typeRenderer,
     cellStyle: { textAlign: 'center' },
   },
@@ -50,6 +49,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
         cellStyle: { backgroundColor: 'rgb(239 239 239)' },
       }),
       createNumericColumn('purchase_amount', '매입액', {
+        sortable: true,
         cellStyle: { backgroundColor: 'rgb(255 247 220)' },
       }),
     ],
@@ -65,6 +65,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
       createNumericColumn('app_fee', '앱 수수료', { columnGroupShow: 'open' }),
       createNumericColumn('other_fee', '기타 수수료', { columnGroupShow: 'open' }),
       createNumericColumn('expected_settlement', '정산 예정액', {
+        sortable: true,
         cellStyle: { backgroundColor: 'rgb(255 247 220)' },
       }),
     ],
@@ -75,6 +76,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
+        sortable: true,
         cellStyle: { backgroundColor: 'rgb(255 247 220)' },
       }),
       createNumericColumn('invoice_total', '계산서발행 총액'),
@@ -83,17 +85,20 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   createNumericColumn('balance', '잔액', {
     minWidth: 180,
     pinned: 'right',
+    sortable: true,
     headerStyle: { backgroundColor: 'rgb(255 252 151)', color: 'red' },
     cellStyle: { backgroundColor: 'rgb(253 255 217)', color: 'red', fontWeight: 'bold' },
   }),
   {
     headerName: '최종 매입일',
     field: 'last_purchase_date',
+    sortable: true,
     cellStyle: { textAlign: 'right' },
   },
   {
     headerName: '최종 지급일',
     field: 'last_payment_date',
+    sortable: true,
     cellStyle: { textAlign: 'right' },
   },
   createNumericColumn('total_product_inventory_value', '상품재고액(전일자 기준)'),

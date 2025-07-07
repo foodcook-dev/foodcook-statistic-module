@@ -42,6 +42,8 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
             params: {
               start_date: format(dateRange.from, 'yyyy-MM-dd'),
               end_date: format(dateRange.to, 'yyyy-MM-dd'),
+              filter: JSON.stringify(params.filterModel),
+              sort: JSON.stringify(params.sortModel),
               page,
               size,
             },
