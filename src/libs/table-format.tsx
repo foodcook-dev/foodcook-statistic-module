@@ -1,9 +1,17 @@
 import { type ColDef } from 'ag-grid-community';
 
-export function createBadgeRenderer(colorMap: Record<string, string>) {
+export function createBadgeRenderer(
+  colorMap: Record<string, string | { className: string; text: string }>,
+) {
   return (params: any) => {
     const value: string = params.value;
-    return <span className={`badge ${colorMap[value] || ''}`}>{value}</span>;
+    const config = colorMap[value];
+
+    if (typeof config === 'object' && config.className && config.text) {
+      return <span className={`badge ${config.className}`}>{config.text}</span>;
+    }
+
+    return <span className={`badge ${config || ''}`}>{value}</span>;
   };
 }
 
