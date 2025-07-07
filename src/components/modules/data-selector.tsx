@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/atoms/dialog';
-import CustomFilter from '@/components/modules/select-filter';
+import SelectFilter from '@/components/modules/select-filter';
 
 type DataSelectorProps = {
   placeholder?: string;
@@ -82,7 +82,6 @@ export default function DataSelector({
         <DialogTrigger asChild>
           <Button
             type="button"
-            // variant="outline"
             className="whitespace-nowrap bg-[rgb(255,103,57)] text-white border-[rgb(255,103,57)] hover:bg-[rgb(230,93,47)] hover:border-[rgb(230,93,47)]"
             disabled={disabled}
           >
@@ -100,7 +99,7 @@ export default function DataSelector({
               rowData={bodyResponse.data}
               onRowClicked={onRowClicked}
               rowSelection="single"
-              components={{ customFilter: CustomFilter }}
+              components={{ customFilter: SelectFilter }}
             />
             {bodyResponse.data?.length === 0 && (
               <div className="text-center py-8 text-gray-500">데이터가 없습니다.</div>
