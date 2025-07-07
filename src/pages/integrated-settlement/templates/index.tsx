@@ -2,8 +2,8 @@ import { AgGridReact } from 'ag-grid-react';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import { gridOptions } from '../config/grid-config';
 import { useIntegratedSettlement } from '../hooks/useIntegratedSettlement';
-import ColumnStateResetButton from '@/components/modules/column-state-reset-button';
-import { STORAGE_KEYS } from '@/libs/column-state-storage';
+import ColumnStateResetButton from '@/components/modules/column-reset-button';
+import { STORAGE_KEYS } from '@/libs/column-state';
 
 export default function IntegratedSettlement() {
   const { gridRef, dateRange, setDateRange, onGridReady, error } = useIntegratedSettlement();

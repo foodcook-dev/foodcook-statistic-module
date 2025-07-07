@@ -5,8 +5,8 @@ import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
 import { PARTNER_INFO } from '../structure';
-import ColumnStateResetButton from '@/components/modules/column-state-reset-button';
-import { STORAGE_KEYS } from '@/libs/column-state-storage';
+import ColumnStateResetButton from '@/components/modules/column-reset-button';
+import { STORAGE_KEYS } from '@/libs/column-state';
 
 export default function ConsignmentSettlement() {
   const {

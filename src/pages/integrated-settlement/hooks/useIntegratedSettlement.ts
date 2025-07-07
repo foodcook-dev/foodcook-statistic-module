@@ -3,8 +3,8 @@ import { AgGridReact } from 'ag-grid-react';
 import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
-import createAxios from '@/libs/createAxiosInstance';
-import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state-storage';
+import createAxios from '@/libs/create-axios-instance';
+import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 
 type UseIntegratedSettlementReturn = {
   gridRef: React.RefObject<AgGridReact | null>;
@@ -33,8 +33,8 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
         }
 
         try {
-          const page = Math.floor(params.startRow / 50) + 1;
-          const size = 50;
+          const page = Math.floor(params.startRow / 100) + 1;
+          const size = 100;
 
           const response = await createAxios({
             method: 'get',

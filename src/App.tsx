@@ -2,7 +2,7 @@ import { HashRouter } from 'react-router-dom';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import ResponseError from '@/libs/responseError';
+import ResponseError from '@/libs/response-error';
 import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
 
