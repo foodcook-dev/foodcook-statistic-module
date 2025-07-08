@@ -30,12 +30,17 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   {
     field: 'payment_date',
     headerName: '결제일',
+    filter: SelectFilter,
+    filterParams: { structure: PAYMENT },
     cellRenderer: paymentRenderer,
     cellStyle: { textAlign: 'center' },
   },
   { headerName: '사업자번호', field: 'b_no' },
-  createNumericColumn('previous_balance', '전기이월액'),
-  createNumericColumn('sales_amount', '매출액', { headerStyle: { backgroundColor: '#ff7b54' } }),
+  createNumericColumn('previous_balance', '전기이월액', { sortable: true }),
+  createNumericColumn('sales_amount', '매출액', {
+    sortable: true,
+    headerStyle: { backgroundColor: '#ff7b54' },
+  }),
   {
     headerName: '매입정보',
     headerStyle: { backgroundColor: 'rgb(255 133 98)' },
@@ -79,7 +84,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
         sortable: true,
         cellStyle: { backgroundColor: 'rgb(255 247 220)' },
       }),
-      createNumericColumn('invoice_total', '계산서발행 총액'),
+      createNumericColumn('invoice_total', '계산서발행 총액', { sortable: true }),
     ],
   },
   createNumericColumn('balance', '잔액', {
@@ -101,7 +106,9 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     sortable: true,
     cellStyle: { textAlign: 'right' },
   },
-  createNumericColumn('total_product_inventory_value', '상품재고액(전일자 기준)'),
+  createNumericColumn('total_product_inventory_value', '상품재고액(전일자 기준)', {
+    sortable: true,
+  }),
   { headerName: '전자 세금계산서', field: 'tax_invoice_email' },
   { headerName: '비고', field: 'memo' },
 ];
@@ -112,7 +119,7 @@ export const gridOptions: GridOptions = {
   columnDefs: columnDefs,
 
   rowModelType: 'infinite',
-  cacheBlockSize: 50,
+  cacheBlockSize: 100,
   cacheOverflowSize: 2,
   maxConcurrentDatasourceRequests: 1,
   infiniteInitialRowCount: 1,
