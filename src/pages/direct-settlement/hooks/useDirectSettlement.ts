@@ -6,24 +6,14 @@ import { startOfMonth, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
+import { PaymentData } from '@/components/modules/payment-dialog';
 
 type SelectedBuyer = {
   id: string;
   name: string;
 };
 
-type UseDirectSettlementReturn = {
-  gridRef: React.RefObject<AgGridReact | null>;
-  dateRange: DateRange;
-  selectedBuyer: SelectedBuyer;
-  buyerInfo: any;
-  isBuyerInfoLoading: boolean;
-  setDateRange: (dateRange: DateRange) => void;
-  setSelectedBuyer: (buyer: SelectedBuyer) => void;
-  onGridReady: (event: GridReadyEvent) => void;
-};
-
-export const useDirectSettlement = (): UseDirectSettlementReturn => {
+export const useDirectSettlement = () => {
   const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
@@ -82,6 +72,31 @@ export const useDirectSettlement = (): UseDirectSettlementReturn => {
     };
   }, [selectedBuyer.id, dateRange.from, dateRange.to]);
 
+  const handlePaymentSubmit = useCallback(
+    async (data: PaymentData) => {
+      try {
+        await createAxios({
+          method: 'post',
+          endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
+          body: {
+            payment_date: format(data.processDate!, 'yyyy-MM-dd'),
+            payment_amount: Number(data.amount),
+            manager: data.manager,
+            payment_note: data.notes,
+          },
+        });
+
+        if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
+          const newDataSource = createDataSource();
+          gridRef.current.api.setGridOption('datasource', newDataSource);
+        }
+      } catch (error) {
+        console.error('Failed to submit payment:', error);
+      }
+    },
+    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource],
+  );
+
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
@@ -109,6 +124,7 @@ export const useDirectSettlement = (): UseDirectSettlementReturn => {
     isBuyerInfoLoading: buyerInfoResponse.isLoading,
     setDateRange,
     setSelectedBuyer,
+    handlePaymentSubmit,
     onGridReady,
   };
 };
