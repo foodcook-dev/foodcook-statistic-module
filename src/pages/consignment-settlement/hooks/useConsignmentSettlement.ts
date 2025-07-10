@@ -6,24 +6,14 @@ import { startOfMonth, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
+import { PaymentData } from '@/components/modules/payment-dialog';
 
 interface SelectedPartner {
   id: string;
   name: string;
 }
 
-interface UseDirectSettlementReturn {
-  gridRef: React.RefObject<AgGridReact | null>;
-  dateRange: DateRange;
-  selectedPartner: SelectedPartner;
-  partnerInfo: any;
-  isPartnerInfoLoading: boolean;
-  setDateRange: (dateRange: DateRange) => void;
-  setSelectedPartner: (partner: SelectedPartner) => void;
-  onGridReady: (event: GridReadyEvent) => void;
-}
-
-export const useConsignmentSettlement = (): UseDirectSettlementReturn => {
+export const useConsignmentSettlement = () => {
   const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
@@ -82,6 +72,31 @@ export const useConsignmentSettlement = (): UseDirectSettlementReturn => {
     };
   }, [selectedPartner.id, dateRange.from, dateRange.to]);
 
+  const handlePaymentSubmit = useCallback(
+    async (data: PaymentData) => {
+      try {
+        await createAxios({
+          method: 'post',
+          endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+          body: {
+            payment_date: format(data.processDate!, 'yyyy-MM-dd'),
+            payment_amount: Number(data.amount),
+            manager: data.manager,
+            payment_note: data.notes,
+          },
+        });
+
+        if (gridRef.current?.api && selectedPartner.id && dateRange.from && dateRange.to) {
+          const newDataSource = createDataSource();
+          gridRef.current.api.setGridOption('datasource', newDataSource);
+        }
+      } catch (error) {
+        console.error('Failed to submit payment:', error);
+      }
+    },
+    [selectedPartner.id, dateRange.from, dateRange.to, createDataSource],
+  );
+
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
@@ -110,5 +125,6 @@ export const useConsignmentSettlement = (): UseDirectSettlementReturn => {
     setDateRange,
     setSelectedPartner,
     onGridReady,
+    handlePaymentSubmit,
   };
 };

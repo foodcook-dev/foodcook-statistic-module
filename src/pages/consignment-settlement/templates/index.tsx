@@ -4,6 +4,7 @@ import { companyColumnDefs, gridOptions } from '../config/grid-config';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
+import Payment from '@/components/modules/payment-dialog';
 import { PARTNER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
@@ -17,6 +18,7 @@ export default function ConsignmentSettlement() {
     setDateRange,
     setSelectedPartner,
     onGridReady,
+    handlePaymentSubmit,
   } = useConsignmentSettlement();
 
   return (
@@ -48,10 +50,13 @@ export default function ConsignmentSettlement() {
             />
           </div>
         </div>
-        <ColumnStateResetButton
-          storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
-          gridApi={gridRef.current?.api}
-        />
+        <div className="flex items-center gap-2">
+          <ColumnStateResetButton
+            storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
+            gridApi={gridRef.current?.api}
+          />
+          <Payment onSubmit={handlePaymentSubmit} />
+        </div>
       </div>
       <InfoTable data={PARTNER_INFO} info={partnerInfo} />
       <div className="w-full h-[500px]">

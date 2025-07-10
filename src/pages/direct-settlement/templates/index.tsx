@@ -1,12 +1,13 @@
 import { AgGridReact } from 'ag-grid-react';
 import { useDirectSettlement } from '../hooks/useDirectSettlement';
-import { companyColumnDefs, gridOptions } from '../config/grid-config';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
-import { BUYER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
+import Payment from '@/components/modules/payment-dialog';
 import { STORAGE_KEYS } from '@/libs/column-state';
+import { companyColumnDefs, gridOptions } from '../config/grid-config';
+import { BUYER_INFO } from '../structure';
 
 export default function DirectSettlement() {
   const {
@@ -16,6 +17,7 @@ export default function DirectSettlement() {
     buyerInfo,
     setDateRange,
     setSelectedBuyer,
+    handlePaymentSubmit,
     onGridReady,
   } = useDirectSettlement();
 
@@ -48,10 +50,13 @@ export default function DirectSettlement() {
             />
           </div>
         </div>
-        <ColumnStateResetButton
-          storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}
-          gridApi={gridRef.current?.api}
-        />
+        <div className="flex items-center gap-2">
+          <ColumnStateResetButton
+            storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}
+            gridApi={gridRef.current?.api}
+          />
+          <Payment onSubmit={handlePaymentSubmit} />
+        </div>
       </div>
       <InfoTable data={BUYER_INFO} info={buyerInfo} />
       <div className="w-full h-[500px]">

@@ -81,7 +81,6 @@ export default function DataSelector({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button
-            type="button"
             className="whitespace-nowrap bg-[rgb(255,103,57)] text-white border-[rgb(255,103,57)] hover:bg-[rgb(230,93,47)] hover:border-[rgb(230,93,47)]"
             disabled={disabled}
           >
