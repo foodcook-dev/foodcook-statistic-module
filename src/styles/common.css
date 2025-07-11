@@ -109,7 +109,7 @@ button {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -120,7 +120,7 @@ button {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
 
 @layer base {
   * {
