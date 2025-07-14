@@ -81,7 +81,6 @@ export const useConsignmentSettlement = () => {
           body: {
             payment_date: format(data.processDate!, 'yyyy-MM-dd'),
             payment_amount: Number(data.amount),
-            manager: data.manager,
             payment_note: data.notes,
           },
         });

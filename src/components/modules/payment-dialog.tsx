@@ -18,7 +18,7 @@ interface PaymentDialogProps {
 export interface PaymentData {
   processDate: Date;
   amount: number | null;
-  manager: string;
+  // manager: string;
   notes: string;
 }
 
@@ -28,7 +28,6 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
   const [formData, setFormData] = useState<PaymentData>({
     processDate: today,
     amount: null,
-    manager: '',
     notes: '',
   });
 
@@ -46,8 +45,8 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
   };
 
   const handleSubmit = () => {
-    if (!formData.amount || !formData.manager) {
-      alert('결제금액, 담당자는 필수 입력 항목입니다.');
+    if (!formData.amount) {
+      alert('결제금액은 필수 입력 항목입니다.');
       return;
     }
 
@@ -56,7 +55,6 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
     setFormData({
       processDate: today,
       amount: null,
-      manager: '',
       notes: '',
     });
   };
@@ -66,7 +64,6 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
     setFormData({
       processDate: today,
       amount: null,
-      manager: '',
       notes: '',
     });
   };
@@ -109,18 +106,6 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
                 placeholder="결제금액을 입력해주세요"
                 value={formData.amount?.toLocaleString('ko-KR') || ''}
                 onChange={handleAmountChange}
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <label htmlFor="manager" className="text-sm font-medium">
-                담당자 <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="manager"
-                placeholder="담당자명을 입력해주세요"
-                value={formData.manager}
-                onChange={(e) => setFormData({ ...formData, manager: e.target.value })}
               />
             </div>
 
