@@ -5,10 +5,12 @@ import { useEffect } from 'react';
 import ResponseError from '@/libs/response-error';
 import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
+import { ThemeProvider, useTheme } from '@/components/modules/theme-provider';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function App() {
+  // const { setTheme } = useTheme();
   // const commonErrorHandle = useGlobalRejectHandler();
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -32,11 +34,26 @@ export default function App() {
     }
   }, []);
 
+  // iframe에서 토큰을 가져오는 로직
+  // useEffect(() => {
+  //   const handleMessage = (event: MessageEvent) => {
+  //     const { type, theme: newTheme } = event.data;
+  //     if (type === 'THEME_CHANGE') setTheme(newTheme);
+  //   };
+
+  //   window.addEventListener('message', handleMessage);
+  //   return () => {
+  //     window.removeEventListener('message', handleMessage);
+  //   };
+  // }, [setTheme]);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <HashRouter>
-        <Pages />
-      </HashRouter>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <HashRouter>
+          <Pages />
+        </HashRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
