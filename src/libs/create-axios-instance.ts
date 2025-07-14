@@ -20,21 +20,8 @@ instance.interceptors.request.use(
       newConfig.headers.Authorization = `Bearer ${token}`;
     }
 
-    // TODO: 추후 기존 토큰 처리 로직으로 대체 가능
-    // const encryptedUserData = localStorage.getItem('userData');
-    // let accessToken = '';
+    // newConfig.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGhvbmVfbnVtIjoiMDEwMzQzMzU2NzMiLCJwaG9uZV9udW1iZXIiOiIwMTAzNDMzNTY3MyIsImVtYWlsIjoieWFyZ2V1NThAZ21haWwuY29tIn0.OyqgJy7_fE4gleCI5yvi7muDkoiRHtf0ZE0-vlro3zc`;
 
-    // if (encryptedUserData) {
-    //   try {
-    //     const decrypted = decryption(encryptedUserData);
-    //     const parsed = JSON.parse(decrypted);
-    //     accessToken = parsed?.accessToken || '';
-    //   } catch (e) {
-    //     console.error('유저 데이터 복호화/파싱 실패:', e);
-    //   }
-    // }
-
-    // newConfig.headers.Authorization = accessToken ? `Bearer ${accessToken}` : '';
     return newConfig;
   },
   (err) => Promise.reject(err),
