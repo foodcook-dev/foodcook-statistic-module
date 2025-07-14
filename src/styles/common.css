@@ -100,3 +100,9 @@ button {
   font-family: inherit;
   cursor: pointer;
 }
+
+@layer base {
+  body {
+    @apply bg-background text-contrast;
+  }
+}
