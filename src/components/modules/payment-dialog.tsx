@@ -71,13 +71,13 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
   return (
     <>
       <Button
-        className="text-xs bg-[rgb(255,103,57)] text-white border-[rgb(255,103,57)] hover:bg-[rgb(230,93,47)] hover:border-[rgb(230,93,47)]"
+        className="text-xs text-white bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover"
         onClick={() => setPaymentDialogOpen(true)}
       >
         결제 입력
       </Button>
       <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] border-border text-contrast">
           <DialogHeader>
             <DialogTitle>결제 입력</DialogTitle>
           </DialogHeader>
@@ -91,8 +91,9 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
                 type="text"
                 value={format(today, 'yyyy-MM-dd')}
                 readOnly
+                disabled
                 tabIndex={-1}
-                className="text-gray-400 cursor-not-allowed"
+                className="text-gray-500 cursor-not-allowed"
               />
             </div>
 
@@ -128,7 +129,7 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
               취소
             </Button>
             <Button
-              className="bg-[rgb(255,103,57)] text-white border-[rgb(255,103,57)] hover:bg-[rgb(230,93,47)] hover:border-[rgb(230,93,47)]"
+              className="bg-primary text-white border-primary hover:bg-primary-hover hover:border-primary-hover"
               onClick={handleSubmit}
             >
               저장

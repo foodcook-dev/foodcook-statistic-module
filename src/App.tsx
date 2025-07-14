@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import ResponseError from '@/libs/response-error';
 import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
-import { ThemeProvider, useTheme } from '@/components/modules/theme-provider';
+import { ThemeProvider } from '@/components/modules/theme-provider';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

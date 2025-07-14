@@ -8,7 +8,10 @@ export default function BaseLayout() {
   return (
     <>
       <Suspense fallback={null}>
-        <section style={isDev ? { padding: '64px' } : undefined}>
+        <section
+          className="bg-background text-contrast"
+          style={isDev ? { padding: '64px' } : undefined}
+        >
           <Outlet />
         </section>
       </Suspense>

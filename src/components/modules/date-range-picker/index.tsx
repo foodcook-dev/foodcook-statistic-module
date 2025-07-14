@@ -42,13 +42,13 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
               id="date"
               ref={ref}
               variant="outline"
-              className="w-[230px] flex justify-between hover:border-[rgb(255,103,57)] group"
+              className="w-[230px] flex justify-between hover:border-primary group"
               onClick={handleTogglePopover}
               suppressHydrationWarning
               {...props}
             >
-              <CalendarIcon className="h-4 w-4 group-hover:text-[rgb(255,103,57)] transition-colors duration-200" />
-              <span className="group-hover:text-[rgb(255,103,57)] transition-colors duration-200">
+              <CalendarIcon className="h-4 w-4 group-hover:text-primary transition-colors duration-200" />
+              <span className="group-hover:text-primary transition-colors duration-200">
                 {date?.from && date?.to ? (
                   <>
                     <span>{formatWithTz(date.from, 'yyyy-MM-dd')}</span>
@@ -63,7 +63,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
           </PopoverTrigger>
           {isOpen && (
             <PopoverContent
-              className="w-auto"
+              className="w-auto bg-background"
               align={contentAlign}
               avoidCollisions={false}
               onInteractOutside={handleClose}
@@ -81,8 +81,8 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
                       variant="ghost"
                       size="sm"
                       className={cn(
-                        'justify-start bg-white hover:bg-gray-100 hover:text-gray-900',
-                        selectedOption === label && 'bg-gray-200 text-gray-900 hover:!bg-gray-300',
+                        'justify-start bg-foreground text-contrast',
+                        selectedOption === label && 'bg-gray-200 text-gray-900',
                       )}
                       onClick={() => {
                         selectDateRange(start, end);
@@ -99,7 +99,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
                   onSelect={handleDateSelect}
                   numberOfMonths={2}
                   showOutsideDays={false}
-                  className={className}
+                  className={cn('text-contrast', className)}
                   month={calendarMonth}
                   onMonthChange={setCalendarMonth}
                 />
