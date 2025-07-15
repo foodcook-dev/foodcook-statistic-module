@@ -6,6 +6,8 @@ import ResponseError from '@/libs/response-error';
 import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
 import { ThemeProvider } from '@/components/modules/theme-provider';
+import Alert from '@/components/modules/dialog/alert';
+import Confirm from '@/components/modules/dialog/confirm';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -51,6 +53,8 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <HashRouter>
+          <Alert />
+          <Confirm />
           <Pages />
         </HashRouter>
       </ThemeProvider>
