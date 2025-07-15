@@ -52,7 +52,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     headerName: '매출정보',
     wrapHeaderText: true,
     autoHeaderHeight: true,
-    headerStyle: { backgroundColor: '#ff7b54' },
+    headerClass: 'ag-header-2',
     children: [
       createNumericColumn('sales_amount', '매출액', {
         cellStyle: getNegativeValueStyle,
@@ -61,7 +61,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     headerName: '매입정보',
-    headerStyle: { backgroundColor: 'rgb(255 133 98)' },
+    headerClass: 'ag-header-3',
     children: [
       createNumericColumn('tax_purchase', '매입 과세액', {
         columnGroupShow: 'open',
@@ -81,7 +81,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     headerName: '정산정보',
-    headerStyle: { backgroundColor: 'rgb(255 147 117)' },
+    headerClass: 'ag-header-4',
     children: [
       createNumericColumn('commission_rate', '정산 수수료(%)', {
         columnGroupShow: 'open',
@@ -99,7 +99,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     headerName: '결제정보',
-    headerStyle: { backgroundColor: 'rgb(255 131 100)' },
+    headerClass: 'ag-header-5',
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
@@ -109,7 +109,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     ],
   },
   createNumericColumn('balance', '잔액', {
-    headerStyle: { backgroundColor: 'rgb(237 76 36)' },
+    headerClass: 'ag-header-accent',
     cellStyle: (params) => {
       const baseStyle = { backgroundColor: 'rgb(253 255 217)' };
       return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;

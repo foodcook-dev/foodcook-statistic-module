@@ -1,7 +1,27 @@
 .ag-header {
-  background: var(--color-primary);
+  background: var(--color-grid-header-background);
   color: white;
   font-weight: bold;
+}
+
+.ag-header-2 {
+  background: var(--color-grid-header-background-2) !important;
+}
+
+.ag-header-3 {
+  background: var(--color-grid-header-background-3) !important;
+}
+
+.ag-header-4 {
+  background: var(--color-grid-header-background-4) !important;
+}
+
+.ag-header-5 {
+  background: var(--color-grid-header-background-5) !important;
+}
+
+.ag-header-accent {
+  background: var(--color-grid-header-background-accent) !important;
 }
 
 .ag-header-cell-resize {

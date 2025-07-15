@@ -5,6 +5,8 @@ import { useIntegratedSettlement } from '../hooks/useIntegratedSettlement';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
+
 export default function IntegratedSettlement() {
   const { gridRef, dateRange, setDateRange, onGridReady, error } = useIntegratedSettlement();
 
@@ -18,6 +20,7 @@ export default function IntegratedSettlement() {
             onDateSelect={({ from, to }) => setDateRange({ from, to })}
             contentAlign="start"
           />
+          {/* <ThemeToggle /> */}
         </div>
         <ColumnStateResetButton
           storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}

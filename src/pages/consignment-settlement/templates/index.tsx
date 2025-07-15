@@ -9,6 +9,8 @@ import { PARTNER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
+
 export default function ConsignmentSettlement() {
   const {
     gridRef,
@@ -49,6 +51,7 @@ export default function ConsignmentSettlement() {
               contentAlign="end"
             />
           </div>
+          {/* <ThemeToggle /> */}
         </div>
         <div className="flex items-center gap-2">
           <ColumnStateResetButton
@@ -61,9 +64,9 @@ export default function ConsignmentSettlement() {
       <InfoTable data={PARTNER_INFO} info={partnerInfo} />
       <div className="w-full h-[500px]">
         {!selectedPartner?.id ? (
-          <div className="flex items-center justify-center h-full bg-gray-50 border border-gray-200 rounded-lg">
+          <div className="flex items-center justify-center h-full bg-foreground border border-border rounded-lg">
             <div className="text-center">
-              <p className="text-gray-500 text-lg font-medium">매입사를 선택해주세요</p>
+              <p className="text-contrast text-lg font-medium">매입사를 선택해주세요</p>
               <p className="text-gray-400 text-sm mt-2">조회할 매입사를 선택해주시기 바랍니다.</p>
             </div>
           </div>

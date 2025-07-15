@@ -46,7 +46,7 @@ export const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: '처리일자', field: 'process_date', pinned: 'left' },
   {
     headerName: '매입정보',
-    headerStyle: { backgroundColor: 'rgb(255 133 98)' },
+    headerClass: 'ag-header-2',
     children: [
       createNumericColumn('purchase_amount', '매입액', {
         cellStyle: (params) => {
@@ -58,7 +58,7 @@ export const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     headerName: '결제정보',
-    headerStyle: { backgroundColor: 'rgb(255 131 100)' },
+    headerClass: 'ag-header-3',
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
@@ -68,7 +68,7 @@ export const columnDefs: (ColDef | ColGroupDef)[] = [
     ],
   },
   createNumericColumn('balance', '잔액', {
-    headerStyle: { backgroundColor: 'rgb(237 76 36)' },
+    headerClass: 'ag-header-accent',
     cellStyle: (params) => {
       const baseStyle = { backgroundColor: 'rgb(253 255 217)' };
       return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;

@@ -21,6 +21,15 @@
   --placeholder: oklch(0.6481 0 264.66);
   --border: oklch(0.8603 0 264.66);
 
+  /* grid */
+  --header-background: oklch(0.6997 0.1951 37.04);
+  --header-background-2: oklch(0.7465 0.1567 36.87);
+  --header-background-3: oklch(0.7715 0.1375 36.39);
+  --header-background-4: oklch(0.7438 0.1579 35.13);
+  --header-background-5: oklch(0.7683 0.1392 35.13);
+  --header-background-accent: oklch(0.6383 0.204 34.61);
+  --grid-border: oklch(0.8855 0 38.16);
+
   /* input */
   --input-background: oklch(1 0 0);
   --input-border: oklch(0.8603 0 264.66);
@@ -40,6 +49,15 @@
   --contrast: oklch(1 0 0);
   --placeholder: oklch(0.7004 0 264.66);
   --border: oklch(0.5882 0.0789 264.66);
+
+  /* grid */
+  --header-background: oklch(0.3914 0.0543 264.66);
+  --header-background-2: oklch(0.4481 0.0543 264.66);
+  --header-background-3: oklch(0.5039 0.0543 264.66);
+  --header-background-4: oklch(0.5351 0.0543 264.66);
+  --header-background-5: oklch(0.5739 0.0543 264.66);
+  --header-background-accent: oklch(0.3368 0.0543 264.66);
+  --grid-border: oklch(0.3353 0.0543 264.66);
 
   /* input */
   --input-background: oklch(0.3353 0.0543 264.66);
@@ -63,6 +81,14 @@
   --color-contrast: var(--contrast);
   --color-placeholder: var(--placeholder);
   --color-border: var(--border);
+
+  --color-grid-header-background: var(--header-background);
+  --color-grid-header-background-2: var(--header-background-2);
+  --color-grid-header-background-3: var(--header-background-3);
+  --color-grid-header-background-4: var(--header-background-4);
+  --color-grid-header-background-5: var(--header-background-5);
+  --color-grid-header-background-accent: var(--header-background-accent);
+  --color-grid-border: var(--grid-border);
 
   --color-input-background: var(--input-background);
   --color-input-border: var(--input-border);
