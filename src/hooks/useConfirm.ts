@@ -8,7 +8,7 @@ interface ConfirmOptions {
 export const useConfirm = () => {
   const { showConfirm } = useConfirmStore();
 
-  const confirm = (options: ConfirmOptions): Promise<boolean> => {
+  const setConfirm = (options: ConfirmOptions): Promise<boolean> => {
     return new Promise((resolve) => {
       showConfirm({
         title: options.title,
@@ -19,5 +19,5 @@ export const useConfirm = () => {
     });
   };
 
-  return confirm;
+  return setConfirm;
 };

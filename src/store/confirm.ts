@@ -16,12 +16,12 @@ interface ConfirmState {
 }
 
 const useConfirmStore = create<ConfirmState>((set) => ({
-  title: '확인',
+  title: '알림',
   message: '',
   isOpen: false,
   onConfirm: null,
   onCancel: null,
-  showConfirm: ({ title = '확인', message, onConfirm, onCancel }) =>
+  showConfirm: ({ title = '알림', message, onConfirm, onCancel }) =>
     set({
       isOpen: true,
       title,
@@ -32,7 +32,7 @@ const useConfirmStore = create<ConfirmState>((set) => ({
   closeConfirm: () =>
     set({
       isOpen: false,
-      title: '확인',
+      title: '알림',
       message: '',
       onConfirm: null,
       onCancel: null,
