@@ -1,6 +1,6 @@
+import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useConsignmentSettlement } from '../hooks/useConsignmentSettlement';
-import { companyColumnDefs, gridOptions } from '../config/grid-config';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
@@ -8,6 +8,7 @@ import Payment from '@/components/modules/payment-dialog';
 import { PARTNER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
+import { companyColumnDefs, createColumnDefs, gridOptions } from '../config/grid-config';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
@@ -19,9 +20,24 @@ export default function ConsignmentSettlement() {
     partnerInfo,
     setDateRange,
     setSelectedPartner,
+    handleEdit,
+    handleDelete,
     onGridReady,
     handlePaymentSubmit,
   } = useConsignmentSettlement();
+
+  const columnDefs = useMemo(
+    () => createColumnDefs(handleEdit, handleDelete),
+    [handleEdit, handleDelete],
+  );
+
+  const updatedGridOptions = useMemo(
+    () => ({
+      ...gridOptions,
+      columnDefs: columnDefs,
+    }),
+    [columnDefs],
+  );
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -71,7 +87,7 @@ export default function ConsignmentSettlement() {
             </div>
           </div>
         ) : (
-          <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
+          <AgGridReact ref={gridRef} gridOptions={updatedGridOptions} onGridReady={onGridReady} />
         )}
       </div>
     </div>

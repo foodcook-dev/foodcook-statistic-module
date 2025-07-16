@@ -13,23 +13,39 @@ import { Textarea } from '@/components/atoms/textarea';
 
 interface PaymentDialogProps {
   onSubmit: (data: PaymentData) => void;
+  title?: string;
+  buttonText?: string;
+  buttonClassName?: string;
+  children?: React.ReactNode;
+  initialData?: Partial<PaymentData>;
 }
 
 export interface PaymentData {
+  id: number | null;
   processDate: Date;
   amount: number | null;
-  // manager: string;
   notes: string;
 }
 
-export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
+export default function PaymentDialog({
+  onSubmit,
+  title = '결제 입력',
+  buttonText = '결제 입력',
+  buttonClassName = 'text-xs text-white bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover',
+  children,
+  initialData,
+}: PaymentDialogProps) {
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const today = new Date();
-  const [formData, setFormData] = useState<PaymentData>({
-    processDate: today,
-    amount: null,
-    notes: '',
+
+  const getInitialFormData = (): PaymentData => ({
+    id: initialData?.id || null,
+    processDate: initialData?.processDate || today,
+    amount: initialData?.amount || null,
+    notes: initialData?.notes || '',
   });
+
+  const [formData, setFormData] = useState<PaymentData>(getInitialFormData());
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -52,34 +68,28 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
 
     onSubmit(formData);
     setPaymentDialogOpen(false);
-    setFormData({
-      processDate: today,
-      amount: null,
-      notes: '',
-    });
+    setFormData(getInitialFormData());
   };
 
   const handleCancel = () => {
     setPaymentDialogOpen(false);
-    setFormData({
-      processDate: today,
-      amount: null,
-      notes: '',
-    });
+    setFormData(getInitialFormData());
+  };
+
+  const handleDialogOpen = () => {
+    setFormData(getInitialFormData());
+    setPaymentDialogOpen(true);
   };
 
   return (
     <>
-      <Button
-        className="text-xs text-white bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover"
-        onClick={() => setPaymentDialogOpen(true)}
-      >
-        결제 입력
+      <Button className={buttonClassName} onClick={handleDialogOpen}>
+        {children || buttonText}
       </Button>
       <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] border-border text-contrast">
+        <DialogContent className="sm:max-w-[425px] text-contrast">
           <DialogHeader>
-            <DialogTitle>결제 입력</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
@@ -89,7 +99,7 @@ export default function PaymentDialog({ onSubmit }: PaymentDialogProps) {
               <Input
                 id="processDate"
                 type="text"
-                value={format(today, 'yyyy-MM-dd')}
+                value={format(formData.processDate, 'yyyy-MM-dd')}
                 readOnly
                 disabled
                 tabIndex={-1}

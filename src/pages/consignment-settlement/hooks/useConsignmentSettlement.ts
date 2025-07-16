@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 import { PaymentData } from '@/components/modules/payment-dialog';
+import { useConfirm } from '@/hooks/useConfirm';
 
 interface SelectedPartner {
   id: string;
@@ -14,17 +15,25 @@ interface SelectedPartner {
 }
 
 export const useConsignmentSettlement = () => {
+  const setConfirm = useConfirm();
   const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
-  const today = new Date();
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: startOfMonth(today),
-    to: today,
+  const [dateRange, setDateRange] = useState<DateRange>(() => {
+    const today = new Date();
+    return {
+      from: startOfMonth(today),
+      to: today,
+    };
   });
   const [selectedPartner, setSelectedPartner] = useState<SelectedPartner>({
     id: '',
     name: '',
   });
+
+  const dateRangeRef = useRef(dateRange);
+  useEffect(() => {
+    dateRangeRef.current = dateRange;
+  }, [dateRange]);
 
   const partnerInfoResponse = useQuery({
     queryKey: ['partner_companies', selectedPartner.id],
@@ -39,7 +48,8 @@ export const useConsignmentSettlement = () => {
   const createDataSource = useCallback((): IDatasource => {
     return {
       getRows: async (params: IGetRowsParams) => {
-        if (!selectedPartner.id || !dateRange.from || !dateRange.to) {
+        const { from, to } = dateRangeRef.current;
+        if (!selectedPartner.id || !from || !to) {
           params.failCallback();
           return;
         }
@@ -47,13 +57,15 @@ export const useConsignmentSettlement = () => {
         try {
           const page = Math.floor(params.startRow / 50) + 1;
           const size = 50;
+          const startDate = format(from, 'yyyy-MM-dd');
+          const endDate = format(to, 'yyyy-MM-dd');
 
           const response = await createAxios({
             method: 'get',
             endpoint: `/partner/partner_companies/${selectedPartner.id}/details/`,
             params: {
-              start_date: format(dateRange.from, 'yyyy-MM-dd'),
-              end_date: format(dateRange.to, 'yyyy-MM-dd'),
+              start_date: startDate,
+              end_date: endDate,
               filter: JSON.stringify(params.filterModel),
               page,
               size,
@@ -70,7 +82,7 @@ export const useConsignmentSettlement = () => {
         }
       },
     };
-  }, [selectedPartner.id, dateRange.from, dateRange.to]);
+  }, [selectedPartner.id]);
 
   const handlePaymentSubmit = useCallback(
     async (data: PaymentData) => {
@@ -96,6 +108,54 @@ export const useConsignmentSettlement = () => {
     [selectedPartner.id, dateRange.from, dateRange.to, createDataSource],
   );
 
+  const handleEdit = useCallback(
+    async (data: PaymentData) => {
+      try {
+        await createAxios({
+          method: 'patch',
+          endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+          body: {
+            detail_id: String(data.id),
+            payment_amount: Number(data.amount),
+            payment_note: data.notes,
+          },
+        });
+
+        if (gridRef.current?.api && selectedPartner.id && dateRange.from && dateRange.to) {
+          const newDataSource = createDataSource();
+          gridRef.current.api.setGridOption('datasource', newDataSource);
+        }
+      } catch (error) {
+        console.error('Failed to edit payment:', error);
+      }
+    },
+    [selectedPartner.id, dateRange.from, dateRange.to, createDataSource],
+  );
+
+  const handleDelete = useCallback(
+    async (rowData: any) => {
+      try {
+        const result = await setConfirm({ message: '결제데이터를 삭제하시겠습니까?' });
+
+        if (result) {
+          await createAxios({
+            method: 'delete',
+            endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+            params: { detail_id: rowData.detail_id },
+          });
+
+          if (gridRef.current?.api && selectedPartner.id && dateRange.from && dateRange.to) {
+            const newDataSource = createDataSource();
+            gridRef.current.api.setGridOption('datasource', newDataSource);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to delete row:', error);
+      }
+    },
+    [selectedPartner.id, dateRange.from, dateRange.to, createDataSource],
+  );
+
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
@@ -105,7 +165,7 @@ export const useConsignmentSettlement = () => {
         event.api.setGridOption('datasource', dataSource);
       }
     },
-    [selectedPartner.id, dateRange.from, dateRange.to, createDataSource, STORAGE_KEY],
+    [selectedPartner.id, dateRange.from, dateRange.to, STORAGE_KEY],
   );
 
   useEffect(() => {
@@ -113,7 +173,7 @@ export const useConsignmentSettlement = () => {
       const dataSource = createDataSource();
       gridRef.current.api.setGridOption('datasource', dataSource);
     }
-  }, [selectedPartner.id, dateRange.from, dateRange.to, createDataSource]);
+  }, [selectedPartner.id, dateRange.from, dateRange.to]);
 
   return {
     gridRef,
@@ -123,6 +183,8 @@ export const useConsignmentSettlement = () => {
     isPartnerInfoLoading: partnerInfoResponse.isLoading,
     setDateRange,
     setSelectedPartner,
+    handleEdit,
+    handleDelete,
     onGridReady,
     handlePaymentSubmit,
   };

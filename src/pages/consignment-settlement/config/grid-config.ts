@@ -1,3 +1,5 @@
+import React from 'react';
+import { Edit2, Trash2 } from 'lucide-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import {
   createBadgeRenderer,
@@ -6,6 +8,8 @@ import {
 } from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
 import { STATUS, PAYMENT } from '@/constants/badge';
+import { Button } from '@/components/atoms/button';
+import Payment from '@/components/modules/payment-dialog';
 
 const paymentRenderer = createBadgeRenderer(PAYMENT);
 
@@ -36,7 +40,55 @@ export const companyColumnDefs: ColDef[] = [
 
 const statusRenderer = createBadgeRenderer(STATUS);
 
-const columnDefs: (ColDef | ColGroupDef)[] = [
+const createActionButtonRenderer = (onEdit: (data: any) => void, onDelete: (data: any) => void) => {
+  return (params: any) => {
+    const isEditableRow = params.data?.type === '결제';
+    if (!isEditableRow) return null;
+
+    const handleDelete = () => onDelete(params.data);
+
+    return React.createElement(
+      'div',
+      {
+        className: 'flex gap-2 items-center justify-center h-full',
+      },
+      [
+        React.createElement(
+          Payment,
+          {
+            key: 'edit',
+            title: '결제 수정',
+            buttonClassName: 'w-[32px] h-[30px] bg-blue-500 text-white hover:bg-blue-300',
+            onSubmit: onEdit,
+            initialData: {
+              id: params.data.detail_id,
+              processDate: params.data?.process_date
+                ? new Date(params.data.process_date)
+                : new Date(),
+              amount: params.data?.payment_amount || null,
+              notes: params.data?.note || '',
+            },
+          },
+          React.createElement(Edit2, { size: 16 }),
+        ),
+        React.createElement(
+          Button,
+          {
+            key: 'delete',
+            className: 'w-[32px] h-[30px] bg-red-500 text-white hover:bg-red-300',
+            onClick: handleDelete,
+          },
+          React.createElement(Trash2, { size: 16 }),
+        ),
+      ],
+    );
+  };
+};
+
+export const createColumnDefs = (
+  onEdit: (data: any) => void,
+  onDelete: (data: any) => void,
+): (ColDef | ColGroupDef)[] => [
   { headerName: 'ID', field: 'detail_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
   {
     headerName: '전표상태',
@@ -115,8 +167,23 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
       return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
     },
   }),
-  { headerName: '비고', field: 'note', flex: 1 },
+  { headerName: '비고', field: 'note', flex: 1, minWidth: 400 },
+  {
+    headerName: '관리',
+    field: 'event',
+    minWidth: 100,
+    cellRenderer: createActionButtonRenderer(onEdit, onDelete),
+    sortable: false,
+    filter: false,
+    pinned: 'right',
+    cellStyle: { textAlign: 'center', padding: '4px' },
+  },
 ];
+
+export const columnDefs: (ColDef | ColGroupDef)[] = createColumnDefs(
+  () => console.log('기본 수정'),
+  () => console.log('기본 삭제'),
+);
 
 export const gridOptions: GridOptions = {
   defaultColGroupDef: { headerClass: 'centered' },
