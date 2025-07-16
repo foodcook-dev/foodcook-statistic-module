@@ -8,7 +8,7 @@ export default function BaseLayout() {
   return (
     <>
       <Suspense fallback={null}>
-        <section style={isDev ? { padding: '64px' } : undefined}>
+        <section className="h-full" style={isDev ? { padding: '64px' } : undefined}>
           <Outlet />
         </section>
       </Suspense>

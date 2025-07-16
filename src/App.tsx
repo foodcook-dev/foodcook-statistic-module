@@ -5,7 +5,10 @@ import { useEffect } from 'react';
 import ResponseError from '@/libs/response-error';
 import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
-import { ThemeProvider, useTheme } from '@/components/modules/theme-provider';
+import { ThemeProvider } from '@/components/modules/theme-provider';
+import Alert from '@/components/modules/dialog/alert';
+import Confirm from '@/components/modules/dialog/confirm';
+import Spinner from '@/components/modules/spinner';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -51,6 +54,9 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <HashRouter>
+          <Spinner />
+          <Alert />
+          <Confirm />
           <Pages />
         </HashRouter>
       </ThemeProvider>

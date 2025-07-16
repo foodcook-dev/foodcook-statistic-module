@@ -5,6 +5,8 @@ import { useIntegratedSettlement } from '../hooks/useIntegratedSettlement';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
+
 export default function IntegratedSettlement() {
   const { gridRef, dateRange, setDateRange, onGridReady, error } = useIntegratedSettlement();
 
@@ -18,6 +20,7 @@ export default function IntegratedSettlement() {
             onDateSelect={({ from, to }) => setDateRange({ from, to })}
             contentAlign="start"
           />
+          {/* <ThemeToggle /> */}
         </div>
         <ColumnStateResetButton
           storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
@@ -28,8 +31,8 @@ export default function IntegratedSettlement() {
         <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div className="text-center bg-white shadow-lg rounded-lg p-6 border border-gray-200">
-              <p className="text-gray-700 text-sm font-medium">{error}</p>
+            <div className="text-center bg-foreground shadow-lg rounded-lg p-6 border border-foreground">
+              <p className="text-contrast text-sm font-medium">{error}</p>
             </div>
           </div>
         )}

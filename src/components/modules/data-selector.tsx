@@ -74,21 +74,21 @@ export default function DataSelector({
         type="text"
         placeholder={placeholder}
         value={value}
-        className="flex-1 border border-gray-300"
+        className="flex-1"
         readOnly
         disabled={disabled}
       />
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button
-            className="whitespace-nowrap bg-[rgb(255,103,57)] text-white border-[rgb(255,103,57)] hover:bg-[rgb(230,93,47)] hover:border-[rgb(230,93,47)]"
+            className="whitespace-nowrap bg-primary text-white border-primary hover:bg-primary-hover hover:border-primary-hover"
             disabled={disabled}
           >
             <SearchIcon className="inline-block" />
             선택
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-[650px] max-h-[80vh]">
+        <DialogContent className="w-[650px] border-border bg-background text-contrast max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>{label} 선택</DialogTitle>
           </DialogHeader>
