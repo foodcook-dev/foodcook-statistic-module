@@ -135,6 +135,8 @@ export const useConsignmentSettlement = () => {
       refreshGridData();
       setAlertMessage(MESSAGES.PAYMENT_UPDATED);
     },
+    showSpinner: true,
+    spinnerMessage: '결제 정보 수정 중',
   });
 
   const { request: deletePaymentRequest } = useFetch({
@@ -153,6 +155,8 @@ export const useConsignmentSettlement = () => {
       refreshGridData();
       setAlertMessage(MESSAGES.PAYMENT_DELETED);
     },
+    showSpinner: true,
+    spinnerMessage: '결제 정보 삭제 중',
   });
 
   const onGridReady = useCallback(

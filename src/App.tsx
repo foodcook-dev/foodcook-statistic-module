@@ -8,6 +8,7 @@ import Pages from '@/pages/Root';
 import { ThemeProvider } from '@/components/modules/theme-provider';
 import Alert from '@/components/modules/dialog/alert';
 import Confirm from '@/components/modules/dialog/confirm';
+import Spinner from '@/components/modules/spinner';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -53,6 +54,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <HashRouter>
+          <Spinner />
           <Alert />
           <Confirm />
           <Pages />

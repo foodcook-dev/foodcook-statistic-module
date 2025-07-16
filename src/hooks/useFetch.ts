@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ResponseError from '@/libs/response-error';
 import useAlertStore from '@/store/alert';
+import useSpinnerStore from '@/store/spinner';
 
 export type FetchOptions<T, U> = {
   requestFn: (args: U) => Promise<T> | null | void;
@@ -8,6 +9,8 @@ export type FetchOptions<T, U> = {
   onError?: (e: ResponseError) => void;
   onFetching?: () => void;
   onSettled?: () => void;
+  showSpinner?: boolean;
+  spinnerMessage?: string;
 };
 
 export default function useFetch<T, U>({
@@ -16,11 +19,19 @@ export default function useFetch<T, U>({
   onError,
   onFetching,
   onSettled,
+  showSpinner = false,
+  spinnerMessage = '처리 중...',
 }: FetchOptions<T, U>) {
   const { setAlertMessage } = useAlertStore();
+  const { setLoading } = useSpinnerStore();
   const [state, setState] = useState<any>();
+
   const request: (args?: U) => Promise<void> | null = async (params?: any) => {
+    if (showSpinner) {
+      setLoading(true, spinnerMessage);
+    }
     onFetching?.();
+
     try {
       const response = await requestFn(params);
       setState(response);
@@ -38,6 +49,9 @@ export default function useFetch<T, U>({
         return setAlertMessage(String(e));
       }
     } finally {
+      if (showSpinner) {
+        setLoading(false);
+      }
       onSettled?.();
     }
   };

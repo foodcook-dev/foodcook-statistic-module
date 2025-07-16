@@ -10,7 +10,7 @@ import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { companyColumnDefs, createColumnDefs, gridOptions } from '../config/grid-config';
 
-// import { ThemeToggle } from '@/components/modules/theme-toggle';
+import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function ConsignmentSettlement() {
   const {
@@ -67,7 +67,7 @@ export default function ConsignmentSettlement() {
               contentAlign="end"
             />
           </div>
-          {/* <ThemeToggle /> */}
+          <ThemeToggle />
         </div>
         <div className="flex items-center gap-2">
           <ColumnStateResetButton
