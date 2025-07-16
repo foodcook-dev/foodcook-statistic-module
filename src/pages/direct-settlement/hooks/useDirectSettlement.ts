@@ -14,8 +14,6 @@ import useAlertStore from '@/store/alert';
 const PAGE_SIZE = 50;
 const MESSAGES = {
   PAYMENT_CREATED: '결제 정보가 입력되었습니다.',
-  PAYMENT_UPDATED: '결제 정보가 수정되었습니다.',
-  PAYMENT_DELETED: '결제 정보가 삭제되었습니다.',
   DELETE_CONFIRM: '결제데이터를 삭제하시겠습니까?',
 } as const;
 
@@ -133,7 +131,6 @@ export const useDirectSettlement = () => {
     },
     onSuccess: () => {
       refreshGridData();
-      setAlertMessage(MESSAGES.PAYMENT_UPDATED);
     },
     showSpinner: true,
     spinnerMessage: '결제 정보 수정 중',
@@ -149,7 +146,6 @@ export const useDirectSettlement = () => {
     },
     onSuccess: () => {
       refreshGridData();
-      setAlertMessage(MESSAGES.PAYMENT_DELETED);
     },
     showSpinner: true,
     spinnerMessage: '결제 정보 삭제 중',
