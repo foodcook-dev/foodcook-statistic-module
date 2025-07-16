@@ -104,7 +104,7 @@ export const createColumnDefs = (
     headerName: '매출정보',
     wrapHeaderText: true,
     autoHeaderHeight: true,
-    headerClass: 'ag-header-2',
+    headerClass: 'ag-header-2 centered',
     children: [
       createNumericColumn('sales_amount', '매출액', {
         cellStyle: getNegativeValueStyle,
@@ -113,7 +113,7 @@ export const createColumnDefs = (
   },
   {
     headerName: '매입정보',
-    headerClass: 'ag-header-3',
+    headerClass: 'ag-header-3 centered',
     children: [
       createNumericColumn('tax_purchase', '매입 과세액', {
         columnGroupShow: 'open',
@@ -133,7 +133,7 @@ export const createColumnDefs = (
   },
   {
     headerName: '정산정보',
-    headerClass: 'ag-header-4',
+    headerClass: 'ag-header-4 centered',
     children: [
       createNumericColumn('commission_rate', '정산 수수료(%)', {
         columnGroupShow: 'open',
@@ -151,7 +151,7 @@ export const createColumnDefs = (
   },
   {
     headerName: '결제정보',
-    headerClass: 'ag-header-5',
+    headerClass: 'ag-header-5 centered',
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
@@ -161,7 +161,7 @@ export const createColumnDefs = (
     ],
   },
   createNumericColumn('balance', '잔액', {
-    headerClass: 'ag-header-accent',
+    headerClass: 'ag-header-accent ag-right-aligned-header',
     cellStyle: (params) => {
       const baseStyle = { backgroundColor: 'rgb(253 255 217)' };
       return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
@@ -186,7 +186,6 @@ export const columnDefs: (ColDef | ColGroupDef)[] = createColumnDefs(
 );
 
 export const gridOptions: GridOptions = {
-  defaultColGroupDef: { headerClass: 'centered' },
   defaultColDef: { headerClass: 'centered', sortable: false, floatingFilter: false },
   columnDefs: columnDefs,
 

@@ -98,7 +98,7 @@ export const createColumnDefs = (
   { headerName: '처리일자', field: 'process_date', pinned: 'left' },
   {
     headerName: '매입정보',
-    headerClass: 'ag-header-2',
+    headerClass: 'ag-header-2 centered',
     children: [
       createNumericColumn('purchase_amount', '매입액', {
         cellStyle: (params) => {
@@ -110,7 +110,7 @@ export const createColumnDefs = (
   },
   {
     headerName: '결제정보',
-    headerClass: 'ag-header-3',
+    headerClass: 'ag-header-3 centered',
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
@@ -120,7 +120,7 @@ export const createColumnDefs = (
     ],
   },
   createNumericColumn('balance', '잔액', {
-    headerClass: 'ag-header-accent',
+    headerClass: 'ag-header-accent ag-right-aligned-header',
     cellStyle: (params) => {
       const baseStyle = { backgroundColor: 'rgb(253 255 217)' };
       return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
@@ -145,7 +145,6 @@ export const columnDefs: (ColDef | ColGroupDef)[] = createColumnDefs(
 );
 
 export const gridOptions: GridOptions = {
-  defaultColGroupDef: { headerClass: 'centered' },
   defaultColDef: { headerClass: 'centered', sortable: false, floatingFilter: false },
   columnDefs: columnDefs,
 

@@ -39,11 +39,11 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   createNumericColumn('previous_balance', '전기이월액', { sortable: true }),
   createNumericColumn('sales_amount', '매출액', {
     sortable: true,
-    headerClass: 'ag-header-2',
+    headerClass: 'ag-header-2 centered',
   }),
   {
     headerName: '매입정보',
-    headerClass: 'ag-header-3',
+    headerClass: 'ag-header-3 centered',
     children: [
       createNumericColumn('tax_purchase', '매입 과세액', {
         columnGroupShow: 'open',
@@ -61,7 +61,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     headerName: '정산정보',
-    headerClass: 'ag-header-4',
+    headerClass: 'ag-header-4 centered',
     children: [
       createNumericColumn('commission_rate', '정산 수수료(%)', {
         columnGroupShow: 'open',
@@ -77,7 +77,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     headerName: '결제정보',
-    headerClass: 'ag-header-5',
+    headerClass: 'ag-header-5 centered',
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
@@ -114,7 +114,6 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
 ];
 
 export const gridOptions: GridOptions = {
-  defaultColGroupDef: { headerClass: 'centered' },
   defaultColDef: { headerClass: 'centered', sortable: false, floatingFilter: false },
   columnDefs: columnDefs,
 
