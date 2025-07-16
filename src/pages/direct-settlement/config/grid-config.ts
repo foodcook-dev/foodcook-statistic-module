@@ -62,7 +62,7 @@ const createActionButtonRenderer = (onEdit: (data: any) => void, onDelete: (data
                 ? new Date(params.data.process_date)
                 : new Date(),
               amount: params.data?.payment_amount || null,
-              notes: params.data?.memo || '',
+              notes: params.data?.memo ? params.data.memo.split('|').pop()?.trim() || '' : '',
             },
           },
           React.createElement(Edit2, { size: 16 }),

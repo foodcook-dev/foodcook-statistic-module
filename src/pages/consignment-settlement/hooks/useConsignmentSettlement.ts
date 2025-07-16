@@ -141,15 +141,11 @@ export const useConsignmentSettlement = () => {
 
   const { request: deletePaymentRequest } = useFetch({
     requestFn: async (rowData: any) => {
-      const result = await setConfirm({ message: MESSAGES.DELETE_CONFIRM });
-
-      if (result) {
-        return await createAxios({
-          method: 'delete',
-          endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
-          params: { detail_id: rowData.detail_id },
-        });
-      }
+      return await createAxios({
+        method: 'delete',
+        endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+        params: { detail_id: rowData.detail_id },
+      });
     },
     onSuccess: () => {
       refreshGridData();
@@ -158,6 +154,11 @@ export const useConsignmentSettlement = () => {
     showSpinner: true,
     spinnerMessage: '결제 정보 삭제 중',
   });
+
+  const handleDelete = async (rowData: any) => {
+    const result = await setConfirm({ message: MESSAGES.DELETE_CONFIRM });
+    if (result) await deletePaymentRequest(rowData);
+  };
 
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
@@ -185,7 +186,7 @@ export const useConsignmentSettlement = () => {
     setSelectedPartner,
     handlePaymentSubmit: submitPaymentRequest,
     handleEdit: editPaymentRequest,
-    handleDelete: deletePaymentRequest,
+    handleDelete,
     onGridReady,
   };
 };
