@@ -18,7 +18,7 @@ class ResponseError {
     // this.status = status;
     // this.message = message;
     // this.defaultText = `Error Code ${code}: ${message}`;
-    this.error = detail;
+    this.error = detail?.[0].msg || 'Unknown error';
   }
 }
 

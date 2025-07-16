@@ -7,7 +7,17 @@ import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 import { PaymentData } from '@/components/modules/payment-dialog';
+import useFetch from '@/hooks/useFetch';
 import { useConfirm } from '@/hooks/useConfirm';
+import useAlertStore from '@/store/alert';
+
+const PAGE_SIZE = 50;
+const MESSAGES = {
+  PAYMENT_CREATED: '결제 정보가 입력되었습니다.',
+  PAYMENT_UPDATED: '결제 정보가 수정되었습니다.',
+  PAYMENT_DELETED: '결제 정보가 삭제되었습니다.',
+  DELETE_CONFIRM: '결제데이터를 삭제하시겠습니까?',
+} as const;
 
 type SelectedBuyer = {
   id: string;
@@ -16,6 +26,7 @@ type SelectedBuyer = {
 
 export const useDirectSettlement = () => {
   const setConfirm = useConfirm();
+  const { setAlertMessage } = useAlertStore();
   const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const [dateRange, setDateRange] = useState<DateRange>(() => {
@@ -55,8 +66,7 @@ export const useDirectSettlement = () => {
         }
 
         try {
-          const page = Math.floor(params.startRow / 50) + 1;
-          const size = 50;
+          const page = Math.floor(params.startRow / PAGE_SIZE) + 1;
           const startDate = format(from, 'yyyy-MM-dd');
           const endDate = format(to, 'yyyy-MM-dd');
 
@@ -68,7 +78,7 @@ export const useDirectSettlement = () => {
               end_date: endDate,
               filter: JSON.stringify(params.filterModel),
               page,
-              size,
+              size: PAGE_SIZE,
             },
           });
 
@@ -84,77 +94,66 @@ export const useDirectSettlement = () => {
     };
   }, [selectedBuyer.id]);
 
-  const handlePaymentSubmit = useCallback(
-    async (data: PaymentData) => {
-      try {
-        await createAxios({
-          method: 'post',
+  const refreshGridData = useCallback(() => {
+    if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
+      const newDataSource = createDataSource();
+      gridRef.current.api.setGridOption('datasource', newDataSource);
+    }
+  }, [createDataSource, selectedBuyer.id, dateRange.from, dateRange.to]);
+
+  const { request: submitPaymentRequest } = useFetch({
+    requestFn: async (data: PaymentData) => {
+      return await createAxios({
+        method: 'post',
+        endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
+        body: {
+          payment_date: format(data.processDate!, 'yyyy-MM-dd'),
+          payment_amount: Number(data.amount),
+          payment_note: data.notes,
+        },
+      });
+    },
+    onSuccess: () => {
+      refreshGridData();
+      setAlertMessage(MESSAGES.PAYMENT_CREATED);
+    },
+  });
+
+  const { request: editPaymentRequest } = useFetch({
+    requestFn: async (data: PaymentData) => {
+      return await createAxios({
+        method: 'patch',
+        endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
+        body: {
+          detail_id: String(data.id),
+          payment_amount: Number(data.amount),
+          payment_note: data.notes,
+        },
+      });
+    },
+    onSuccess: () => {
+      refreshGridData();
+      setAlertMessage(MESSAGES.PAYMENT_UPDATED);
+    },
+  });
+
+  const { request: deletePaymentRequest } = useFetch({
+    requestFn: async (rowData: any) => {
+      const result = await setConfirm({ message: MESSAGES.DELETE_CONFIRM });
+
+      if (result) {
+        return await createAxios({
+          method: 'delete',
           endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
-          body: {
-            payment_date: format(data.processDate!, 'yyyy-MM-dd'),
-            payment_amount: Number(data.amount),
-            payment_note: data.notes,
-          },
+          params: { detail_id: rowData.detail_id },
         });
-
-        if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
-          const newDataSource = createDataSource();
-          gridRef.current.api.setGridOption('datasource', newDataSource);
-        }
-      } catch (error) {
-        console.error('Failed to submit payment:', error);
       }
     },
-    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource],
-  );
-
-  const handleEdit = useCallback(
-    async (data: PaymentData) => {
-      try {
-        await createAxios({
-          method: 'patch',
-          endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
-          body: {
-            detail_id: data.id,
-            payment_amount: Number(data.amount),
-            payment_note: data.notes,
-          },
-        });
-
-        if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
-          const newDataSource = createDataSource();
-          gridRef.current.api.setGridOption('datasource', newDataSource);
-        }
-      } catch (error) {
-        console.error('Failed to edit payment:', error);
-      }
+    onSuccess: () => {
+      refreshGridData();
+      setAlertMessage(MESSAGES.PAYMENT_DELETED);
     },
-    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource],
-  );
-
-  const handleDelete = useCallback(
-    async (rowData: any) => {
-      try {
-        const result = await setConfirm({ message: '결제데이터를 삭제하시겠습니까?' });
-
-        if (result) {
-          await createAxios({
-            method: 'delete',
-            endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
-            params: { detail_id: rowData.detail_id },
-          });
-
-          if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
-            const newDataSource = createDataSource();
-            gridRef.current.api.setGridOption('datasource', newDataSource);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to delete row:', error);
-      }
-    },
-    [selectedBuyer.id, dateRange.from, dateRange.to, createDataSource],
-  );
+  });
 
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
@@ -169,11 +168,8 @@ export const useDirectSettlement = () => {
   );
 
   useEffect(() => {
-    if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
-      const dataSource = createDataSource();
-      gridRef.current.api.setGridOption('datasource', dataSource);
-    }
-  }, [selectedBuyer.id, dateRange.from, dateRange.to]);
+    refreshGridData();
+  }, [refreshGridData]);
 
   return {
     gridRef,
@@ -183,9 +179,9 @@ export const useDirectSettlement = () => {
     isBuyerInfoLoading: buyerInfoResponse.isLoading,
     setDateRange,
     setSelectedBuyer,
-    handlePaymentSubmit,
-    handleEdit,
-    handleDelete,
+    handlePaymentSubmit: submitPaymentRequest,
+    handleEdit: editPaymentRequest,
+    handleDelete: deletePaymentRequest,
     onGridReady,
   };
 };
