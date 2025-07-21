@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import { Logs } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/atoms/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/atoms/dialog';
 import { Button } from '@/components/atoms/button';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
