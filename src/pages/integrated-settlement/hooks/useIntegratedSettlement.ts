@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
@@ -9,12 +10,14 @@ import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-sta
 type UseIntegratedSettlementReturn = {
   gridRef: React.RefObject<AgGridReact | null>;
   dateRange: DateRange;
+  handleCellClick: (event: any) => void;
   setDateRange: (dateRange: DateRange) => void;
   onGridReady: (event: GridReadyEvent) => void;
   error: string | null;
 };
 
 export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
+  const navigate = useNavigate();
   const STORAGE_KEY = STORAGE_KEYS.INTEGRATED_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
@@ -62,6 +65,18 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     };
   }, [dateRange.from, dateRange.to]);
 
+  const handleCellClick = (event: any) => {
+    if (event.colDef?.field === 'b_nm') {
+      const row = event.data;
+      const state = { id: row.company_id, name: row.b_nm, dateRange };
+      if (row.type === 'buy') {
+        navigate('/direct', { state });
+      } else if (row.type === 'partner') {
+        navigate('/consignment', { state });
+      }
+    }
+  };
+
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
@@ -85,6 +100,7 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
   return {
     gridRef,
     dateRange,
+    handleCellClick,
     setDateRange,
     onGridReady,
     error,

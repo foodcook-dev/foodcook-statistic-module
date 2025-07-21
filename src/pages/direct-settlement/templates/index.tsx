@@ -9,6 +9,7 @@ import Payment from '@/components/modules/payment-dialog';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { companyColumnDefs, createColumnDefs, gridOptions } from '../config/grid-config';
 import { BUYER_INFO } from '../structure';
+import { Tabs } from '@/components/modules/Tabs';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
@@ -27,8 +28,8 @@ export default function DirectSettlement() {
   } = useDirectSettlement();
 
   const columnDefs = useMemo(
-    () => createColumnDefs(handleEdit, handleDelete),
-    [handleEdit, handleDelete],
+    () => createColumnDefs(handleEdit, handleDelete, selectedBuyer.id),
+    [handleEdit, handleDelete, selectedBuyer.id],
   );
 
   const updatedGridOptions = useMemo(
@@ -41,6 +42,7 @@ export default function DirectSettlement() {
 
   return (
     <div className="w-full flex flex-col gap-6">
+      <Tabs />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -53,7 +55,7 @@ export default function DirectSettlement() {
               valueKey="buy_company_id"
               displayKey="b_nm"
               columnDefs={companyColumnDefs}
-              value={selectedBuyer?.name}
+              value={selectedBuyer.name}
               onSelect={(value, displayValue) =>
                 setSelectedBuyer({ id: value, name: displayValue })
               }

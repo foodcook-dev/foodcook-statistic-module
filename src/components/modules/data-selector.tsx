@@ -99,6 +99,7 @@ export default function DataSelector({
               onRowClicked={onRowClicked}
               rowSelection="single"
               components={{ customFilter: SelectFilter }}
+              suppressDragLeaveHidesColumns
             />
             {bodyResponse.data?.length === 0 && (
               <div className="text-center py-8 text-gray-500">데이터가 없습니다.</div>

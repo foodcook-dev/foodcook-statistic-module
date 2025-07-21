@@ -10,6 +10,7 @@ import { PaymentData } from '@/components/modules/payment-dialog';
 import useFetch from '@/hooks/useFetch';
 import { useConfirm } from '@/hooks/useConfirm';
 import useAlertStore from '@/store/alert';
+import { useLocation } from 'react-router-dom';
 
 const PAGE_SIZE = 50;
 const MESSAGES = {
@@ -23,20 +24,20 @@ type SelectedBuyer = {
 };
 
 export const useDirectSettlement = () => {
+  const location = useLocation();
   const setConfirm = useConfirm();
   const { setAlertMessage } = useAlertStore();
   const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
-  const [dateRange, setDateRange] = useState<DateRange>(() => {
-    const today = new Date();
-    return {
-      from: startOfMonth(today),
-      to: today,
-    };
-  });
+  const [dateRange, setDateRange] = useState<DateRange>(
+    location.state?.dateRange || {
+      from: startOfMonth(new Date()),
+      to: new Date(),
+    },
+  );
   const [selectedBuyer, setSelectedBuyer] = useState<SelectedBuyer>({
-    id: '',
-    name: '',
+    id: location.state?.id || '',
+    name: location.state?.name || '',
   });
 
   const dateRangeRef = useRef(dateRange);
