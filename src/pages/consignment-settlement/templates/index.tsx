@@ -4,12 +4,12 @@ import { useConsignmentSettlement } from '../hooks/useConsignmentSettlement';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
-import Payment from '@/components/modules/payment-dialog';
+import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import { PARTNER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { companyColumnDefs, createColumnDefs, gridOptions } from '../config/grid-config';
-import { Tabs } from '@/components/modules/Tabs';
+import { Tabs } from '@/components/modules/tab';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 

@@ -6,7 +6,7 @@ import { startOfMonth, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
-import { PaymentData } from '@/components/modules/payment-dialog';
+import { PaymentData } from '@/components/modules/custom-dialog/payment-dialog';
 import { useConfirm } from '@/hooks/useConfirm';
 import useFetch from '@/hooks/useFetch';
 import useAlertStore from '@/store/alert';

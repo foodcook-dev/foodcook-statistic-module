@@ -10,8 +10,8 @@ export function Tabs({ className = '' }: TabsProps) {
 
   const tabs = [
     { label: '통합매입사 대시보드', path: '/integrated' },
-    { label: '위탁매입사', path: '/consignment' },
-    { label: '직매입사', path: '/direct' },
+    { label: '위탁매입사 대시보드', path: '/consignment' },
+    { label: '직매입사 대시보드', path: '/direct' },
   ];
 
   return (

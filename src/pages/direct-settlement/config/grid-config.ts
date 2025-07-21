@@ -5,8 +5,8 @@ import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
 import { STATUS, PAYMENT } from '@/constants/badge';
 import { Button } from '@/components/atoms/button';
-import Payment from '@/components/modules/payment-dialog';
-import Log from '@/components/modules/log-dialog';
+import Payment from '@/components/modules/custom-dialog/payment-dialog';
+import Log from '@/components/modules/custom-dialog/log-dialog';
 
 const paymentRenderer = createBadgeRenderer(PAYMENT);
 

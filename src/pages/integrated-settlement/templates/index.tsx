@@ -4,7 +4,7 @@ import { gridOptions } from '../config/grid-config';
 import { useIntegratedSettlement } from '../hooks/useIntegratedSettlement';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
-import { Tabs } from '@/components/modules/Tabs';
+import { Tabs } from '@/components/modules/tab';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
