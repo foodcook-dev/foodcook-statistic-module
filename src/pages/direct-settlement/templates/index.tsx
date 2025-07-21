@@ -28,8 +28,8 @@ export default function DirectSettlement() {
   } = useDirectSettlement();
 
   const columnDefs = useMemo(
-    () => createColumnDefs(handleEdit, handleDelete),
-    [handleEdit, handleDelete],
+    () => createColumnDefs(handleEdit, handleDelete, selectedBuyer.id),
+    [handleEdit, handleDelete, selectedBuyer.id],
   );
 
   const updatedGridOptions = useMemo(

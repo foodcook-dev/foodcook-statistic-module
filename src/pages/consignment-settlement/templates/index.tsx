@@ -28,8 +28,8 @@ export default function ConsignmentSettlement() {
   } = useConsignmentSettlement();
 
   const columnDefs = useMemo(
-    () => createColumnDefs(handleEdit, handleDelete),
-    [handleEdit, handleDelete],
+    () => createColumnDefs(handleEdit, handleDelete, selectedPartner.id),
+    [handleEdit, handleDelete, selectedPartner.id],
   );
 
   const updatedGridOptions = useMemo(

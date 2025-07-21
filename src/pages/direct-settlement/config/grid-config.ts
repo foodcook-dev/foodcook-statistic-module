@@ -6,6 +6,7 @@ import SelectFilter from '@/components/modules/select-filter';
 import { STATUS, PAYMENT } from '@/constants/badge';
 import { Button } from '@/components/atoms/button';
 import Payment from '@/components/modules/payment-dialog';
+import Log from '@/components/modules/log-dialog';
 
 const paymentRenderer = createBadgeRenderer(PAYMENT);
 
@@ -36,7 +37,11 @@ export const companyColumnDefs: ColDef[] = [
 
 const statusRenderer = createBadgeRenderer(STATUS);
 
-const createActionButtonRenderer = (onEdit: (data: any) => void, onDelete: (data: any) => void) => {
+const createActionButtonRenderer = (
+  onEdit: (data: any) => void,
+  onDelete: (data: any) => void,
+  selectedBuyerId: string,
+) => {
   return (params: any) => {
     const isEditableRow = params.data?.type === '결제';
     if (!isEditableRow) return null;
@@ -76,6 +81,12 @@ const createActionButtonRenderer = (onEdit: (data: any) => void, onDelete: (data
           },
           React.createElement(Trash2, { size: 16 }),
         ),
+        React.createElement(Log, {
+          key: 'log',
+          endpoint: `/log/buy_company_logs/`,
+          companyId: selectedBuyerId,
+          detailId: params.data.detail_id,
+        }),
       ],
     );
   };
@@ -84,6 +95,7 @@ const createActionButtonRenderer = (onEdit: (data: any) => void, onDelete: (data
 export const createColumnDefs = (
   onEdit: (data: any) => void,
   onDelete: (data: any) => void,
+  selectedBuyerId: string,
 ): (ColDef | ColGroupDef)[] => [
   { headerName: 'ID', field: 'detail_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
   {
@@ -131,7 +143,7 @@ export const createColumnDefs = (
     headerName: '관리',
     field: 'event',
     minWidth: 100,
-    cellRenderer: createActionButtonRenderer(onEdit, onDelete),
+    cellRenderer: createActionButtonRenderer(onEdit, onDelete, selectedBuyerId),
     sortable: false,
     filter: false,
     pinned: 'right',
@@ -142,6 +154,7 @@ export const createColumnDefs = (
 export const columnDefs: (ColDef | ColGroupDef)[] = createColumnDefs(
   () => console.log('기본 수정'),
   () => console.log('기본 삭제'),
+  '',
 );
 
 export const gridOptions: GridOptions = {
