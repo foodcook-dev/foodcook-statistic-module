@@ -13,7 +13,7 @@ export default function Root() {
   return (
     <Routes>
       <Route element={<BaseLayout />}>
-        <Route path="/" element={<ConsignmentSettlement />} />
+        <Route path="/" element={<IntegratedSettlement />} />
         <Route path="/integrated" element={<IntegratedSettlement />} />
         <Route path="/direct" element={<DirectSettlement />} />
         <Route path="/consignment" element={<ConsignmentSettlement />} />
