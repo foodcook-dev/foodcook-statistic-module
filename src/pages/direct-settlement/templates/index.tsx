@@ -55,7 +55,7 @@ export default function DirectSettlement() {
               valueKey="buy_company_id"
               displayKey="b_nm"
               columnDefs={companyColumnDefs}
-              value={selectedBuyer?.name}
+              value={selectedBuyer.name}
               onSelect={(value, displayValue) =>
                 setSelectedBuyer({ id: value, name: displayValue })
               }

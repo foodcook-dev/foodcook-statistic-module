@@ -10,6 +10,7 @@ import { PaymentData } from '@/components/modules/payment-dialog';
 import { useConfirm } from '@/hooks/useConfirm';
 import useFetch from '@/hooks/useFetch';
 import useAlertStore from '@/store/alert';
+import { useLocation } from 'react-router-dom';
 
 const PAGE_SIZE = 50;
 const MESSAGES = {
@@ -25,20 +26,20 @@ interface SelectedPartner {
 }
 
 export const useConsignmentSettlement = () => {
+  const location = useLocation();
   const setConfirm = useConfirm();
   const { setAlertMessage } = useAlertStore();
   const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
-  const [dateRange, setDateRange] = useState<DateRange>(() => {
-    const today = new Date();
-    return {
-      from: startOfMonth(today),
-      to: today,
-    };
-  });
+  const [dateRange, setDateRange] = useState<DateRange>(
+    location.state?.dateRange || {
+      from: startOfMonth(new Date()),
+      to: new Date(),
+    },
+  );
   const [selectedPartner, setSelectedPartner] = useState<SelectedPartner>({
-    id: '',
-    name: '',
+    id: location.state?.id || '',
+    name: location.state?.name || '',
   });
 
   const dateRangeRef = useRef(dateRange);

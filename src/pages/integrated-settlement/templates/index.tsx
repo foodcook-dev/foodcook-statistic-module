@@ -9,7 +9,8 @@ import { Tabs } from '@/components/modules/Tabs';
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function IntegratedSettlement() {
-  const { gridRef, dateRange, setDateRange, onGridReady, error } = useIntegratedSettlement();
+  const { gridRef, dateRange, handleCellClick, setDateRange, onGridReady, error } =
+    useIntegratedSettlement();
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -30,7 +31,12 @@ export default function IntegratedSettlement() {
         />
       </div>
       <div className="w-full h-[600px] relative">
-        <AgGridReact ref={gridRef} gridOptions={gridOptions} onGridReady={onGridReady} />
+        <AgGridReact
+          ref={gridRef}
+          gridOptions={gridOptions}
+          onGridReady={onGridReady}
+          onCellClicked={handleCellClick}
+        />
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="text-center bg-foreground shadow-lg rounded-lg p-6 border border-foreground">

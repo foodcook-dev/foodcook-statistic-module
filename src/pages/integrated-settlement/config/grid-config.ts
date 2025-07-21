@@ -18,6 +18,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
       filterOptions: ['contains'],
       maxNumConditions: 0,
     },
+    cellStyle: { cursor: 'pointer' },
   },
   {
     field: 'type',
