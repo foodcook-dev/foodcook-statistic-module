@@ -33,7 +33,8 @@ export default function LogDialog({ endpoint, companyId, detailId }: LogDialogPr
   const renderAgGrid = () => {
     if (!data) return null;
     const rows = Array.isArray(data) ? data : data.items || [];
-    if (!rows.length) return <div className="text-contrast text-center py-8">No changes.</div>;
+    if (!rows.length)
+      return <div className="h-full content-center text-contrast text-center py-8">No logs.</div>;
 
     const columnDefs = [
       {
