@@ -9,6 +9,7 @@ import { PARTNER_INFO } from '../structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { companyColumnDefs, createColumnDefs, gridOptions } from '../config/grid-config';
+import { Tabs } from '@/components/modules/Tabs';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
@@ -41,6 +42,7 @@ export default function ConsignmentSettlement() {
 
   return (
     <div className="w-full flex flex-col gap-6">
+      <Tabs />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">

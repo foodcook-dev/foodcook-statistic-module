@@ -4,6 +4,7 @@ import { gridOptions } from '../config/grid-config';
 import { useIntegratedSettlement } from '../hooks/useIntegratedSettlement';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
+import { Tabs } from '@/components/modules/Tabs';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
@@ -12,6 +13,7 @@ export default function IntegratedSettlement() {
 
   return (
     <div className="w-full flex flex-col gap-6">
+      <Tabs />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">조회기간 :</span>
