@@ -15,13 +15,13 @@ export function Tabs({ className = '' }: TabsProps) {
   ];
 
   return (
-    <div className={`flex items-center gap-0 border-b border-gray-300 bg-transparent ${className}`}>
+    <div className={`flex items-center gap-6 border-b border-gray-300 bg-transparent ${className}`}>
       {tabs.map((tab) => {
         const isActive = location.pathname.startsWith(tab.path);
         return (
           <span
             key={tab.path}
-            className={`relative px-4 py-2 text-sm font-medium cursor-pointer transition-colors duration-200
+            className={`relative py-2 text-sm font-medium cursor-pointer transition-colors duration-200
               ${
                 isActive
                   ? 'text-primary border-b-2 border-primary'
