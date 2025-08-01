@@ -6,7 +6,7 @@ import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { Tabs } from '@/components/modules/tab';
 
-import { ThemeToggle } from '@/components/modules/theme-toggle';
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function IntegratedSettlement() {
   const { gridRef, dateRange, handleCellClick, setDateRange, onGridReady, error } =
@@ -25,7 +25,7 @@ export default function IntegratedSettlement() {
               contentAlign="start"
               maxDateType="today"
             />
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
           </div>
           <ColumnStateResetButton
             storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
