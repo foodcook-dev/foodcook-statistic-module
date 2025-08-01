@@ -29,10 +29,11 @@ export const useConsignmentSettlement = () => {
   const { setAlertMessage } = useAlertStore();
   const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
+  const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>(
     location.state?.dateRange || {
-      from: startOfMonth(new Date()),
-      to: new Date(),
+      from: startOfMonth(today),
+      to: today,
     },
   );
   const [selectedPartner, setSelectedPartner] = useState<SelectedPartner>({

@@ -44,32 +44,38 @@ export default function ConsignmentSettlement() {
     <div className="w-full flex flex-col gap-6">
       <Tabs />
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold">매입사 :</span>
-            <DataSelector
-              className="w-[300px]"
-              placeholder="매입사를 선택해주세요"
-              label="위탁매입사"
-              endpoint="/partner/partner_companies/"
-              valueKey="partner_company_id"
-              displayKey="b_nm"
-              columnDefs={companyColumnDefs}
-              value={selectedPartner?.name}
-              onSelect={(value, displayValue) =>
-                setSelectedPartner({ id: value, name: displayValue })
-              }
-            />
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold">매입사 :</span>
+              <DataSelector
+                className="w-[300px]"
+                placeholder="매입사를 선택해주세요"
+                label="위탁매입사"
+                endpoint="/partner/partner_companies/"
+                valueKey="partner_company_id"
+                displayKey="b_nm"
+                columnDefs={companyColumnDefs}
+                value={selectedPartner?.name}
+                onSelect={(value, displayValue) =>
+                  setSelectedPartner({ id: value, name: displayValue })
+                }
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold">조회기간 :</span>
+              <DateRangePicker
+                date={dateRange}
+                onDateSelect={({ from, to }) => setDateRange({ from, to })}
+                contentAlign="end"
+                maxDateType="today"
+              />
+            </div>
+            {/* <ThemeToggle /> */}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold">조회기간 :</span>
-            <DateRangePicker
-              date={dateRange}
-              onDateSelect={({ from, to }) => setDateRange({ from, to })}
-              contentAlign="end"
-            />
+          <div className="text-xs text-gray-400">
+            데이터는 매일 오전 1시에 전일 기준으로 업데이트됩니다.
           </div>
-          {/* <ThemeToggle /> */}
         </div>
         <div className="flex items-center gap-2">
           <ColumnStateResetButton

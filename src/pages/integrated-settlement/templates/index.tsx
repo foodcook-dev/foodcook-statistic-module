@@ -6,7 +6,7 @@ import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { Tabs } from '@/components/modules/tab';
 
-// import { ThemeToggle } from '@/components/modules/theme-toggle';
+import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function IntegratedSettlement() {
   const { gridRef, dateRange, handleCellClick, setDateRange, onGridReady, error } =
@@ -15,20 +15,26 @@ export default function IntegratedSettlement() {
   return (
     <div className="w-full flex flex-col gap-6">
       <Tabs />
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">조회기간 :</span>
-          <DateRangePicker
-            date={dateRange}
-            onDateSelect={({ from, to }) => setDateRange({ from, to })}
-            contentAlign="start"
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold">조회기간 :</span>
+            <DateRangePicker
+              date={dateRange}
+              onDateSelect={({ from, to }) => setDateRange({ from, to })}
+              contentAlign="start"
+              maxDateType="today"
+            />
+            <ThemeToggle />
+          </div>
+          <ColumnStateResetButton
+            storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
+            gridApi={gridRef.current?.api}
           />
-          {/* <ThemeToggle /> */}
         </div>
-        <ColumnStateResetButton
-          storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
-          gridApi={gridRef.current?.api}
-        />
+        <div className="text-xs text-gray-400">
+          데이터는 매일 오전 1시에 전일 기준으로 업데이트됩니다.
+        </div>
       </div>
       <div className="w-full h-[600px] relative">
         <AgGridReact

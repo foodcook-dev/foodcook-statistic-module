@@ -10,18 +10,21 @@ import {
   endOfYear,
   startOfDay,
   endOfDay,
+  isSameDay,
 } from 'date-fns';
 import { toDate, formatInTimeZone } from 'date-fns-tz';
 import { DATE_RANGE_OPTIONS } from '../constants';
 
 type DatePickerProps = {
   onDateSelect: (range: { from: Date; to: Date }) => void;
+  computedMaxDate: Date;
 };
 
-export const useDatePicker = ({ onDateSelect }: DatePickerProps) => {
+export const useDatePicker = ({ onDateSelect, computedMaxDate }: DatePickerProps) => {
+  const today = new Date();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(
-    DATE_RANGE_OPTIONS.THIS_MONTH,
+    isSameDay(computedMaxDate, today) ? DATE_RANGE_OPTIONS.THIS_MONTH : null,
   );
   const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
 
@@ -47,26 +50,37 @@ export const useDatePicker = ({ onDateSelect }: DatePickerProps) => {
     setSelectedOption(null);
   };
 
-  const today = new Date();
   const dateRanges = [
     {
+      // 이번주 (오늘 날짜 기준 주의 시작 날짜 ~ 설정된 MaxDate 까지)
+      // 설정된 MaxDate가 주의 시작 날짜보다 이전이면 비활성화
       label: DATE_RANGE_OPTIONS.THIS_WEEK,
       start: startOfWeek(today, { weekStartsOn: 1 }),
-      end: endOfWeek(today, { weekStartsOn: 1 }),
+      end: computedMaxDate,
+      disabled: computedMaxDate < startOfWeek(today, { weekStartsOn: 1 }),
     },
     {
+      // 지난주 (오늘날짜 기준)
       label: DATE_RANGE_OPTIONS.LAST_WEEK,
       start: subDays(startOfWeek(today, { weekStartsOn: 1 }), 7),
       end: subDays(endOfWeek(today, { weekStartsOn: 1 }), 7),
     },
-    { label: DATE_RANGE_OPTIONS.LAST_7_DAYS, start: subDays(today, 6), end: today },
     {
-      label: DATE_RANGE_OPTIONS.THIS_MONTH,
-      start: startOfMonth(today),
-      // end: endOfMonth(today),
-      end: today,
+      // 최근 7일간 (설정된 MaxDate 기준 6일 전 ~ MaxDate)
+      label: DATE_RANGE_OPTIONS.LAST_7_DAYS,
+      start: subDays(computedMaxDate, 6),
+      end: computedMaxDate,
     },
     {
+      // 이번달 (오늘 날짜 기준 이번달 1일 ~ 설정된 MaxDate)
+      // 설정된 MaxDate가 이번달 1일보다 이전이면 비활성화
+      label: DATE_RANGE_OPTIONS.THIS_MONTH,
+      start: startOfMonth(today),
+      end: computedMaxDate,
+      disabled: computedMaxDate < startOfMonth(today),
+    },
+    {
+      // 지난달 (오늘 날짜 기준 지난달 1일 ~ 지난달 마지막 날)
       label: DATE_RANGE_OPTIONS.LAST_MONTH,
       start: startOfMonth(subDays(today, today.getDate())),
       end: endOfMonth(subDays(today, today.getDate())),
@@ -74,8 +88,7 @@ export const useDatePicker = ({ onDateSelect }: DatePickerProps) => {
     {
       label: DATE_RANGE_OPTIONS.THIS_YEAR,
       start: startOfYear(today),
-      // end: endOfYear(today),
-      end: today,
+      end: computedMaxDate,
     },
     {
       label: DATE_RANGE_OPTIONS.LAST_YEAR,
