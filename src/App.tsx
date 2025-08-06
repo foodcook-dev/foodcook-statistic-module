@@ -13,28 +13,13 @@ import { useTheme } from '@/components/modules/theme-provider';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-export default function App() {
+function AppContent() {
   const { setTheme } = useTheme();
-  // const commonErrorHandle = useGlobalRejectHandler();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        retry: 0,
-      },
-    },
-    queryCache: new QueryCache({
-      onError: (e) => {
-        if (e instanceof ResponseError) console.log(e);
-      },
-    }),
-  });
 
   useEffect(() => {
     const token = getTokenFromUrl();
     if (token) {
       setTokenToStorage(token);
-      console.log('토큰이 URL에서 추출되어 저장되었습니다:', token);
     }
   }, []);
 
@@ -51,14 +36,34 @@ export default function App() {
   }, [setTheme]);
 
   return (
+    <HashRouter>
+      <Spinner />
+      <Alert />
+      <Confirm />
+      <Pages />
+    </HashRouter>
+  );
+}
+
+export default function App() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 0,
+      },
+    },
+    queryCache: new QueryCache({
+      onError: (e) => {
+        if (e instanceof ResponseError) console.log(e);
+      },
+    }),
+  });
+
+  return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <HashRouter>
-          <Spinner />
-          <Alert />
-          <Confirm />
-          <Pages />
-        </HashRouter>
+        <AppContent />
       </ThemeProvider>
     </QueryClientProvider>
   );
