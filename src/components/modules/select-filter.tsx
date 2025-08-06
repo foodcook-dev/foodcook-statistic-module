@@ -5,7 +5,8 @@ import { Button } from '@/components/atoms/button';
 import { Checkbox } from '@/components/atoms/checkbox';
 
 type SelectFilterState = {
-  selectedValues: Array<string>;
+  filterType: 'set';
+  values: Array<string>;
 };
 
 type StructureType = {
@@ -24,7 +25,7 @@ type SelectFilterProps = {
 };
 
 const SelectFilter = (props: SelectFilterProps) => {
-  const [selectedData, setSelectedData] = useState<string[]>(props.model?.selectedValues || []);
+  const [selectedData, setSelectedData] = useState<string[]>(props.model?.values || []);
   const [uniqueValues, setUniqueValues] = useState<string[]>([]);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const SelectFilter = (props: SelectFilterProps) => {
   }, [props.api, props.getValue, props.structure]);
 
   useEffect(() => {
-    setSelectedData(props.model?.selectedValues || []);
+    setSelectedData(props.model?.values || []);
   }, [props.model]);
 
   const doesFilterPass = (params: IDoesFilterPassParams) => {
@@ -65,7 +66,7 @@ const SelectFilter = (props: SelectFilterProps) => {
     if (newSelectedValues.length === 0) {
       props.onModelChange(null);
     } else {
-      props.onModelChange({ selectedValues: [...newSelectedValues] });
+      props.onModelChange({ filterType: 'set', values: [...newSelectedValues] });
     }
   };
 
