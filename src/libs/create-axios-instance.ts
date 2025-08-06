@@ -16,11 +16,11 @@ instance.interceptors.request.use(
     // iframe URL 파라미터에서 토큰을 가져와서 사용
     const token = getCurrentToken();
 
-    if (token) {
-      newConfig.headers.Authorization = `Bearer ${token}`;
-    }
+    // if (token) {
+    //   newConfig.headers.Authorization = `Bearer ${token}`;
+    // }
 
-    // newConfig.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGhvbmVfbnVtIjoiMDEwMzQzMzU2NzMiLCJwaG9uZV9udW1iZXIiOiIwMTAzNDMzNTY3MyIsImVtYWlsIjoieWFyZ2V1NThAZ21haWwuY29tIn0.OyqgJy7_fE4gleCI5yvi7muDkoiRHtf0ZE0-vlro3zc`;
+    newConfig.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGhvbmVfbnVtIjoiMDEwMzQzMzU2NzMiLCJwaG9uZV9udW1iZXIiOiIwMTAzNDMzNTY3MyIsImVtYWlsIjoieWFyZ2V1NThAZ21haWwuY29tIn0.OyqgJy7_fE4gleCI5yvi7muDkoiRHtf0ZE0-vlro3zc`;
 
     return newConfig;
   },
