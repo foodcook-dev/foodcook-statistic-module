@@ -1,129 +1,163 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useGridFilter } from 'ag-grid-react';
-import { IDoesFilterPassParams } from 'ag-grid-community';
+import { IDoesFilterPassParams, IRowNode } from 'ag-grid-community';
 import { Button } from '@/components/atoms/button';
 import { Checkbox } from '@/components/atoms/checkbox';
 
-type SelectFilterState = {
+interface SelectFilterState {
   filterType: 'set';
-  values: Array<string>;
-};
+  values: string[];
+}
 
-type StructureType = {
-  [key: string]: {
-    className: string;
-    text: string;
-  };
-};
+interface GridApi {
+  forEachNode: (callback: (node: IRowNode) => void) => void;
+}
 
-type SelectFilterProps = {
-  api: any;
+interface SelectFilterProps {
+  api: GridApi;
+  type: 'radio' | 'checkbox';
+  structure: Array<{ key: string; label: string }>;
   onModelChange: (model: SelectFilterState | null) => void;
-  getValue: (node: any) => any;
-  model?: SelectFilterState | null;
-  structure?: StructureType;
+  getValue: (node: IRowNode) => unknown;
+}
+
+const useFilterList = (
+  api: GridApi,
+  getValue: (node: IRowNode) => unknown,
+  structure: Array<{ key: string; label: string }>,
+) => {
+  return useMemo(() => {
+    if (structure) {
+      return structure;
+    }
+
+    const values: Array<{ key: string; label: string }> = [];
+    const seenKeys = new Set<string>();
+
+    api.forEachNode((node: IRowNode) => {
+      const value = getValue(node);
+      const stringValue = String(value);
+
+      if (value !== null && value !== undefined && value !== '' && !seenKeys.has(stringValue)) {
+        seenKeys.add(stringValue);
+        values.push({ key: stringValue, label: stringValue });
+      }
+    });
+
+    return values.sort((a, b) => a.label.localeCompare(b.label));
+  }, [api, getValue, structure]);
 };
 
-const SelectFilter = (props: SelectFilterProps) => {
-  const [selectedData, setSelectedData] = useState<string[]>(props.model?.values || []);
-  const [uniqueValues, setUniqueValues] = useState<string[]>([]);
+const useFilterState = (type: 'radio' | 'checkbox') => {
+  const [selectedData, setSelectedData] = useState<string[]>([]);
+  const [selectedRadioValue, setSelectedRadioValue] = useState<string>('');
 
-  useEffect(() => {
-    if (props.structure) {
-      const structureKeys = Object.keys(props.structure).sort();
-      setUniqueValues(structureKeys);
+  const resetState = useCallback(() => {
+    if (type === 'radio') {
+      setSelectedRadioValue('');
     } else {
-      const values: string[] = [];
-      props.api.forEachNode((node: any) => {
-        const value = props.getValue(node);
-        if (value !== null && value !== undefined && value !== '' && !values.includes(value)) {
-          values.push(String(value));
-        }
-      });
-      setUniqueValues(values.sort());
+      setSelectedData([]);
     }
-  }, [props.api, props.getValue, props.structure]);
+  }, [type]);
 
-  useEffect(() => {
-    setSelectedData(props.model?.values || []);
-  }, [props.model]);
-
-  const doesFilterPass = (params: IDoesFilterPassParams) => {
-    if (selectedData.length === 0 || selectedData.length === uniqueValues.length) {
-      return true;
-    }
-    const value = String(props.getValue(params.node));
-    return selectedData.includes(value);
+  return {
+    selectedData,
+    selectedRadioValue,
+    setSelectedData,
+    setSelectedRadioValue,
+    resetState,
   };
+};
 
-  useGridFilter({
-    doesFilterPass,
-  });
+const SelectFilter = ({ api, type, structure, onModelChange, getValue }: SelectFilterProps) => {
+  const filterList = useFilterList(api, getValue, structure);
+  const { selectedData, selectedRadioValue, setSelectedData, resetState } = useFilterState(type);
 
-  const updateModel = (newSelectedValues: string[]) => {
-    setSelectedData(newSelectedValues);
+  const doesFilterPass = useCallback(
+    (params: IDoesFilterPassParams) => {
+      const nodeValue = String(getValue(params.node));
 
-    if (newSelectedValues.length === 0) {
-      props.onModelChange(null);
-    } else {
-      props.onModelChange({ filterType: 'set', values: [...newSelectedValues] });
-    }
-  };
+      if (type === 'radio') {
+        return !selectedRadioValue || nodeValue === selectedRadioValue;
+      }
 
-  const handleChange = (value: string, checked: boolean) => {
-    let newSelectedValues: string[];
-    if (checked) {
-      newSelectedValues = [...selectedData, value];
-    } else {
-      newSelectedValues = selectedData.filter((v) => v !== value);
-    }
-    updateModel(newSelectedValues);
-  };
+      return (
+        selectedData.length === 0 ||
+        selectedData.length === filterList.length ||
+        selectedData.includes(nodeValue)
+      );
+    },
+    [type, selectedRadioValue, selectedData, filterList.length, getValue],
+  );
 
-  const handleClear = () => {
+  useGridFilter({ doesFilterPass });
+
+  const updateModel = useCallback(
+    (values: string[]) => {
+      const model = values.length > 0 ? { filterType: 'set' as const, values } : null;
+      onModelChange(model);
+    },
+    [onModelChange],
+  );
+
+  const handleCheckboxChange = useCallback(
+    (value: string, checked: boolean) => {
+      const newSelectedValues = checked
+        ? [...selectedData, value]
+        : selectedData.filter((v) => v !== value);
+
+      setSelectedData(newSelectedValues);
+      updateModel(newSelectedValues);
+    },
+    [selectedData, setSelectedData, updateModel],
+  );
+
+  // const handleRadioChange = useCallback(
+  //   (value: string) => {
+  //     setSelectedRadioValue(value);
+  //     updateModel(value ? [value] : []);
+  //   },
+  //   [setSelectedRadioValue, updateModel],
+  // );
+
+  const handleClear = useCallback(() => {
+    resetState();
     updateModel([]);
-  };
+  }, [resetState, updateModel]);
 
-  const getDisplayValue = (value: string) => {
-    const mapping = props?.structure;
-    return mapping?.[value]?.text || value;
-  };
+  const renderFilterOptions = useMemo(() => {
+    // if (type === 'radio') {
+    //   return <></>;
+    // }
+
+    return filterList.map((item) => (
+      <label
+        key={item.key}
+        className="flex cursor-pointer items-center gap-2 rounded p-1 hover:bg-gray-50"
+      >
+        <Checkbox
+          checked={selectedData.includes(item.key)}
+          onCheckedChange={(checked) => handleCheckboxChange(item.key, checked as boolean)}
+          className="h-4 w-4"
+        />
+        <span className="text-xs text-gray-900">{item.label}</span>
+      </label>
+    ));
+  }, [type, filterList, selectedData, handleCheckboxChange]);
 
   return (
-    <div className="p-[8px] min-w-[200px] max-h-[300px] overflow-y-auto bg-white">
-      <div className="space-y-2">
-        {uniqueValues.map((value) => (
-          <label
-            key={value}
-            className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
+    <div className="min-w-[200px] overflow-y-auto bg-white p-2">
+      <div className="max-h-[200px] space-y-2 overflow-auto">{renderFilterOptions}</div>
+      <div className="mt-2 border-t border-gray-200 pt-2">
+        <div className="flex justify-end">
+          <Button
+            onClick={handleClear}
+            className="h-[30px] rounded bg-gray-500 text-xs text-white hover:bg-gray-600"
           >
-            <Checkbox
-              checked={selectedData.includes(value)}
-              onCheckedChange={(checked) => handleChange(value, checked as boolean)}
-              className="w-4 h-4"
-            />
-            <span className="text-xs text-gray-900">{getDisplayValue(value)}</span>
-          </label>
-        ))}
+            초기화
+          </Button>
+        </div>
       </div>
-      {uniqueValues.length === 0 ? (
-        <div className="text-sm text-gray-500 text-center py-6">
-          해당열에 데이터가 없어
-          <br />
-          필터를 설정할 수 없습니다.
-        </div>
-      ) : (
-        <div className="mt-[8px] pt-[8px] border-t border-gray-200">
-          <div className="flex justify-end">
-            <Button
-              onClick={handleClear}
-              className="h-[30px] text-xs bg-gray-500 text-white rounded hover:bg-gray-600"
-            >
-              초기화
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

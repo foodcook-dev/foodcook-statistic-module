@@ -4,6 +4,7 @@ import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
 import { STATUS, PAYMENT } from '@/constants/badge';
+import { STATUS_LIST, PAYMENT_LIST } from '@/constants/filter';
 import { Button } from '@/components/atoms/button';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import Log from '@/components/modules/custom-dialog/log-dialog';
@@ -29,6 +30,7 @@ export const companyColumnDefs: ColDef[] = [
     headerName: '결제일',
     sortable: false,
     filter: SelectFilter,
+    filterParams: { type: 'checkbox', structure: PAYMENT_LIST },
     floatingFilter: false,
     cellRenderer: paymentRenderer,
     cellStyle: { textAlign: 'center' },
@@ -103,7 +105,7 @@ export const createColumnDefs = (
     field: 'type',
     pinned: 'left',
     filter: SelectFilter,
-    filterParams: { structure: STATUS },
+    filterParams: { type: 'checkbox', structure: STATUS_LIST },
     cellStyle: { textAlign: 'center' },
     cellRenderer: statusRenderer,
   },
