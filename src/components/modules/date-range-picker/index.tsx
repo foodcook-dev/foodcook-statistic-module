@@ -16,12 +16,12 @@ interface DateRangePickerProps extends React.HTMLAttributes<HTMLButtonElement> {
   maxDateType: 'today' | 'yesterday';
   onDateSelect: (range: { from: Date; to: Date }) => void;
   contentAlign?: 'start' | 'center' | 'end';
-  simpleMode?: boolean;
+  isDashboard?: boolean;
 }
 
 export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps>(
   (
-    { className, date, onDateSelect, contentAlign = 'start', maxDateType, simpleMode, ...props },
+    { className, date, onDateSelect, contentAlign = 'start', maxDateType, isDashboard, ...props },
     ref,
   ) => {
     const computedMaxDate = React.useMemo(() => {
@@ -43,7 +43,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
       selectDateRange,
       handleDateSelect,
       formatWithTz,
-    } = useDatePicker({ onDateSelect, computedMaxDate, simpleMode });
+    } = useDatePicker({ onDateSelect, computedMaxDate, isDashboard });
 
     return (
       <>

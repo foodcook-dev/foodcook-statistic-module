@@ -5,18 +5,19 @@ import { useDashboardData } from '@/pages/dashboard/hooks/useDashboardData';
 import { useMemo } from 'react';
 import { startOfMonth, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { useTheme } from '@/components/modules/theme-provider';
 
 interface UseDashboardParams {
   partnerId?: number;
 }
 
 export const useDashboard = ({ partnerId }: UseDashboardParams = {}) => {
+  const { theme } = useTheme();
   const [lastUpdateDate, setLastUpdateDate] = useState<Date | undefined>();
   const [period, setPeriod] = useState<string>('realtime');
-  const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>({
-    from: startOfMonth(today),
-    to: today,
+    from: startOfMonth(new Date()),
+    to: new Date(),
   });
 
   const { data: dashboardData, refetch } = useDashboardData({
@@ -42,59 +43,95 @@ export const useDashboard = ({ partnerId }: UseDashboardParams = {}) => {
     }));
   }, [dashboardData]);
 
+  const themeColors = useMemo(() => {
+    const isDark = theme === 'dark';
+    return {
+      background: isDark ? '#111827' : '#ffffff',
+      text: isDark ? '#ffffff' : '#000000',
+      markerStroke: isDark ? '#1a1b23' : '#ffffff',
+      revenue: isDark ? '#F687B3' : '#F6A5A5',
+      purchase: isDark ? '#4FD1C7' : '#6EC6A9',
+      profit: isDark ? '#F6E05E' : '#FFD54F',
+    };
+  }, [theme]);
+
+  const createAxes = useMemo(
+    () => [
+      {
+        type: 'category' as const,
+        position: 'bottom' as const,
+        label: {
+          color: themeColors.text,
+        },
+      },
+      {
+        type: 'number' as const,
+        position: 'left' as const,
+        label: {
+          formatter: (params: any) => `${params.value.toLocaleString()} 원`,
+          color: themeColors.text,
+        },
+      },
+    ],
+    [themeColors.text],
+  );
+
+  const createSeries = useMemo(
+    () => [
+      {
+        type: 'bar' as const,
+        xKey: 'date',
+        yKey: 'revenue',
+        yName: '매출액',
+        fill: themeColors.revenue,
+        fillOpacity: 0.9,
+      },
+      {
+        type: 'bar' as const,
+        xKey: 'date',
+        yKey: 'purchase',
+        yName: '매입액',
+        fill: themeColors.purchase,
+        fillOpacity: 0.9,
+      },
+      {
+        type: 'line' as const,
+        xKey: 'date',
+        yKey: 'margin',
+        yName: '매출 총 이익',
+        stroke: themeColors.profit,
+        strokeWidth: 3,
+        marker: {
+          enabled: true,
+          size: 10,
+          fill: themeColors.profit,
+          stroke: themeColors.markerStroke,
+          strokeWidth: 2,
+        },
+      },
+    ],
+    [themeColors],
+  );
+
   const chartOptions: AgChartOptions = useMemo(
     () => ({
       data: chartData,
-      axes: [
-        {
-          type: 'category' as any,
-          position: 'bottom',
-        },
-        {
-          type: 'number' as any,
-          position: 'left',
+      background: {
+        fill: themeColors.background,
+      },
+      axes: createAxes,
+      series: createSeries,
+      legend: {
+        enabled: true,
+        position: 'bottom',
+        item: {
           label: {
-            formatter: (params: any) => {
-              return params.value.toLocaleString() + ' 원';
-            },
+            color: themeColors.text,
           },
         },
-      ],
-      series: [
-        {
-          type: 'bar' as any,
-          xKey: 'date',
-          yKey: 'revenue',
-          yName: '매출액',
-          fill: '#F6A5A5',
-          fillOpacity: 0.9,
-        },
-        {
-          type: 'bar' as any,
-          xKey: 'date',
-          yKey: 'purchase',
-          yName: '매입액',
-          fill: '#6EC6A9',
-          fillOpacity: 0.9,
-        },
-        {
-          type: 'line' as any,
-          xKey: 'date',
-          yKey: 'margin',
-          yName: '매출 총 이익',
-          stroke: '#FFD54F',
-          strokeWidth: 3,
-          marker: {
-            enabled: true,
-            size: 10,
-            fill: '#FFD54F',
-            stroke: '#ffffff',
-            strokeWidth: 2,
-          },
-        },
-      ],
+      },
     }),
-    [chartData],
+    [chartData, themeColors, createAxes, createSeries],
   );
 
   return {
