@@ -16,10 +16,14 @@ interface DateRangePickerProps extends React.HTMLAttributes<HTMLButtonElement> {
   maxDateType: 'today' | 'yesterday';
   onDateSelect: (range: { from: Date; to: Date }) => void;
   contentAlign?: 'start' | 'center' | 'end';
+  simpleMode?: boolean;
 }
 
 export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps>(
-  ({ className, date, onDateSelect, contentAlign = 'start', maxDateType, ...props }, ref) => {
+  (
+    { className, date, onDateSelect, contentAlign = 'start', maxDateType, simpleMode, ...props },
+    ref,
+  ) => {
     const computedMaxDate = React.useMemo(() => {
       if (maxDateType === 'yesterday') return new Date(Date.now() - 24 * 60 * 60 * 1000);
       if (maxDateType === 'today') return new Date();
@@ -39,7 +43,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
       selectDateRange,
       handleDateSelect,
       formatWithTz,
-    } = useDatePicker({ onDateSelect, computedMaxDate });
+    } = useDatePicker({ onDateSelect, computedMaxDate, simpleMode });
 
     return (
       <>
@@ -49,13 +53,13 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
               id="date"
               ref={ref}
               variant="outline"
-              className="w-[230px] flex justify-between hover:border-primary group"
+              className="hover:border-primary group text-contrast/70 flex w-[230px] justify-between"
               onClick={handleTogglePopover}
               suppressHydrationWarning
               {...props}
             >
-              <CalendarIcon className="h-4 w-4 group-hover:text-primary transition-colors duration-200" />
-              <span className="group-hover:text-primary transition-colors duration-200">
+              <CalendarIcon className="group-hover:text-primary h-4 w-4 transition-colors duration-200" />
+              <span className="group-hover:text-primary flex-1 transition-colors duration-200">
                 {date?.from && date?.to ? (
                   <>
                     <span>{formatWithTz(date.from, 'yyyy-MM-dd')}</span>
@@ -63,14 +67,14 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
                     <span>{formatWithTz(date.to, 'yyyy-MM-dd')}</span>
                   </>
                 ) : (
-                  <span>기간을 선택하세요</span>
+                  <span className="text-contrast/30">기간을 선택해주세요</span>
                 )}
               </span>
             </Button>
           </PopoverTrigger>
           {isOpen && (
             <PopoverContent
-              className="w-auto bg-background"
+              className="bg-background w-auto"
               align={contentAlign}
               avoidCollisions={false}
               onInteractOutside={handleClose}
@@ -81,7 +85,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
               }}
             >
               <div className="flex">
-                <div className="flex flex-col gap-1 pr-4 text-left border-r border-foreground/10">
+                <div className="border-foreground/10 flex flex-col gap-1 border-r pr-4 text-left">
                   {dateRanges.map(({ label, start, end, disabled }) => (
                     <Button
                       key={label}
@@ -89,7 +93,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
                       size="sm"
                       disabled={disabled}
                       className={cn(
-                        'justify-start bg-foreground text-contrast',
+                        'bg-foreground text-contrast justify-start',
                         selectedOption === label && 'bg-gray-200 text-gray-900',
                       )}
                       onClick={() => {

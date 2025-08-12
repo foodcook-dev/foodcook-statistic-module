@@ -13,7 +13,7 @@ export default function IntegratedSettlement() {
     useIntegratedSettlement();
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Tabs />
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
@@ -36,7 +36,7 @@ export default function IntegratedSettlement() {
           데이터는 매일 오전 1시에 전일 기준으로 업데이트됩니다.
         </div>
       </div>
-      <div className="w-full h-[600px] relative">
+      <div className="relative h-[600px] w-full">
         <AgGridReact
           ref={gridRef}
           gridOptions={gridOptions}
@@ -44,8 +44,8 @@ export default function IntegratedSettlement() {
           onCellClicked={handleCellClick}
         />
         {error && (
-          <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div className="text-center bg-foreground shadow-lg rounded-lg p-6 border border-foreground">
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <div className="bg-foreground border-foreground rounded-lg border p-6 text-center shadow-lg">
               <p className="text-contrast text-sm font-medium">{error}</p>
             </div>
           </div>
