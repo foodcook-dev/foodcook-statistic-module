@@ -11,7 +11,7 @@ import StatCard from '../modules/stat-card';
 import DetailCard from '../modules/detail-card';
 import { useDashboard } from '../hooks/useDashboard';
 import { STAT_LIST } from '../structure';
-import { ThemeToggle } from '@/components/modules/theme-toggle';
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function Dashboard() {
   const {
@@ -22,11 +22,33 @@ export default function Dashboard() {
     dateRange,
     setPeriod,
     setDateRange,
+    partners,
+    selectedPartnerId,
+    handlePartnerChange,
   } = useDashboard();
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex items-center justify-end gap-4">
+      <div className="flex items-center justify-between gap-4">
+        <Select
+          value={selectedPartnerId ? selectedPartnerId.toString() : 'all'}
+          onValueChange={handlePartnerChange}
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="파트너사 선택" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">전체 파트너사</SelectItem>
+            {partners.map((partner) => (
+              <SelectItem
+                key={partner.partner_company_id}
+                value={partner.partner_company_id.toString()}
+              >
+                {partner.b_nm}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <div className="flex items-center gap-2">
           <Select value={period} onValueChange={(value) => setPeriod(value)}>
             <SelectTrigger className="w-[140px]">
@@ -37,17 +59,17 @@ export default function Dashboard() {
               <SelectItem value="select">기간 선택</SelectItem>
             </SelectContent>
           </Select>
+          {period === 'select' && (
+            <DateRangePicker
+              date={dateRange}
+              onDateSelect={({ from, to }) => setDateRange({ from, to })}
+              contentAlign="end"
+              maxDateType="today"
+              isDashboard
+            />
+          )}
         </div>
-        {period === 'select' && (
-          <DateRangePicker
-            date={dateRange}
-            onDateSelect={({ from, to }) => setDateRange({ from, to })}
-            contentAlign="end"
-            maxDateType="today"
-            isDashboard
-          />
-        )}
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">

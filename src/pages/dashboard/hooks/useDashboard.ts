@@ -2,6 +2,7 @@ import { type AgChartOptions } from 'ag-charts-community';
 import { useState, useEffect } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useDashboardData } from '@/pages/dashboard/hooks/useDashboardData';
+import { usePartnerData } from '@/pages/dashboard/hooks/usePartnerData';
 import { useMemo } from 'react';
 import { startOfMonth, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -11,20 +12,30 @@ interface UseDashboardParams {
   partnerId?: number;
 }
 
-export const useDashboard = ({ partnerId }: UseDashboardParams = {}) => {
+export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams = {}) => {
   const { theme } = useTheme();
   const [lastUpdateDate, setLastUpdateDate] = useState<Date | undefined>();
   const [period, setPeriod] = useState<string>('realtime');
+  const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(initialPartnerId);
   const [dateRange, setDateRange] = useState<DateRange>({
     from: startOfMonth(new Date()),
     to: new Date(),
   });
 
+  // 파트너사 데이터 가져오기
+  const { partners } = usePartnerData();
+
   const { data: dashboardData, refetch } = useDashboardData({
     startDate: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
     endDate: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-    partnerId,
+    partnerId: selectedPartnerId,
   });
+
+  // 파트너사 변경 핸들러
+  const handlePartnerChange = (partnerId: string) => {
+    const id = partnerId === 'all' ? undefined : Number(partnerId);
+    setSelectedPartnerId(id);
+  };
 
   useEffect(() => {
     if (dashboardData) setLastUpdateDate(new Date());
@@ -143,5 +154,8 @@ export const useDashboard = ({ partnerId }: UseDashboardParams = {}) => {
     refetch,
     setPeriod,
     setDateRange,
+    partners,
+    selectedPartnerId,
+    handlePartnerChange,
   };
 };

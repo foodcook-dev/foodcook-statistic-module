@@ -1,4 +1,5 @@
 import { DashboardApiResponse } from '@/pages/dashboard/types/dashboard';
+import { mockPartnerData } from './mockPartnerData';
 
 export const mockDashboardData: DashboardApiResponse = {
   partner_company_id: 1001,
@@ -132,7 +133,10 @@ export const fetchDashboardData = async (
 
   // 요청 파라미터에 따라 다른 데이터를 반환할 수 있음
   if (partnerId && partnerId !== mockDashboardData.partner_company_id) {
-    const partnerName = `파트너사 ${partnerId}`;
+    // mockPartnerData에서 파트너사 이름 찾기
+    const partner = mockPartnerData.find((p) => p.partner_company_id === partnerId);
+    const partnerName = partner ? partner.b_nm : `파트너사 ${partnerId}`;
+
     const generatedData = generateRandomData(partnerId, partnerName);
 
     // 날짜 범위에 따른 데이터 조정
@@ -144,7 +148,7 @@ export const fetchDashboardData = async (
     // 실제 API 호출 시뮬레이션을 위한 딜레이
     await new Promise((resolve) => setTimeout(resolve, Math.random() * 1000 + 500));
 
-    console.log(`[${timestamp}] 파트너 ${partnerId} 데이터 반환 완료`);
+    console.log(`[${timestamp}] 파트너 ${partnerId} (${partnerName}) 데이터 반환 완료`);
     return generatedData;
   }
 
@@ -193,14 +197,9 @@ export const getMockDataByDateRange = (
 };
 
 export const getMockDataByPartner = (partnerId: number): DashboardApiResponse => {
-  const partnerNames = [
-    '푸드쿡 파트너사',
-    '글로벌 식품',
-    '프레시 마켓',
-    '디럭스 푸드',
-    '퀄리티 서플라이',
-  ];
+  // mockPartnerData에서 파트너사 이름 찾기
+  const partner = mockPartnerData.find((p) => p.partner_company_id === partnerId);
+  const partnerName = partner ? partner.b_nm : `파트너사 ${partnerId}`;
 
-  const partnerName = partnerNames[partnerId % partnerNames.length] || `파트너사 ${partnerId}`;
   return generateRandomData(partnerId, partnerName);
 };

@@ -30,7 +30,7 @@ export const STAT_LIST = [
   {
     title: '총 재고자산',
     unit: '원',
-    tooltip: '현재 보유하고 있는 재고 자산입니다',
+    tooltip: '3000개 미만(재고관리상품)으로 보유하고 있는 재고자산입니다',
     value: 'inventory_asset',
     isRealtime: true,
   },

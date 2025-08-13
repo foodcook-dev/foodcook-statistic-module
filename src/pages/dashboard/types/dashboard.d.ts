@@ -6,6 +6,16 @@ export interface DashboardChartData {
   cost_to_sales_ratio: number;
 }
 
+export interface PartnerCompany {
+  partner_company_id: number;
+  b_nm: string;
+}
+
+export interface PartnerListResponse {
+  partners: PartnerCompany[];
+  total_count: number;
+}
+
 export interface DashboardApiResponse {
   partner_company_id: number | null;
   partner_company_name: string | null;
