@@ -1,4 +1,4 @@
-import { InfoIcon, Activity } from 'lucide-react';
+import { InfoIcon } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/atoms/tooltip';
 
 type StatCardProps = {
@@ -18,19 +18,12 @@ export default function StatCard({
 }: StatCardProps) {
   return (
     <div
-      className={`bg-background border-border/80 flex flex-col gap-2 rounded-lg border p-6 shadow-sm transition-all duration-200 ${
-        isRealtime ? 'bg-foreground/30' : ''
-      } `}
+      className={`bg-background border-border/80 flex flex-col gap-2 rounded-lg border p-6 shadow-sm ${isRealtime ? 'bg-foreground/30' : ''}`}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <p
-            className={`text-sm font-medium ${isRealtime ? 'text-blue-800 dark:text-blue-600' : 'text-contrast/50'}`}
-          >
-            {title}
-          </p>
-          {isRealtime && <Activity className="h-3 w-3 text-blue-500" />}
-        </div>
+      <div className="flex items-center justify-between text-sm font-medium">
+        <p className={`${isRealtime ? 'text-blue-800 dark:text-blue-600' : 'text-contrast/50'}`}>
+          {title}
+        </p>
         {tooltip && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -49,7 +42,7 @@ export default function StatCard({
           {value ? value.toLocaleString() : '-'}
         </span>
         <span className={`text-sm font-normal ${isRealtime ? 'text-blue-600' : 'text-contrast'}`}>
-          {unit || '-'}
+          {unit}
         </span>
       </div>
     </div>

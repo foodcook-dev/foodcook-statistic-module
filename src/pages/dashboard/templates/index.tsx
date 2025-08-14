@@ -17,19 +17,19 @@ export default function Dashboard() {
   const {
     chartOptions,
     dashboardData,
-    lastUpdateDate,
-    period,
-    dateRange,
-    setPeriod,
-    setDateRange,
     partners,
     selectedPartnerId,
+    periodType,
+    dateRange,
+    lastUpdateDate,
+    setDateRange,
     handlePartnerChange,
+    handlePeriodChange,
   } = useDashboard();
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between">
         <Select
           value={selectedPartnerId ? selectedPartnerId.toString() : 'all'}
           onValueChange={handlePartnerChange}
@@ -38,8 +38,8 @@ export default function Dashboard() {
             <SelectValue placeholder="파트너사 선택" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">전체 파트너사</SelectItem>
-            {partners.map((partner) => (
+            <SelectItem value="all">식자재쿡</SelectItem>
+            {partners?.map((partner: any) => (
               <SelectItem
                 key={partner.partner_company_id}
                 value={partner.partner_company_id.toString()}
@@ -50,16 +50,16 @@ export default function Dashboard() {
           </SelectContent>
         </Select>
         <div className="flex items-center gap-2">
-          <Select value={period} onValueChange={(value) => setPeriod(value)}>
+          <Select value={periodType} onValueChange={handlePeriodChange}>
             <SelectTrigger className="w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="realtime">실시간</SelectItem>
-              <SelectItem value="select">기간 선택</SelectItem>
+              <SelectItem value="period">기간 선택</SelectItem>
             </SelectContent>
           </Select>
-          {period === 'select' && (
+          {periodType === 'period' && (
             <DateRangePicker
               date={dateRange}
               onDateSelect={({ from, to }) => setDateRange({ from, to })}

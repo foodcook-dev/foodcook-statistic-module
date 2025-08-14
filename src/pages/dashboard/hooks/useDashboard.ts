@@ -1,9 +1,9 @@
 import { type AgChartOptions } from 'ag-charts-community';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import createAxios from '@/libs/create-axios-instance';
 import { DateRange } from 'react-day-picker';
 import { useDashboardData } from '@/pages/dashboard/hooks/useDashboardData';
-import { usePartnerData } from '@/pages/dashboard/hooks/usePartnerData';
-import { useMemo } from 'react';
 import { startOfMonth, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useTheme } from '@/components/modules/theme-provider';
@@ -14,42 +14,76 @@ interface UseDashboardParams {
 
 export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams = {}) => {
   const { theme } = useTheme();
-  const [lastUpdateDate, setLastUpdateDate] = useState<Date | undefined>();
-  const [period, setPeriod] = useState<string>('realtime');
   const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(initialPartnerId);
+  const [periodType, setPeriodType] = useState<string>('realtime');
   const [dateRange, setDateRange] = useState<DateRange>({
-    from: startOfMonth(new Date()),
+    from: new Date(),
     to: new Date(),
   });
 
-  // 파트너사 데이터 가져오기
-  const { partners } = usePartnerData();
-
-  const { data: dashboardData, refetch } = useDashboardData({
-    startDate: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-    endDate: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-    partnerId: selectedPartnerId,
+  const { data: partners } = useQuery({
+    queryKey: ['partners'],
+    queryFn: () =>
+      createAxios({
+        method: 'get',
+        endpoint: '/dashboard/companies/',
+      }),
   });
 
-  // 파트너사 변경 핸들러
+  const { data: dashboardData, dataUpdatedAt } = useQuery({
+    queryKey: ['dashboard', selectedPartnerId, dateRange.from, dateRange.to],
+    queryFn: () => {
+      return createAxios({
+        method: 'get',
+        endpoint: `/dashboard/main_by_company/`,
+        params: {
+          start_date: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : '',
+          end_date: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : '',
+          partner_company_id: selectedPartnerId,
+        },
+      });
+    },
+    enabled: !!dateRange.from && !!dateRange.to,
+    staleTime: 0, // 데이터를 항상 stale로 간주하여 자동 리페치 허용
+    gcTime: 20 * 60 * 1000, // 20분간 캐시 유지 (구 cacheTime)
+    refetchOnWindowFocus: true,
+    refetchInterval: 600 * 1000, // 10분마다 자동 리페치
+    refetchIntervalInBackground: true, // 백그라운드에서도 리페치 실행
+    retry: 2,
+  });
+
+  // const { data: dashboardData, refetch } = useDashboardData({
+  //   startDate: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+  //   endDate: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+  //   partnerId: selectedPartnerId,
+  // });
+
   const handlePartnerChange = (partnerId: string) => {
     const id = partnerId === 'all' ? undefined : Number(partnerId);
     setSelectedPartnerId(id);
   };
 
-  useEffect(() => {
-    if (dashboardData) setLastUpdateDate(new Date());
-  }, [dashboardData]);
+  const handlePeriodChange = (period: string) => {
+    setPeriodType(period);
+    setDateRange({
+      from: startOfMonth(new Date()),
+      to: new Date(),
+    });
+  };
+
+  const lastUpdateDate = useMemo(() => {
+    return dataUpdatedAt ? new Date(dataUpdatedAt) : undefined;
+  }, [dataUpdatedAt]);
 
   const chartData = useMemo(() => {
     if (!dashboardData?.chart_data) return [];
 
-    return dashboardData.chart_data.map((item) => ({
+    return dashboardData.chart_data.map((item: any) => ({
       date: format(new Date(item.date), 'MM/dd[EEE]', { locale: ko }),
       revenue: item.sales_amount,
       purchase: item.purchase_amount,
       profit: item.sales_amount - item.purchase_amount,
-      margin: item.sales_amount * (dashboardData.gross_profit_margin / 100),
+      margin: item.gross_profit_margin,
       costRatio: item.cost_to_sales_ratio,
     }));
   }, [dashboardData]);
@@ -146,16 +180,15 @@ export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams
   );
 
   return {
+    selectedPartnerId,
+    partners,
     lastUpdateDate,
-    period,
+    periodType,
     dateRange,
     chartOptions,
     dashboardData,
-    refetch,
-    setPeriod,
     setDateRange,
-    partners,
-    selectedPartnerId,
     handlePartnerChange,
+    handlePeriodChange,
   };
 };

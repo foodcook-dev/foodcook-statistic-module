@@ -3,7 +3,6 @@ import { mockPartnerData } from './mockPartnerData';
 
 export const mockDashboardData: DashboardApiResponse = {
   partner_company_id: 1001,
-  partner_company_name: '푸드쿡 파트너사',
   realtime_revenue: 2450000,
   total_revenue: 58551046,
   unique_user_count: 342,
@@ -17,6 +16,7 @@ export const mockDashboardData: DashboardApiResponse = {
   external_revenue: 13551046,
   total_tax_amount: 53200000,
   total_tax_free_amount: 5351046,
+  purchase_amount: 38173157,
   gross_profit_margin: 24.5,
   chart_data: [
     {
@@ -65,7 +65,7 @@ export const mockDashboardData: DashboardApiResponse = {
 };
 
 // 다양한 파트너사 데이터 생성을 위한 헬퍼 함수
-const generateRandomData = (partnerId: number, partnerName: string): DashboardApiResponse => {
+const generateRandomData = (partnerId: number): DashboardApiResponse => {
   const baseRevenue = Math.floor(Math.random() * 100000000) + 20000000;
   const realtimeRevenue = Math.floor(Math.random() * 5000000) + 1000000;
   const userCount = Math.floor(Math.random() * 500) + 100;
@@ -73,7 +73,6 @@ const generateRandomData = (partnerId: number, partnerName: string): DashboardAp
 
   return {
     partner_company_id: partnerId,
-    partner_company_name: partnerName,
     realtime_revenue: realtimeRevenue,
     total_revenue: baseRevenue,
     unique_user_count: userCount,
@@ -87,6 +86,7 @@ const generateRandomData = (partnerId: number, partnerName: string): DashboardAp
     external_revenue: Math.floor(baseRevenue * 0.3),
     total_tax_amount: Math.floor(baseRevenue * 0.85),
     total_tax_free_amount: Math.floor(baseRevenue * 0.15),
+    purchase_amount: Math.floor(baseRevenue * 0.6), // 60% 매입액
     gross_profit_margin: Math.floor(Math.random() * 30) + 15, // 15-45% 마진
     chart_data: generateChartData(),
   };
@@ -137,7 +137,7 @@ export const fetchDashboardData = async (
     const partner = mockPartnerData.find((p) => p.partner_company_id === partnerId);
     const partnerName = partner ? partner.b_nm : `파트너사 ${partnerId}`;
 
-    const generatedData = generateRandomData(partnerId, partnerName);
+    const generatedData = generateRandomData(partnerId);
 
     // 날짜 범위에 따른 데이터 조정
     if (startDate && endDate) {
@@ -199,7 +199,6 @@ export const getMockDataByDateRange = (
 export const getMockDataByPartner = (partnerId: number): DashboardApiResponse => {
   // mockPartnerData에서 파트너사 이름 찾기
   const partner = mockPartnerData.find((p) => p.partner_company_id === partnerId);
-  const partnerName = partner ? partner.b_nm : `파트너사 ${partnerId}`;
 
-  return generateRandomData(partnerId, partnerName);
+  return generateRandomData(partnerId);
 };
