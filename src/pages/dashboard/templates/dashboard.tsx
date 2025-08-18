@@ -7,16 +7,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/atoms/select';
-import StatCard from './stat-card';
-import DetailCard from './detail-card';
+import StatCard from '../modules/stat-card';
+import DetailCard from '../modules/detail-card';
 import { useDashboard } from '../hooks/useDashboard';
 import { STAT_LIST } from '../structure';
 
-interface DashboardContentProps {
+interface DashboardProps {
   isSelectable?: boolean;
 }
 
-export default function DashboardContent({ isSelectable = false }: DashboardContentProps) {
+export default function Dashboard({ isSelectable = false }: DashboardProps) {
   const {
     chartOptions,
     dashboardData,

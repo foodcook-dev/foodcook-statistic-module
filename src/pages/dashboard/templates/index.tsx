@@ -1,4 +1,6 @@
-import AdminDashboard from './admin-dashboard';
-import MainDashboard from './main-dashboard';
+import Dashboard from './dashboard';
+
+const AdminDashboard = () => <Dashboard isSelectable />;
+const MainDashboard = () => <Dashboard />;
 
 export { AdminDashboard, MainDashboard };
