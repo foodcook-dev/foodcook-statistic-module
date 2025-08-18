@@ -77,7 +77,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="flex gap-4">
         {STAT_LIST.map((stat) => (
           <StatCard
             key={stat.value}
@@ -88,8 +88,8 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
         ))}
       </div>
 
-      <div className="grid h-[600px] grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="bg-background border-border/50 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm lg:col-span-2">
+      <div className="grid h-[600px] grid-cols-3 gap-6">
+        <div className="bg-background border-border/50 col-span-2 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
           <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
             매출 통계
           </h3>

@@ -19,7 +19,7 @@ export default function StatCard({ stat, value, periodType }: StatCardProps) {
 
   return (
     <div
-      className={`bg-background border-border/80 flex flex-col gap-2 rounded-lg border p-6 shadow-sm ${isActive ? 'bg-foreground/30' : ''}`}
+      className={`bg-background border-border/80 flex flex-1 flex-col gap-2 rounded-lg border p-6 shadow-sm ${isActive ? 'bg-foreground/30' : ''}`}
     >
       <div className="flex items-center justify-between text-sm font-medium">
         <p className={`${isActive ? 'text-blue-800 dark:text-blue-600' : 'text-contrast/50'}`}>

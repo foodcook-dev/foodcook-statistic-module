@@ -34,7 +34,7 @@ export const STAT_LIST = [
     unit: '원',
     tooltip: (isRealtime?: boolean) =>
       isRealtime
-        ? '3000개 미만(재고관리상품)으로 보유하고 있는 재고자산입니다'
+        ? '3000개 미만(재고관리상품)으로 보유하고 있는 실시간 재고자산입니다'
         : '기간내 평균 재고자산입니다',
     value: 'inventory_asset',
     isHighlight: true,

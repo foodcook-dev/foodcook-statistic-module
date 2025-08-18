@@ -96,7 +96,7 @@ export default function DetailCard({ dateRange, periodType, data }: DetailCardPr
       : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
 
   return (
-    <div className="border-border/50 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm lg:col-span-1">
+    <div className="border-border/50 col-span-1 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
       <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
         {title}
       </h3>
