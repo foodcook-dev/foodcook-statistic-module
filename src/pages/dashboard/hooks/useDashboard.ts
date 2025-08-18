@@ -7,13 +7,13 @@ import { startOfMonth, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useTheme } from '@/components/modules/theme-provider';
 
-interface UseDashboardParams {
-  partnerId?: number;
+interface UseDashboardOptions {
+  isSelectable: boolean;
 }
 
-export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams = {}) => {
+export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
   const { theme } = useTheme();
-  const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(initialPartnerId);
+  const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(undefined);
   const [periodType, setPeriodType] = useState<string>('realtime');
   const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(),
@@ -27,20 +27,32 @@ export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams
         method: 'get',
         endpoint: '/dashboard/companies/',
       }),
+    enabled: isSelectable,
   });
 
   const { data: dashboardData, dataUpdatedAt } = useQuery({
-    queryKey: ['dashboard', periodType, selectedPartnerId, dateRange.from, dateRange.to],
+    queryKey: [
+      'dashboard',
+      periodType,
+      selectedPartnerId,
+      dateRange.from,
+      dateRange.to,
+      isSelectable,
+    ],
     queryFn: () => {
+      const endpoint = isSelectable ? '/dashboard/main_by_company/' : '/dashboard/main/';
+      const params: any = {
+        start_date: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : '',
+        end_date: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : '',
+        type: periodType,
+      };
+
+      if (isSelectable) params.partner_company_id = selectedPartnerId;
+
       return createAxios({
         method: 'get',
-        endpoint: `/dashboard/main_by_company/`,
-        params: {
-          start_date: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : '',
-          end_date: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : '',
-          type: periodType,
-          partner_company_id: selectedPartnerId,
-        },
+        endpoint,
+        params,
       });
     },
     enabled: !!dateRange.from && !!dateRange.to,
