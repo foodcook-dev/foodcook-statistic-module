@@ -75,12 +75,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
         {STAT_LIST.map((stat) => (
           <StatCard
-            key={stat.title}
-            title={stat.title}
+            key={stat.value}
+            stat={stat}
             value={Number(dashboardData?.[stat.value as keyof typeof dashboardData])}
-            unit={stat.unit}
-            tooltip={stat.tooltip}
-            isRealtime={stat.isRealtime}
+            periodType={periodType}
           />
         ))}
       </div>
@@ -92,7 +90,7 @@ export default function Dashboard() {
           </h3>
           <AgCharts className="flex-1" options={chartOptions} />
         </div>
-        <DetailCard data={dashboardData} />
+        <DetailCard data={dashboardData} periodType={periodType} dateRange={dateRange} />
       </div>
 
       <div className="flex items-center justify-end gap-2 rounded-lg p-2 px-4">

@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
+import { format } from 'date-fns';
 import { DashboardApiResponse } from '@/pages/dashboard/types/dashboard';
 
 interface DetailCardProps {
+  dateRange: DateRange;
+  periodType: string;
   data?: DashboardApiResponse;
 }
 
@@ -81,15 +85,20 @@ const RevenueDetailsPanel = ({ data }: { data?: DashboardApiResponse }) => (
   </div>
 );
 
-export default function DetailCard({ data }: DetailCardProps) {
+export default function DetailCard({ dateRange, periodType, data }: DetailCardProps) {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => setShowDetails((prev) => !prev);
 
+  const title =
+    periodType === 'realtime'
+      ? '일간 매출액'
+      : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
+
   return (
     <div className="border-border/50 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm lg:col-span-1">
       <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
-        일간 매출액
+        {title}
       </h3>
       <div className="space-y-3 text-sm">
         <SimpleRow label="매출액" value={data?.revenue} />

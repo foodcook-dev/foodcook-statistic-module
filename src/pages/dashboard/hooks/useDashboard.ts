@@ -1,9 +1,8 @@
 import { type AgChartOptions } from 'ag-charts-community';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { DateRange } from 'react-day-picker';
-import { useDashboardData } from '@/pages/dashboard/hooks/useDashboardData';
 import { startOfMonth, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useTheme } from '@/components/modules/theme-provider';
@@ -31,7 +30,7 @@ export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams
   });
 
   const { data: dashboardData, dataUpdatedAt } = useQuery({
-    queryKey: ['dashboard', selectedPartnerId, dateRange.from, dateRange.to],
+    queryKey: ['dashboard', periodType, selectedPartnerId, dateRange.from, dateRange.to],
     queryFn: () => {
       return createAxios({
         method: 'get',
@@ -39,24 +38,19 @@ export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams
         params: {
           start_date: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : '',
           end_date: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : '',
+          type: periodType,
           partner_company_id: selectedPartnerId,
         },
       });
     },
     enabled: !!dateRange.from && !!dateRange.to,
-    staleTime: 0, // 데이터를 항상 stale로 간주하여 자동 리페치 허용
-    gcTime: 20 * 60 * 1000, // 20분간 캐시 유지 (구 cacheTime)
-    refetchOnWindowFocus: true,
-    refetchInterval: 600 * 1000, // 10분마다 자동 리페치
-    refetchIntervalInBackground: true, // 백그라운드에서도 리페치 실행
+    staleTime: periodType === 'realtime' ? 0 : 5 * 60 * 1000, // realtime일 때만 항상 stale
+    gcTime: 20 * 60 * 1000, // 20분간 캐시 유지
+    refetchOnWindowFocus: periodType === 'realtime', // realtime일 때만 포커스 시 리페치
+    refetchInterval: periodType === 'realtime' ? 600 * 1000 : false, // realtime일 때만 10분마다 자동 리페치
+    refetchIntervalInBackground: periodType === 'realtime', // realtime일 때만 백그라운드 리페치
     retry: 2,
   });
-
-  // const { data: dashboardData, refetch } = useDashboardData({
-  //   startDate: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-  //   endDate: dateRange.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-  //   partnerId: selectedPartnerId,
-  // });
 
   const handlePartnerChange = (partnerId: string) => {
     const id = partnerId === 'all' ? undefined : Number(partnerId);
@@ -121,8 +115,8 @@ export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams
     [themeColors.text],
   );
 
-  const createSeries = useMemo(
-    () => [
+  const createSeries = useMemo(() => {
+    const baseSeries = [
       {
         type: 'bar' as const,
         xKey: 'date',
@@ -154,9 +148,18 @@ export const useDashboard = ({ partnerId: initialPartnerId }: UseDashboardParams
           strokeWidth: 2,
         },
       },
-    ],
-    [themeColors],
-  );
+    ];
+
+    return baseSeries.filter((series) => {
+      if (series.yKey === 'purchase') {
+        return chartData.some((item: any) => item.purchase != null && item.purchase > 0);
+      }
+      if (series.yKey === 'margin') {
+        return chartData.some((item: any) => item.margin != null && item.margin !== 0);
+      }
+      return true;
+    });
+  }, [themeColors, dashboardData]);
 
   const chartOptions: AgChartOptions = useMemo(
     () => ({
