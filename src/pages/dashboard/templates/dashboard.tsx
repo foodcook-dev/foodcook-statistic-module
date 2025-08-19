@@ -1,4 +1,5 @@
 import { AgCharts } from 'ag-charts-react';
+import { ChartColumnBig } from 'lucide-react';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import {
   Select,
@@ -7,10 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/atoms/select';
+import LoadingSpinner from '@/components/atoms/loading-spinner';
 import StatCard from '../modules/stat-card';
 import DetailCard from '../modules/detail-card';
 import { useDashboard } from '../hooks/useDashboard';
-import { STAT_LIST } from '../structure';
 
 interface DashboardProps {
   isSelectable?: boolean;
@@ -18,6 +19,8 @@ interface DashboardProps {
 
 export default function Dashboard({ isSelectable = false }: DashboardProps) {
   const {
+    isLoading,
+    isFetching,
     chartOptions,
     dashboardData,
     partners,
@@ -35,14 +38,14 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
       <div className="flex items-center justify-between">
         {isSelectable && (
           <Select
-            value={selectedPartnerId ? selectedPartnerId.toString() : 'all'}
+            value={selectedPartnerId ? selectedPartnerId.toString() : 'default'}
             onValueChange={handlePartnerChange}
           >
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="파트너사 선택" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">식자재쿡</SelectItem>
+              <SelectItem value="default">식자재쿡</SelectItem>
               {partners?.map((partner: any) => (
                 <SelectItem
                   key={partner.partner_company_id}
@@ -77,25 +80,46 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        {STAT_LIST.map((stat) => (
-          <StatCard
-            key={stat.value}
-            stat={stat}
-            value={Number(dashboardData?.[stat.value as keyof typeof dashboardData])}
-            periodType={periodType}
-          />
-        ))}
-      </div>
+      <StatCard
+        dashboardData={dashboardData}
+        periodType={periodType}
+        isLoading={isLoading}
+        isFetching={isFetching}
+      />
 
       <div className="grid h-[600px] grid-cols-3 gap-6">
         <div className="bg-background border-border/50 col-span-2 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
           <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
             매출 통계
           </h3>
-          <AgCharts className="flex-1" options={chartOptions} />
+          <div className="flex-1">
+            {isLoading ? (
+              <div className="flex h-full items-center justify-center">
+                <LoadingSpinner size="lg" />
+              </div>
+            ) : dashboardData?.chart_data && dashboardData.chart_data.length > 0 ? (
+              <AgCharts className="h-full" options={chartOptions} />
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center">
+                <div className="text-center">
+                  <ChartColumnBig className="mx-auto mb-4 h-16 w-16 text-gray-300" />
+                  <h3 className="mb-2 text-lg font-medium text-gray-600 dark:text-gray-400">
+                    표시할 데이터가 없습니다
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-500">
+                    선택한 기간에 해당하는 데이터가 없습니다
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <DetailCard data={dashboardData} periodType={periodType} dateRange={dateRange} />
+        <DetailCard
+          data={dashboardData}
+          periodType={periodType}
+          dateRange={dateRange}
+          isLoading={isLoading}
+        />
       </div>
 
       <div className="flex items-center justify-end gap-2 rounded-lg p-2 px-4">

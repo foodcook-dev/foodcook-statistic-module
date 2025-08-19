@@ -1,5 +1,5 @@
 import { type AgChartOptions } from 'ag-charts-community';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { DateRange } from 'react-day-picker';
@@ -30,7 +30,12 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
     enabled: isSelectable,
   });
 
-  const { data: dashboardData, dataUpdatedAt } = useQuery({
+  const {
+    isLoading,
+    isFetching,
+    data: dashboardData,
+    dataUpdatedAt,
+  } = useQuery({
     queryKey: [
       'dashboard',
       periodType,
@@ -59,13 +64,13 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
     staleTime: periodType === 'realtime' ? 0 : 5 * 60 * 1000, // realtime일 때만 항상 stale
     gcTime: 20 * 60 * 1000, // 20분간 캐시 유지
     refetchOnWindowFocus: periodType === 'realtime', // realtime일 때만 포커스 시 리페치
-    refetchInterval: periodType === 'realtime' ? 600 * 1000 : false, // realtime일 때만 10분마다 자동 리페치
+    refetchInterval: periodType === 'realtime' ? 10 * 1000 : false, // realtime일 때만 10분마다 자동 리페치
     refetchIntervalInBackground: periodType === 'realtime', // realtime일 때만 백그라운드 리페치
     retry: 2,
   });
 
   const handlePartnerChange = (partnerId: string) => {
-    const id = partnerId === 'all' ? undefined : Number(partnerId);
+    const id = partnerId === 'default' ? undefined : Number(partnerId);
     setSelectedPartnerId(id);
   };
 
@@ -86,11 +91,9 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
 
     return dashboardData.chart_data.map((item: any) => ({
       date: format(new Date(item.date), 'MM/dd[EEE]', { locale: ko }),
-      revenue: item.sales_amount,
+      sales: item.sales_amount,
       purchase: item.purchase_amount,
-      profit: item.sales_amount - item.purchase_amount,
-      margin: item.gross_profit_margin,
-      costRatio: item.cost_to_sales_ratio,
+      costToSalesRatio: item.cost_to_sales_ratio,
     }));
   }, [dashboardData]);
 
@@ -100,9 +103,9 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
       background: isDark ? '#111827' : '#ffffff',
       text: isDark ? '#ffffff' : '#000000',
       markerStroke: isDark ? '#1a1b23' : '#ffffff',
-      revenue: isDark ? '#F687B3' : '#F6A5A5',
+      sales: isDark ? '#F687B3' : '#F6A5A5',
       purchase: isDark ? '#4FD1C7' : '#6EC6A9',
-      profit: isDark ? '#F6E05E' : '#FFD54F',
+      costToSalesRatio: isDark ? '#F6E05E' : '#FFD54F',
     };
   }, [theme]);
 
@@ -132,9 +135,9 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
       {
         type: 'bar' as const,
         xKey: 'date',
-        yKey: 'revenue',
+        yKey: 'sales',
         yName: '매출액',
-        fill: themeColors.revenue,
+        fill: themeColors.sales,
         fillOpacity: 0.9,
       },
       {
@@ -148,14 +151,14 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
       {
         type: 'line' as const,
         xKey: 'date',
-        yKey: 'margin',
+        yKey: 'costToSalesRatio',
         yName: '매출 총 이익',
-        stroke: themeColors.profit,
+        stroke: themeColors.costToSalesRatio,
         strokeWidth: 3,
         marker: {
           enabled: true,
           size: 10,
-          fill: themeColors.profit,
+          fill: themeColors.costToSalesRatio,
           stroke: themeColors.markerStroke,
           strokeWidth: 2,
         },
@@ -166,8 +169,10 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
       if (series.yKey === 'purchase') {
         return chartData.some((item: any) => item.purchase != null && item.purchase > 0);
       }
-      if (series.yKey === 'margin') {
-        return chartData.some((item: any) => item.margin != null && item.margin !== 0);
+      if (series.yKey === 'costToSalesRatio') {
+        return chartData.some(
+          (item: any) => item.costToSalesRatio != null && item.costToSalesRatio !== 0,
+        );
       }
       return true;
     });
@@ -195,6 +200,8 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
   );
 
   return {
+    isLoading,
+    isFetching,
     selectedPartnerId,
     partners,
     lastUpdateDate,

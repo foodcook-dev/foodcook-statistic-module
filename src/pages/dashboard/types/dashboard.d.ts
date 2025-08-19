@@ -16,11 +16,11 @@ export interface PartnerListResponse {
   total_count: number;
 }
 
-export interface DashboardApiResponse {
+export interface DashboardResponse {
   partner_company_id: number | null; // 파트너사 ID
   realtime_revenue: number; // 실시간 매출
   total_revenue: number; // 총 매출
-  unique_user_count: number; // 주문 유저 수
+  average_user_count: number; // 주문 유저 수
   average_order_amount: number; // 평균 주문 금액
   inventory_asset: number; // 재고 자산
   revenue: number; // 매출액

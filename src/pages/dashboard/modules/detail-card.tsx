@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { format } from 'date-fns';
-import { DashboardApiResponse } from '@/pages/dashboard/types/dashboard';
+import LoadingSpinner from '@/components/atoms/loading-spinner';
+import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
 
 interface DetailCardProps {
   dateRange: DateRange;
   periodType: string;
-  data?: DashboardApiResponse;
+  data?: DashboardResponse;
+  isLoading?: boolean;
 }
 
 interface SimpleRowProps {
@@ -25,7 +27,7 @@ interface ExpandableRowProps {
 }
 
 const formatCurrency = (value: number | undefined): string => {
-  return `${(value || 0).toLocaleString()} 원`;
+  return value ? `${(value || 0).toLocaleString()} 원` : '-';
 };
 
 const formatPercentage = (value: number | undefined): string => {
@@ -74,7 +76,7 @@ const DetailRowSmall = ({ label, value }: { label: string; value: number | undef
   </div>
 );
 
-const RevenueDetailsPanel = ({ data }: { data?: DashboardApiResponse }) => (
+const RevenueDetailsPanel = ({ data }: { data?: DashboardResponse }) => (
   <div className="border-border/50 bg-background text-contrast space-y-2 rounded-lg border px-3 py-2 text-xs">
     <DetailRowSmall label="매출 주문" value={data?.sales_revenue} />
     <DetailRowSmall label="앱 매출" value={data?.app_revenue} />
@@ -85,14 +87,19 @@ const RevenueDetailsPanel = ({ data }: { data?: DashboardApiResponse }) => (
   </div>
 );
 
-export default function DetailCard({ dateRange, periodType, data }: DetailCardProps) {
+export default function DetailCard({
+  dateRange,
+  periodType,
+  data,
+  isLoading = false,
+}: DetailCardProps) {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => setShowDetails((prev) => !prev);
 
   const title =
     periodType === 'realtime'
-      ? '일간 매출액'
+      ? '출고 매출액'
       : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
 
   return (
@@ -100,27 +107,33 @@ export default function DetailCard({ dateRange, periodType, data }: DetailCardPr
       <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
         {title}
       </h3>
-      <div className="space-y-3 text-sm">
-        <SimpleRow label="매출액" value={data?.revenue} />
-        <SimpleRow
-          label="부분환불금액"
-          value={data?.partial_cancel_revenue}
-          className="text-red-600"
-        />
-        <SimpleRow label="부가세" value={data?.vat} className="text-contrast" />
-        <ExpandableRow
-          label="합계금액"
-          value={data?.total_revenue}
-          isExpanded={showDetails}
-          onToggle={toggleDetails}
-        />
-        {showDetails && <RevenueDetailsPanel data={data} />}
-        <SimpleRow label="매입액" value={data?.purchase_amount} />
-        <div className="flex items-center justify-between py-2">
-          <span>GP 마진율</span>
-          <span>{formatPercentage(data?.gross_profit_margin)}</span>
+      {isLoading ? (
+        <div className="flex flex-1 items-center justify-center">
+          <LoadingSpinner size="lg" />
         </div>
-      </div>
+      ) : (
+        <div className="space-y-3 text-sm">
+          <SimpleRow label="매출액" value={data?.revenue} />
+          <SimpleRow
+            label="부분환불금액"
+            value={data?.partial_cancel_revenue}
+            className="text-red-600"
+          />
+          <SimpleRow label="부가세" value={data?.vat} className="text-contrast" />
+          <ExpandableRow
+            label="합계금액"
+            value={data?.total_revenue}
+            isExpanded={showDetails}
+            onToggle={toggleDetails}
+          />
+          {showDetails && <RevenueDetailsPanel data={data} />}
+          <SimpleRow label="매입액" value={data?.purchase_amount} />
+          <div className="flex items-center justify-between py-2">
+            <span>GP 마진율</span>
+            <span>{formatPercentage(data?.gross_profit_margin)}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
