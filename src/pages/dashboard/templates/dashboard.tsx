@@ -12,6 +12,7 @@ import LoadingSpinner from '@/components/atoms/loading-spinner';
 import StatCard from '../modules/stat-card';
 import DetailCard from '../modules/detail-card';
 import { useDashboard } from '../hooks/useDashboard';
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 interface DashboardProps {
   isSelectable?: boolean;
@@ -78,6 +79,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
             />
           )}
         </div>
+        {/* <ThemeToggle /> */}
       </div>
 
       <StatCard
@@ -119,6 +121,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
           periodType={periodType}
           dateRange={dateRange}
           isLoading={isLoading}
+          isFetching={isFetching}
         />
       </div>
 

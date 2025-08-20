@@ -167,11 +167,11 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
 
     return baseSeries.filter((series) => {
       if (series.yKey === 'purchase') {
-        return chartData.some((item: any) => item.purchase != null && item.purchase > 0);
+        return chartData.some((item: any) => item.purchase !== undefined && item.purchase !== null);
       }
       if (series.yKey === 'costToSalesRatio') {
         return chartData.some(
-          (item: any) => item.costToSalesRatio != null && item.costToSalesRatio !== 0,
+          (item: any) => item.costToSalesRatio !== undefined && item.costToSalesRatio !== null,
         );
       }
       return true;

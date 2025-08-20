@@ -9,6 +9,7 @@ interface DetailCardProps {
   periodType: string;
   data?: DashboardResponse;
   isLoading?: boolean;
+  isFetching?: boolean;
 }
 
 interface SimpleRowProps {
@@ -92,22 +93,24 @@ export default function DetailCard({
   periodType,
   data,
   isLoading = false,
+  isFetching = false,
 }: DetailCardProps) {
+  const isRealtime = periodType === 'realtime';
+  const isShowSpinner = isLoading || (isRealtime && isFetching);
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => setShowDetails((prev) => !prev);
 
-  const title =
-    periodType === 'realtime'
-      ? '출고 매출액'
-      : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
+  const title = isRealtime
+    ? '출고 매출액'
+    : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
 
   return (
     <div className="border-border/50 col-span-1 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
       <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
         {title}
       </h3>
-      {isLoading ? (
+      {isShowSpinner ? (
         <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner size="lg" />
         </div>
