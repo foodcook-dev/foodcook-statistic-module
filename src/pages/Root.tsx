@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 // import RestrictRoute, { isSignIn } from '@/routes/RestrictRoute';
 import BaseLayout from '@/routes/BaseLayout';
 
-import { AdminDashboard, MainDashboard } from '@/pages/dashboard/templates';
+import { MainDashboard, SalesDashboard } from '@/pages/dashboard/templates';
 import IntegratedSettlement from './integrated-settlement/templates';
 import DirectSettlement from './direct-settlement/templates';
 import ConsignmentSettlement from './consignment-settlement/templates';
@@ -14,12 +14,15 @@ export default function Root() {
   return (
     <Routes>
       <Route element={<BaseLayout />}>
+        {/* Settlement */}
         <Route path="/" element={<IntegratedSettlement />} />
         <Route path="/integrated" element={<IntegratedSettlement />} />
         <Route path="/direct" element={<DirectSettlement />} />
         <Route path="/consignment" element={<ConsignmentSettlement />} />
-        <Route path="/mainDashboard" element={<MainDashboard />} />
-        <Route path="/adminDashboard" element={<AdminDashboard />} />
+
+        {/* Dashboard */}
+        <Route path="/dashboard/main" element={<MainDashboard />} />
+        <Route path="/dashboard/sales" element={<SalesDashboard />} />
       </Route>
       {/* <Route path="/*" element={<RestrictRoute allow={isSignIn} redirect="/signIn" />}>
         <Route path="integrated" element={<IntegratedSettlement />} />

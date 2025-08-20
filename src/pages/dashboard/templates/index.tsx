@@ -1,6 +1,6 @@
 import Dashboard from './dashboard';
 
-const AdminDashboard = () => <Dashboard isSelectable />;
 const MainDashboard = () => <Dashboard />;
+const SalesDashboard = () => <Dashboard isSelectable />;
 
-export { AdminDashboard, MainDashboard };
+export { MainDashboard, SalesDashboard };

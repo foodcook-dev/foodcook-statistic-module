@@ -64,7 +64,7 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
     staleTime: periodType === 'realtime' ? 0 : 5 * 60 * 1000, // realtime일 때만 항상 stale
     gcTime: 20 * 60 * 1000, // 20분간 캐시 유지
     refetchOnWindowFocus: periodType === 'realtime', // realtime일 때만 포커스 시 리페치
-    refetchInterval: periodType === 'realtime' ? 10 * 1000 : false, // realtime일 때만 10분마다 자동 리페치
+    refetchInterval: periodType === 'realtime' ? 600 * 1000 : false, // realtime일 때만 10분마다 자동 리페치
     refetchIntervalInBackground: periodType === 'realtime', // realtime일 때만 백그라운드 리페치
     retry: 2,
   });
