@@ -1,5 +1,5 @@
 import { type AgChartOptions } from 'ag-charts-community';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { DateRange } from 'react-day-picker';
