@@ -59,7 +59,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
           </Select>
         )}
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Select value={periodType} onValueChange={handlePeriodChange}>
             <SelectTrigger className="w-[140px]">
               <SelectValue />
@@ -83,10 +83,10 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
       </div>
 
       <StatCard
-        dashboardData={dashboardData}
-        periodType={periodType}
         isLoading={isLoading}
         isFetching={isFetching}
+        data={dashboardData}
+        periodType={periodType}
       />
 
       <div className="grid h-[600px] grid-cols-3 gap-6">
@@ -99,17 +99,14 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
               <div className="flex h-full items-center justify-center">
                 <LoadingSpinner size="lg" />
               </div>
-            ) : dashboardData?.chart_data && dashboardData.chart_data.length > 0 ? (
+            ) : dashboardData?.chart_data.length > 0 ? (
               <AgCharts className="h-full" options={chartOptions} />
             ) : (
               <div className="flex h-full flex-col items-center justify-center">
                 <div className="text-center">
                   <ChartColumnBig className="mx-auto mb-4 h-16 w-16 text-gray-300" />
-                  <h3 className="mb-2 text-lg font-medium text-gray-600 dark:text-gray-400">
-                    표시할 데이터가 없습니다
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-500">
-                    선택한 기간에 해당하는 데이터가 없습니다
+                  <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                    선택한 기간에 해당하는 데이터가 없습니다.
                   </p>
                 </div>
               </div>
@@ -117,20 +114,18 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
           </div>
         </div>
         <DetailCard
+          isLoading={isLoading}
+          isFetching={isFetching}
           data={dashboardData}
           periodType={periodType}
           dateRange={dateRange}
-          isLoading={isLoading}
-          isFetching={isFetching}
         />
       </div>
 
-      <div className="flex items-center justify-end gap-2 rounded-lg p-2 px-4">
-        <div className="text-sm text-gray-400">
-          {lastUpdateDate?.toLocaleTimeString()
-            ? `마지막 업데이트 : ${lastUpdateDate?.toLocaleTimeString()}`
-            : '-'}
-        </div>
+      <div className="flex justify-end gap-2 text-sm text-gray-400">
+        {lastUpdateDate?.toLocaleTimeString()
+          ? `마지막 업데이트 : ${lastUpdateDate?.toLocaleTimeString()}`
+          : '-'}
       </div>
     </div>
   );

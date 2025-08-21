@@ -33,7 +33,7 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
   const {
     isLoading,
     isFetching,
-    data: dashboardData,
+    data: dashboardData = {},
     dataUpdatedAt,
   } = useQuery({
     queryKey: [
@@ -152,7 +152,7 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
         type: 'line' as const,
         xKey: 'date',
         yKey: 'costToSalesRatio',
-        yName: '매출 총 이익',
+        yName: '매출원가',
         stroke: themeColors.costToSalesRatio,
         strokeWidth: 3,
         marker: {

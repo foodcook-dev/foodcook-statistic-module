@@ -1,19 +1,10 @@
-// 대시보드 API 타입 정의
+import { DateRange } from 'react-day-picker';
+
 export interface DashboardChartData {
   date: string;
   sales_amount: number;
   purchase_amount: number;
   cost_to_sales_ratio: number;
-}
-
-export interface PartnerCompany {
-  partner_company_id: number;
-  b_nm: string;
-}
-
-export interface PartnerListResponse {
-  partners: PartnerCompany[];
-  total_count: number;
 }
 
 export interface DashboardResponse {
@@ -34,4 +25,26 @@ export interface DashboardResponse {
   purchase_amount: number; // 매입액
   gross_profit_margin: number; // GP 마진율
   chart_data: DashboardChartData[];
+}
+
+export interface DetailCardProps {
+  isLoading: boolean;
+  isFetching: boolean;
+  data: DashboardResponse;
+  dateRange: DateRange;
+  periodType: string;
+}
+
+export interface SimpleRowProps {
+  label: string;
+  value: number | undefined;
+  className?: string;
+}
+
+export interface ExpandableRowProps {
+  label: string;
+  value: number | undefined;
+  isExpanded: boolean;
+  onToggle: () => void;
+  className?: string;
 }

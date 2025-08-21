@@ -4,19 +4,14 @@ import LoadingSpinner from '@/components/atoms/loading-spinner';
 import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
 import { STAT_LIST } from '../structure';
 
-type StatCardProps = {
-  dashboardData: DashboardResponse;
+interface StatCardProps {
+  isLoading: boolean;
+  isFetching: boolean;
+  data: DashboardResponse;
   periodType: string;
-  isLoading?: boolean;
-  isFetching?: boolean;
-};
+}
 
-export default function StatCard({
-  dashboardData,
-  periodType,
-  isLoading = false,
-  isFetching = false,
-}: StatCardProps) {
+export default function StatCard({ isLoading, isFetching, data, periodType }: StatCardProps) {
   const isRealtime = periodType === 'realtime';
 
   if (isLoading) {
@@ -33,8 +28,7 @@ export default function StatCard({
         const { id, title, tooltip, unit, isHighlight } = stat;
         const isActive = isRealtime && isHighlight;
         const isShowSpinner = isLoading || (isRealtime && isHighlight && isFetching);
-
-        const value = dashboardData?.[id as keyof DashboardResponse];
+        const value = data?.[id as keyof DashboardResponse];
 
         if (!isLoading && value === undefined) return null;
 

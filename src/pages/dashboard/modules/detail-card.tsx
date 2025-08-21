@@ -1,31 +1,13 @@
 import { useState } from 'react';
-import { DateRange } from 'react-day-picker';
 import { format } from 'date-fns';
+import { Button } from '@/components/atoms/button';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
 import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
-
-interface DetailCardProps {
-  isLoading: boolean;
-  isFetching: boolean;
-  dateRange: DateRange;
-  periodType: string;
-  data?: DashboardResponse;
-}
-
-interface SimpleRowProps {
-  label: string;
-  value: number | undefined;
-  className?: string;
-  showBorder?: boolean;
-}
-
-interface ExpandableRowProps {
-  label: string;
-  value: number | undefined;
-  isExpanded: boolean;
-  onToggle: () => void;
-  className?: string;
-}
+import {
+  SimpleRowProps,
+  ExpandableRowProps,
+  DetailCardProps,
+} from '@/pages/dashboard/types/dashboard';
 
 const formatCurrency = (value: number | undefined): string => {
   return value ? `${(value || 0).toLocaleString()} 원` : '-';
@@ -35,10 +17,8 @@ const formatPercentage = (value: number | undefined): string => {
   return value ? `${value} %` : '-';
 };
 
-const SimpleRow = ({ label, value, className = '', showBorder = true }: SimpleRowProps) => (
-  <div
-    className={`flex items-center justify-between py-2 ${showBorder ? 'border-border/50 border-b' : ''}`}
-  >
+const SimpleRow = ({ label, value, className = '' }: SimpleRowProps) => (
+  <div className={`border-border/50 flex items-center justify-between border-b py-2`}>
     <span>{label}</span>
     <span className={className}>{formatCurrency(value)}</span>
   </div>
@@ -55,22 +35,20 @@ const ExpandableRow = ({
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <span>{label}</span>
-        <button
+        <Button
+          variant="ghost"
+          className="hover:bg-foreground flex h-5 w-4 items-center justify-center rounded px-3 text-xs text-gray-500 hover:text-blue-600"
           onClick={onToggle}
-          className="hover:bg-foreground flex h-5 w-5 items-center justify-center rounded text-gray-500 transition-all duration-200 hover:text-blue-600"
-          type="button"
         >
-          <span className="text-xs" aria-hidden="true">
-            {isExpanded ? '▲' : '▼'}
-          </span>
-        </button>
+          {isExpanded ? '▲' : '▼'}
+        </Button>
       </div>
       <span className={`text-blue-600 ${className}`}>{formatCurrency(value)}</span>
     </div>
   </div>
 );
 
-const DetailRowSmall = ({ label, value }: { label: string; value: number | undefined }) => (
+const DetailRow = ({ label, value }: { label: string; value: number | undefined }) => (
   <div className="flex items-center justify-between py-1">
     <span>{label}</span>
     <span className="font-medium">{formatCurrency(value)}</span>
@@ -79,24 +57,32 @@ const DetailRowSmall = ({ label, value }: { label: string; value: number | undef
 
 const RevenueDetailsPanel = ({ data }: { data?: DashboardResponse }) => (
   <div className="border-border/50 bg-background text-contrast space-y-2 rounded-lg border px-3 py-2 text-xs">
-    <DetailRowSmall label="매출 주문" value={data?.sales_revenue} />
-    <DetailRowSmall label="앱 매출" value={data?.app_revenue} />
-    <DetailRowSmall label="타사 매출" value={data?.external_revenue} />
+    <DetailRow label="매출 주문" value={data?.sales_revenue} />
+    <DetailRow label="앱 매출" value={data?.app_revenue} />
+    <DetailRow label="타사 매출" value={data?.external_revenue} />
     <hr className="border-border/30 my-2" />
-    <DetailRowSmall label="총 과세" value={data?.total_tax_amount} />
-    <DetailRowSmall label="총 비과세" value={data?.total_tax_free_amount} />
+    <DetailRow label="총 과세" value={data?.total_tax_amount} />
+    <DetailRow label="총 비과세" value={data?.total_tax_free_amount} />
   </div>
 );
 
 export default function DetailCard({
+  isLoading,
+  isFetching,
+  data,
   dateRange,
   periodType,
-  data,
-  isLoading = false,
-  isFetching = false,
 }: DetailCardProps) {
+  const {
+    revenue,
+    partial_cancel_revenue,
+    vat,
+    total_revenue,
+    purchase_amount,
+    gross_profit_margin,
+  } = data;
   const isRealtime = periodType === 'realtime';
-  const isShowSpinner = isLoading || (isRealtime && isFetching);
+  const isShowSpinner = isLoading || (isRealtime && isFetching) || !data;
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => setShowDetails((prev) => !prev);
@@ -115,28 +101,22 @@ export default function DetailCard({
           <LoadingSpinner size="lg" />
         </div>
       ) : (
-        <div className="space-y-3 text-sm">
-          <SimpleRow label="매출액" value={data?.revenue} />
-          <SimpleRow
-            label="부분환불금액"
-            value={data?.partial_cancel_revenue}
-            className="text-red-600"
-          />
-          <SimpleRow label="부가세" value={data?.vat} className="text-contrast" />
+        <div className="text-contrast space-y-3 text-sm">
+          <SimpleRow label="매출액" value={revenue} />
+          <SimpleRow label="부분환불금액" value={partial_cancel_revenue} className="text-red-600" />
+          <SimpleRow label="부가세" value={vat} />
           <ExpandableRow
             label="합계금액"
-            value={data?.total_revenue}
+            value={total_revenue}
             isExpanded={showDetails}
             onToggle={toggleDetails}
           />
           {showDetails && <RevenueDetailsPanel data={data} />}
-          {data?.purchase_amount !== undefined && (
-            <SimpleRow label="매입액" value={data?.purchase_amount} />
-          )}
-          {data?.gross_profit_margin !== undefined && (
+          {purchase_amount !== undefined && <SimpleRow label="매입액" value={purchase_amount} />}
+          {gross_profit_margin !== undefined && (
             <div className="flex items-center justify-between py-2">
               <span>GP 마진율</span>
-              <span>{formatPercentage(data?.gross_profit_margin)}</span>
+              <span>{formatPercentage(gross_profit_margin)}</span>
             </div>
           )}
         </div>
