@@ -5,11 +5,11 @@ import LoadingSpinner from '@/components/atoms/loading-spinner';
 import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
 
 interface DetailCardProps {
+  isLoading: boolean;
+  isFetching: boolean;
   dateRange: DateRange;
   periodType: string;
   data?: DashboardResponse;
-  isLoading?: boolean;
-  isFetching?: boolean;
 }
 
 interface SimpleRowProps {
@@ -130,11 +130,15 @@ export default function DetailCard({
             onToggle={toggleDetails}
           />
           {showDetails && <RevenueDetailsPanel data={data} />}
-          <SimpleRow label="매입액" value={data?.purchase_amount} />
-          <div className="flex items-center justify-between py-2">
-            <span>GP 마진율</span>
-            <span>{formatPercentage(data?.gross_profit_margin)}</span>
-          </div>
+          {data?.purchase_amount !== undefined && (
+            <SimpleRow label="매입액" value={data?.purchase_amount} />
+          )}
+          {data?.gross_profit_margin !== undefined && (
+            <div className="flex items-center justify-between py-2">
+              <span>GP 마진율</span>
+              <span>{formatPercentage(data?.gross_profit_margin)}</span>
+            </div>
+          )}
         </div>
       )}
     </div>
