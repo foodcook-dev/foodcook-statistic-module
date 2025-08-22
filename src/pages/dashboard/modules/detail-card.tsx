@@ -129,7 +129,7 @@ export default function DetailCard({
           {purchase_amount !== undefined && <SimpleRow label="매입액" value={purchase_amount} />}
           {gross_profit_margin !== undefined && (
             <div className="flex items-center justify-between py-2">
-              <span>GP 마진율</span>
+              <span>GPM (매출 총 이익률)</span>
               <span>{formatPercentage(gross_profit_margin)}</span>
             </div>
           )}
