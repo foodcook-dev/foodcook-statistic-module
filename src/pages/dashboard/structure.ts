@@ -10,7 +10,7 @@ export const STAT_LIST = [
     title: () => '출고 매출액',
     unit: '원',
     tooltip: (isRealtime?: boolean) =>
-      isRealtime ? '금일 출고 매출액입니다' : '기간내 총 출고 매출액입니다',
+      isRealtime ? '금일 출고기준 매출액입니다' : '기간내 총 출고 매출액입니다',
     id: 'total_revenue',
     isHighlight: false,
   },
@@ -33,9 +33,7 @@ export const STAT_LIST = [
     title: (isRealtime?: boolean) => (isRealtime ? '총 재고자산' : '평균 재고자산'),
     unit: '원',
     tooltip: (isRealtime?: boolean) =>
-      isRealtime
-        ? '3000개 미만(재고관리상품)으로 보유하고 있는 실시간 재고자산입니다'
-        : '기간내 평균 재고자산입니다',
+      isRealtime ? '재고관리상품으로 보유중인 실시간 재고자산입니다' : '기간내 평균 재고자산입니다',
     id: 'inventory_asset',
     isHighlight: true,
   },
