@@ -99,7 +99,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
               <div className="flex h-full items-center justify-center">
                 <LoadingSpinner size="lg" />
               </div>
-            ) : dashboardData?.chart_data.length > 0 ? (
+            ) : dashboardData?.chart_data?.length > 0 ? (
               <AgCharts className="h-full" options={chartOptions} />
             ) : (
               <div className="flex h-full flex-col items-center justify-center">

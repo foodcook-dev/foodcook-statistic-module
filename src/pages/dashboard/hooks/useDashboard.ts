@@ -157,9 +157,9 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
         strokeWidth: 3,
         marker: {
           enabled: true,
-          size: 10,
+          size: 8,
           fill: themeColors.costToSalesRatio,
-          stroke: themeColors.markerStroke,
+          stroke: themeColors.costToSalesRatio,
           strokeWidth: 2,
         },
       },

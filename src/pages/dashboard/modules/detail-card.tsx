@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { InfoIcon } from 'lucide-react';
 import { Button } from '@/components/atoms/button';
 import LoadingSpinner from '@/components/atoms/loading-spinner';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/atoms/tooltip';
 import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
 import {
   SimpleRowProps,
@@ -91,11 +93,23 @@ export default function DetailCard({
     ? '출고 매출액'
     : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
 
+  const tooltip = isRealtime
+    ? '금일 출고기준 매출액 상세내역입니다'
+    : '기간내 총 출고 매출액 상세내역입니다';
+
   return (
     <div className="border-border/50 col-span-1 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
-      <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
-        {title}
-      </h3>
+      <div className="border-border/50 flex items-center justify-between border-b pb-2">
+        <h3 className="text-contrast text-lg font-semibold">{title}</h3>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <InfoIcon className="h-4 w-4 cursor-pointer text-gray-400" />
+          </TooltipTrigger>
+          <TooltipContent side="top">
+            <p>{tooltip}</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
       {isShowSpinner ? (
         <div className="flex flex-1 items-center justify-center">
           <LoadingSpinner size="lg" />
