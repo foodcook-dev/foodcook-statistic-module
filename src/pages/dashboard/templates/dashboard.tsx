@@ -95,7 +95,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
             매출 통계
           </h3>
           <div className="flex-1">
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <div className="flex h-full items-center justify-center">
                 <LoadingSpinner size="lg" />
               </div>
