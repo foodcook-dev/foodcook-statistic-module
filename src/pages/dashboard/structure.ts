@@ -7,10 +7,10 @@ export const STAT_LIST = [
     isHighlight: true,
   },
   {
-    title: () => '출고 매출액',
+    title: (isRealtime?: boolean) => (isRealtime ? '출고 매출액' : '매출액'),
     unit: '원',
     tooltip: (isRealtime?: boolean) =>
-      isRealtime ? '금일 출고기준 매출액입니다' : '기간내 총 출고 매출액입니다',
+      isRealtime ? '금일 출고기준 매출액입니다' : '기간내 총 매출액입니다',
     id: 'total_revenue',
     isHighlight: false,
   },

@@ -91,11 +91,11 @@ export default function DetailCard({
 
   const title = isRealtime
     ? '출고 매출액'
-    : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 매출액`;
+    : `${format(dateRange.from!, 'yyyy-MM-dd')} - ${format(dateRange.to!, 'yyyy-MM-dd')} 총 매출액`;
 
   const tooltip = isRealtime
     ? '금일 출고기준 매출액 상세내역입니다'
-    : '기간내 총 출고 매출액 상세내역입니다';
+    : '기간내 총 매출액 상세내역입니다';
 
   return (
     <div className="border-border/50 col-span-1 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
