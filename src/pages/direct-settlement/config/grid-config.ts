@@ -1,7 +1,12 @@
 import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
-import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
+import {
+  createBadgeRenderer,
+  createTypeRenderer,
+  createNumericColumn,
+  getNegativeValueStyle,
+} from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
 import { STATUS, PAYMENT } from '@/constants/badge';
 import { STATUS_LIST, PAYMENT_LIST } from '@/constants/filter';
@@ -9,7 +14,7 @@ import { Button } from '@/components/atoms/button';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import Log from '@/components/modules/custom-dialog/log-dialog';
 
-const paymentRenderer = createBadgeRenderer(PAYMENT);
+const paymentRenderer = createTypeRenderer(PAYMENT);
 
 export const companyColumnDefs: ColDef[] = [
   { headerName: 'ID', field: 'buy_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
@@ -25,7 +30,7 @@ export const companyColumnDefs: ColDef[] = [
     },
   },
   {
-    field: 'type',
+    field: 'payment_period',
     flex: 0.5,
     headerName: '결제일',
     sortable: false,
@@ -114,6 +119,14 @@ export const createColumnDefs = (
     headerName: '매입정보',
     headerClass: 'ag-header-2 centered',
     children: [
+      createNumericColumn('purchase_tax_amount', '매입 과세액', {
+        columnGroupShow: 'open',
+        cellStyle: getNegativeValueStyle,
+      }),
+      createNumericColumn('purchase_tax_free_amount', '매입 면세액', {
+        columnGroupShow: 'open',
+        cellStyle: getNegativeValueStyle,
+      }),
       createNumericColumn('purchase_amount', '매입액', {
         cellStyle: (params) => {
           const baseStyle = { backgroundColor: 'rgb(255 247 220)' };
@@ -154,8 +167,8 @@ export const createColumnDefs = (
 ];
 
 export const columnDefs: (ColDef | ColGroupDef)[] = createColumnDefs(
-  () => console.log('기본 수정'),
-  () => console.log('기본 삭제'),
+  () => console.log('update'),
+  () => console.log('delete'),
   '',
 );
 
@@ -169,6 +182,10 @@ export const gridOptions: GridOptions = {
   maxConcurrentDatasourceRequests: 1,
   infiniteInitialRowCount: 1,
   maxBlocksInCache: 10,
+
+  onColumnGroupOpened: (event) => {
+    event.api.autoSizeAllColumns();
+  },
 
   onModelUpdated: (event) => {
     setTimeout(() => {

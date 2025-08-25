@@ -3,6 +3,7 @@ import { Edit2, Trash2 } from 'lucide-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import {
   createBadgeRenderer,
+  createTypeRenderer,
   createNumericColumn,
   getNegativeValueStyle,
 } from '@/libs/table-format';
@@ -13,7 +14,7 @@ import { Button } from '@/components/atoms/button';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import Log from '@/components/modules/custom-dialog/log-dialog';
 
-const paymentRenderer = createBadgeRenderer(PAYMENT);
+const paymentRenderer = createTypeRenderer(PAYMENT);
 
 export const companyColumnDefs: ColDef[] = [
   { headerName: 'ID', field: 'partner_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
@@ -29,7 +30,7 @@ export const companyColumnDefs: ColDef[] = [
     },
   },
   {
-    field: 'type',
+    field: 'payment_period',
     flex: 0.5,
     headerName: '결제일',
     sortable: false,

@@ -1,11 +1,11 @@
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
-import { createBadgeRenderer, createNumericColumn } from '@/libs/table-format';
+import { createBadgeRenderer, createTypeRenderer, createNumericColumn } from '@/libs/table-format';
 import { TYPE, PAYMENT } from '@/constants/badge';
 import { TYPE_LIST, PAYMENT_LIST } from '@/constants/filter';
 import SelectFilter from '@/components/modules/select-filter';
 
 const typeRenderer = createBadgeRenderer(TYPE);
-const paymentRenderer = createBadgeRenderer(PAYMENT);
+const paymentRenderer = createTypeRenderer(PAYMENT);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: 'ID', field: 'company_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
@@ -30,7 +30,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     cellStyle: { textAlign: 'center' },
   },
   {
-    field: 'payment_date',
+    field: 'payment_period',
     headerName: '결제일',
     filter: SelectFilter,
     filterParams: { type: 'checkbox', structure: PAYMENT_LIST },

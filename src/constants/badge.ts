@@ -11,10 +11,10 @@ export const STATUS = {
 };
 
 export const PAYMENT = {
-  '15일 결제': 'badge-green',
-  '주 결제': 'badge-orange',
-  '월 결제': 'badge-peach',
-  '말일 결제': 'badge-blue',
-  '선금 지급': 'badge-blue-light',
-  '매입시 지급': 'badge-blue',
+  '01': '월 결제',
+  '02': '15일 결제',
+  '03': '주 결제',
+  '04': '선금 지급',
+  '05': '말일 결제',
+  '06': '매입시 지급',
 };
