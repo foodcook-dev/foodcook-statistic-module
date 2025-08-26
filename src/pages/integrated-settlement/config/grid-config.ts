@@ -1,11 +1,11 @@
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
 import { createBadgeRenderer, createTypeRenderer, createNumericColumn } from '@/libs/table-format';
-import { TYPE, PAYMENT } from '@/constants/badge';
+import { TYPE } from '@/constants/badge';
 import { TYPE_LIST, PAYMENT_LIST } from '@/constants/filter';
 import SelectFilter from '@/components/modules/select-filter';
 
 const typeRenderer = createBadgeRenderer(TYPE);
-const paymentRenderer = createTypeRenderer(PAYMENT);
+const paymentRenderer = createTypeRenderer();
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   { headerName: 'ID', field: 'company_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
@@ -49,11 +49,9 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     children: [
       createNumericColumn('tax_purchase', '매입 과세액', {
         columnGroupShow: 'open',
-        cellStyle: { backgroundColor: 'rgb(239 239 239)' },
       }),
       createNumericColumn('tax_free_purchase', '매입 면세액', {
         columnGroupShow: 'open',
-        cellStyle: { backgroundColor: 'rgb(239 239 239)' },
       }),
       createNumericColumn('purchase_amount', '매입액', {
         sortable: true,

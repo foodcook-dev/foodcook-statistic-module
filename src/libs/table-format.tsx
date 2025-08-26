@@ -15,18 +15,17 @@ export function createBadgeRenderer(
   };
 }
 
-export function createTypeRenderer(colorMap: Record<string, string>) {
+export function createTypeRenderer() {
   return (params: any) => {
     const value: string = params.value;
-    const config = colorMap[value];
 
-    if (!config) return <></>;
+    if (!value) return <></>;
 
     return (
       <span
         className={`border-border/50 bg-background text-contrast rounded-sm border p-[6px] text-xs`}
       >
-        {config}
+        {value}
       </span>
     );
   };

@@ -10,10 +10,10 @@ export const STATUS_LIST = [
   { key: '결제', label: '결제' },
 ];
 export const PAYMENT_LIST = [
-  { key: '01', label: '월 결제' },
-  { key: '02', label: '15일 결제' },
-  { key: '03', label: '주 결제' },
-  { key: '04', label: '선금 지급' },
-  { key: '05', label: '말일 결제' },
-  { key: '06', label: '매입시 지급' },
+  { key: '월 결제', label: '월 결제' },
+  { key: '15일 결제', label: '15일 결제' },
+  { key: '주 결제', label: '주 결제' },
+  { key: '선금 지급', label: '선금 지급' },
+  { key: '말일 결제', label: '말일 결제' },
+  { key: '매입시 지급', label: '매입시 지급' },
 ];

@@ -8,13 +8,13 @@ import {
   getNegativeValueStyle,
 } from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
-import { STATUS, PAYMENT } from '@/constants/badge';
+import { STATUS } from '@/constants/badge';
 import { STATUS_LIST, PAYMENT_LIST } from '@/constants/filter';
 import { Button } from '@/components/atoms/button';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import Log from '@/components/modules/custom-dialog/log-dialog';
 
-const paymentRenderer = createTypeRenderer(PAYMENT);
+const paymentRenderer = createTypeRenderer();
 
 export const companyColumnDefs: ColDef[] = [
   { headerName: 'ID', field: 'buy_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
