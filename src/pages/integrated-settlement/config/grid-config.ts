@@ -31,7 +31,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
   },
   {
     field: 'payment_period',
-    headerName: '결제일',
+    headerName: '결제주기',
     filter: SelectFilter,
     filterParams: { type: 'checkbox', structure: PAYMENT_LIST },
     cellRenderer: paymentRenderer,

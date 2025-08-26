@@ -5,6 +5,6 @@ export const BUYER_INFO = [
   { label: '은행명', value: 'bank_name' },
   { label: '계좌번호', value: 'bank_num' },
   { label: '예금주', value: 'bank_holder' },
-  { label: '결제일', value: 'payment_period' },
+  { label: '결제주기', value: 'payment_period' },
   { label: '관리자 메모', value: 'memo' },
 ];

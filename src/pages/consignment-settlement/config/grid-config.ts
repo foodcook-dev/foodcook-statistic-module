@@ -32,7 +32,7 @@ export const companyColumnDefs: ColDef[] = [
   {
     field: 'payment_period',
     flex: 0.5,
-    headerName: '결제일',
+    headerName: '결제주기',
     sortable: false,
     filter: SelectFilter,
     filterParams: { type: 'checkbox', structure: PAYMENT_LIST },
