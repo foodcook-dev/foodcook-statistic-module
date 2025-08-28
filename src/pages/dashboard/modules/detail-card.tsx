@@ -100,13 +100,21 @@ export default function DetailCard({
   return (
     <div className="border-border/50 col-span-1 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
       <div className="border-border/50 flex items-center justify-between border-b pb-2">
-        <h3 className="text-contrast text-lg font-semibold">{title}</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-contrast text-lg font-semibold">{title}</h3>
+        </div>
+
         <Tooltip>
           <TooltipTrigger asChild>
             <InfoIcon className="h-4 w-4 cursor-pointer text-gray-400" />
           </TooltipTrigger>
           <TooltipContent side="top">
             <p>{tooltip}</p>
+            {isRealtime && (
+              <span className="text-contrast/30 text-xs whitespace-pre-line">
+                {data?.delivery_info}
+              </span>
+            )}
           </TooltipContent>
         </Tooltip>
       </div>

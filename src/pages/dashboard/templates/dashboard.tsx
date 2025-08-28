@@ -35,7 +35,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
   } = useDashboard({ isSelectable });
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between">
         {isSelectable && (
           <Select
@@ -74,7 +74,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
               date={dateRange}
               onDateSelect={({ from, to }) => setDateRange({ from, to })}
               contentAlign="end"
-              maxDateType="today"
+              maxDateType="yesterday"
               isDashboard
             />
           )}
@@ -89,7 +89,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
         periodType={periodType}
       />
 
-      <div className="grid h-[600px] grid-cols-3 gap-6">
+      <div className="grid h-[600px] grid-cols-3 gap-4">
         <div className="bg-background border-border/50 col-span-2 flex h-full flex-col gap-3 rounded-lg border p-6 shadow-sm">
           <h3 className="border-border/50 text-contrast border-b pb-2 text-lg font-semibold">
             매출 통계

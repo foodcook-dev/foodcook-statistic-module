@@ -24,6 +24,7 @@ export interface DashboardResponse {
   total_tax_free_amount: number; // 총 비과세 금액
   purchase_amount: number; // 매입액
   gross_profit_margin: number; // GP 마진율
+  delivery_info: string; // 출고 정보 (주문건 기간 or 휴무일 여부)
   chart_data: DashboardChartData[];
 }
 
