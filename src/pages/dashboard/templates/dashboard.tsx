@@ -36,7 +36,7 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex items-center justify-between">
+      <div className={`flex items-center ${isSelectable ? 'justify-between' : 'justify-end'}`}>
         {isSelectable && (
           <Select
             value={selectedPartnerId ? selectedPartnerId.toString() : 'default'}
