@@ -77,7 +77,7 @@ export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
   const handlePeriodChange = (period: string) => {
     setPeriodType(period);
     setDateRange({
-      from: startOfMonth(new Date()),
+      from: startOfMonth(new Date(Date.now() - 24 * 60 * 60 * 1000)),
       to: new Date(Date.now() - 24 * 60 * 60 * 1000),
     });
   };
