@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { type CellBase, type Matrix } from 'react-spreadsheet';
 import { format } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
+import useFetch from '@/hooks/useFetch';
 import { OrderApiResponse } from '../types';
 import useConfirmStore from '@/store/confirm';
 import useAlertStore from '@/store/alert';
@@ -11,6 +12,7 @@ import useAlertStore from '@/store/alert';
 const readOnlyColumns = [0, 1, 2, 3, 5, 6, 7];
 
 export function usePurchase() {
+  const queryClient = useQueryClient();
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -44,6 +46,27 @@ export function usePurchase() {
   useEffect(() => {
     if (!isLoading) setPurchaseData(addReadOnlyAttributes(data));
   }, [isLoading, data]);
+
+  const { request: purchaseRequest } = useFetch({
+    requestFn: async () => {
+      return await createAxios({
+        method: 'patch',
+        endpoint: `/order/batch-vegetable-purchase-product-manual`,
+        baseURL: 'https://admin.cookerp.shop',
+        body: {
+          estimated_delivery_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
+          table_data: purchaseData?.table_data as any,
+        },
+      });
+    },
+    onSuccess: () => {
+      setSelectedDate(undefined);
+      setAlertMessage('매입 주문이 생성되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['availableDates'] });
+    },
+    showSpinner: true,
+    spinnerMessage: '매입 생성중',
+  });
 
   const calculateSummaryBySupplier = useCallback(() => {
     const supplierTotals: Record<string, number> = {};
@@ -184,7 +207,7 @@ export function usePurchase() {
       title: '매입하기',
       message:
         '매입 진행 후에는 해당 날짜의 데이터를 수정할 수 없습니다.\n매입을 진행하시겠습니까?',
-      onConfirm: () => {},
+      onConfirm: () => purchaseRequest(),
     });
   }, [purchaseData]);
 
