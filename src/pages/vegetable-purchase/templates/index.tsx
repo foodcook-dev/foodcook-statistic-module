@@ -27,7 +27,7 @@ export default function VegetablePurchase() {
   const totalItems = purchaseData?.table_data?.length || 0;
 
   return (
-    <div className="bg-background text-contrast flex h-full flex-col p-8">
+    <div className="bg-background text-contrast flex h-screen flex-col">
       <div className="mb-2 flex items-center">
         <p className="text-xl font-bold">야채 매입</p>
         {/* <ThemeToggle /> */}
@@ -76,25 +76,23 @@ export default function VegetablePurchase() {
         ) : (
           <div className="flex h-full flex-1 gap-4">
             <div className="relative h-full flex-1 overflow-auto bg-white">
-              <div className={`h-full`}>
-                <Spreadsheet
-                  data={purchaseData?.table_data as any as Matrix<CellBase>}
-                  onChange={handleChange}
-                  columnLabels={[
-                    '매입사',
-                    '상품ID',
-                    '상품명',
-                    '판매수량',
-                    '매입수량',
-                    '평균판매금액',
-                    '판매설정금액',
-                    '기준매입단가',
-                    '매입단가',
-                    '합계금액',
-                    '기준매입단가 수정여부',
-                  ]}
-                />
-              </div>
+              <Spreadsheet
+                data={purchaseData?.table_data as any as Matrix<CellBase>}
+                onChange={handleChange}
+                columnLabels={[
+                  '매입사',
+                  '상품ID',
+                  '상품명',
+                  '판매수량',
+                  '매입수량',
+                  '평균판매금액',
+                  '판매설정금액',
+                  '기준매입단가',
+                  '매입단가',
+                  '합계금액',
+                  '기준매입단가 수정여부',
+                ]}
+              />
             </div>
 
             <div className="bg-background-50 flex h-full w-80 flex-col gap-4">
