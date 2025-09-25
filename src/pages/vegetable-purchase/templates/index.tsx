@@ -18,11 +18,12 @@ export default function VegetablePurchase() {
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
-    totalItems,
     calculateSummaryBySupplier,
     handlePurchaseOrder,
     isDateDisabled,
   } = usePurchase();
+
+  const totalItems = purchaseData?.table_data?.length || 0;
 
   return (
     <div className="bg-background text-contrast flex h-full flex-col p-8">

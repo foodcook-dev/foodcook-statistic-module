@@ -7,6 +7,9 @@ import { OrderApiResponse } from '../types';
 import useConfirmStore from '@/store/confirm';
 import useAlertStore from '@/store/alert';
 
+// readonly 열 설정 (0: 매입사, 1: 상품ID, 2: 상품명, 3: 판매수량, 5: 평균판매금액, 6: 판매설정금액, 7: 기준매입단가)
+const readOnlyColumns = [0, 1, 2, 3, 5, 6, 7];
+
 export function usePurchase() {
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -42,13 +45,6 @@ export function usePurchase() {
     if (!isLoading) setPurchaseData(addReadOnlyAttributes(data));
   }, [isLoading, data]);
 
-  // readonly 열 설정 (0: 매입사, 1: 상품ID, 2: 상품명, 3: 판매수량, 5: 평균판매금액, 6: 판매설정금액, 7: 기준매입단가)
-  const readOnlyColumns = [0, 1, 2, 3, 5, 6, 7];
-
-  // 총 항목 수 계산
-  const totalItems = purchaseData?.table_data?.length || 0;
-
-  // 매입사별 합계 및 상품 종류 수 계산
   const calculateSummaryBySupplier = useCallback(() => {
     const supplierTotals: Record<string, number> = {};
     const productSets: Record<string, Set<string>> = {};
@@ -99,7 +95,7 @@ export function usePurchase() {
     });
 
     return result;
-  }, [data]);
+  }, [purchaseData]);
 
   const addReadOnlyAttributes = useCallback((inputData: OrderApiResponse): OrderApiResponse => {
     return {
@@ -257,7 +253,6 @@ export function usePurchase() {
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
-    totalItems,
     calculateSummaryBySupplier,
     handlePurchaseOrder,
     isDateDisabled,
