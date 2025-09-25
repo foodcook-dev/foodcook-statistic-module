@@ -23,3 +23,16 @@
 .spreadsheet-readonly .Spreadsheet__cell--readonly {
   background-color: #f0f0f0 !important;
 }
+
+/* 셀 위아래 패딩 추가 */
+.Spreadsheet__cell {
+  box-sizing: border-box;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* 데이터 뷰어/에디터가 셀 패딩 내에서 잘 맞도록 */
+.Spreadsheet__data-viewer,
+.Spreadsheet__data-editor {
+  line-height: 1.2;
+}

@@ -7,9 +7,46 @@ import { Button } from '@/components/atoms/button';
 import { Calendar } from '@/components/atoms/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/atoms/popover';
 import { usePurchase } from '../hooks/usePurchase';
+import { useMemo } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/atoms/select';
 
-// import { ThemeToggle } from '@/components/modules/theme-toggle';
 import '../index.css';
+
+function DropdownEditor({ cell, onChange, exitEditMode }: any) {
+  const current = String(cell?.value ?? '').toUpperCase();
+  const value = current === 'Y' || current === 'N' ? current : undefined;
+
+  return (
+    <div
+      className="flex h-full w-full items-center overflow-hidden px-1"
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <Select
+        value={value}
+        onValueChange={(v) => {
+          onChange({ ...cell, value: v });
+          exitEditMode?.();
+        }}
+        disabled={cell?.readOnly}
+      >
+        <SelectTrigger size="sm" className="min-h-0 w-full rounded-sm text-xs">
+          <SelectValue placeholder="선택" />
+        </SelectTrigger>
+        <SelectContent disablePortal>
+          <SelectItem value="Y">Y</SelectItem>
+          <SelectItem value="N">N</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
 
 export default function VegetablePurchase() {
   const {
@@ -28,6 +65,18 @@ export default function VegetablePurchase() {
 
   const totalItems = purchaseData?.table_data?.length || 0;
   const availableDaysCount = availableDates?.available_date?.length || 0;
+
+  const tableDataWithEditor = useMemo(() => {
+    if (!purchaseData?.table_data) return [] as any;
+    return purchaseData.table_data.map((row) =>
+      row.map((cell, colIndex) => {
+        if (colIndex === 10) {
+          return { ...(cell as any), DataEditor: DropdownEditor } as any;
+        }
+        return cell as any;
+      }),
+    );
+  }, [purchaseData]);
 
   return (
     <div className="bg-background text-contrast flex h-screen flex-col">
@@ -95,7 +144,7 @@ export default function VegetablePurchase() {
               className={`relative h-full flex-1 overflow-auto bg-white ${isAllReadOnly ? 'spreadsheet-readonly' : ''}`}
             >
               <Spreadsheet
-                data={purchaseData?.table_data as any as Matrix<CellBase>}
+                data={tableDataWithEditor as any as Matrix<CellBase>}
                 onChange={handleChange}
                 columnLabels={[
                   '매입사',
@@ -126,8 +175,8 @@ export default function VegetablePurchase() {
                 <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
                   {Object.entries(calculateSummaryBySupplier()).map(([supplier, summary]) => (
                     <div key={supplier} className="bg-foreground rounded-md px-3 py-2 text-sm">
-                      <div className="grid grid-cols-2 items-center gap-2 text-xs">
-                        <div className="flex gap-1 font-medium">
+                      <div className="flex items-center gap-2 text-xs">
+                        <div className="flex flex-1 gap-1 font-medium">
                           <span>{supplier}</span>
                           <span className="text-contrast/50">({summary.productCount})</span>
                         </div>

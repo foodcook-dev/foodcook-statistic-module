@@ -239,25 +239,48 @@ export function usePurchase() {
     (newData: Matrix<CellBase>) => {
       const updatedData = newData.map((row, rowIndex) => {
         const prevRow = purchaseData?.table_data[rowIndex] || [];
-        const updatedRow = [...row];
 
-        // readonly 열의 값이 변경되었는지 확인하고 원래 값으로 복원
-        readOnlyColumns.forEach((colIndex) => {
-          if (prevRow[colIndex] && updatedRow[colIndex]) {
-            updatedRow[colIndex] = { ...prevRow[colIndex] };
+        // prevRow와 new row의 최대 길이를 기준으로 병합
+        const maxCols = Math.max(prevRow.length, row.length);
+        const mergedRow: any[] = new Array(maxCols).fill(null).map((_, colIndex) => {
+          const incomingCell = row[colIndex] as any;
+          const prevCell = prevRow[colIndex] as any;
+
+          // 읽기전용 컬럼: 항상 이전 셀 유지
+          if (readOnlyColumns.includes(colIndex)) {
+            return prevCell ? { ...prevCell } : (prevCell ?? incomingCell ?? null);
           }
+
+          // 변경되지 않은 컬럼(신규 셀 없음): 이전 셀 유지
+          if (!incomingCell) {
+            return prevCell ? { ...prevCell } : (incomingCell ?? null);
+          }
+
+          // 기존 셀이 있다면 메타 유지 + 값만 덮어쓰기
+          if (prevCell) {
+            let nextValue = incomingCell?.value as any;
+            if (colIndex === 10 && typeof nextValue === 'string') {
+              nextValue = nextValue.trim().toUpperCase();
+            }
+            return { ...prevCell, value: nextValue } as CellBase;
+          }
+
+          // prevCell이 없는 드문 경우: 새 셀 생성(읽기전용 규칙 반영)
+          const shouldBeReadOnly = isAllReadOnly || readOnlyColumns.includes(colIndex);
+          return { ...(incomingCell as any), readOnly: shouldBeReadOnly } as any;
         });
 
-        const prevQty = parseFloat(String(prevRow[4]?.value ?? 0)) || 0; // 수량
-        const prevPrice = parseFloat(String(prevRow[8]?.value ?? 0)) || 0; // 매입단가
+        // 2) 합계(9열) 계산/유지 로직
+        const prevQty = parseFloat(String(prevRow[4]?.value ?? 0)) || 0; // 이전 수량
+        const prevPrice = parseFloat(String(prevRow[8]?.value ?? 0)) || 0; // 이전 매입단가
         const prevTotal = (() => {
-          const v = prevRow[9]?.value; // 합계금액
+          const v = prevRow[9]?.value; // 이전 합계금액
           return typeof v === 'number' ? v : parseFloat(String(v)) || 0;
         })();
 
-        const qty = parseFloat(String(updatedRow[4]?.value ?? 0)) || 0; // 수량
-        const price = parseFloat(String(updatedRow[8]?.value ?? 0)) || 0; // 매입단가
-        const currentTotalCell = updatedRow[9]; // 합계금액
+        const qty = parseFloat(String(mergedRow[4]?.value ?? 0)) || 0; // 현재 수량
+        const price = parseFloat(String(mergedRow[8]?.value ?? 0)) || 0; // 현재 매입단가
+        const currentTotalCell = mergedRow[9]; // 현재 합계금액 셀
         const currentTotal = (() => {
           const v = currentTotalCell?.value;
           return typeof v === 'number' ? v : parseFloat(String(v)) || 0;
@@ -267,36 +290,32 @@ export function usePurchase() {
         const priceChanged = price !== prevPrice;
         const totalChanged = currentTotal !== prevTotal;
 
-        if (qtyChanged || priceChanged) {
-          // 수량과 단가가 모두 숫자이고 0이 아닐 때 계산 (마이너스 값도 허용)
-          const calculatedTotal = qty !== 0 && price > 0 ? qty * price : 0;
-          const prevCell = prevRow[9];
+        let nextRow = [...mergedRow];
 
-          updatedRow[9] = {
+        if (qtyChanged || priceChanged) {
+          const calculatedTotal = qty !== 0 && price > 0 ? qty * price : 0;
+          const prevCell = prevRow[9] as any;
+          nextRow[9] = {
             ...prevCell,
             value: calculatedTotal,
-          }; // 합계금액
+          } as any;
 
-          // total_purchase_price 키를 가진 셀이라면 키도 유지
           if ((prevCell as any)?.key === 'total_purchase_price') {
-            updatedRow[9] = {
+            nextRow[9] = {
               ...prevCell,
               value: calculatedTotal,
               key: 'total_purchase_price',
             } as any;
           }
         } else if (totalChanged) {
-          // 사용자가 합계를 직접 수정한 경우
-          const prevCell = prevRow[9];
-
-          updatedRow[9] = {
+          const prevCell = prevRow[9] as any;
+          nextRow[9] = {
             ...prevCell,
             value: currentTotal,
-          }; // 합계금액
+          } as any;
 
-          // total_purchase_price 키를 가진 셀이라면 키도 유지
           if ((prevCell as any)?.key === 'total_purchase_price') {
-            updatedRow[9] = {
+            nextRow[9] = {
               ...prevCell,
               value: currentTotal,
               key: 'total_purchase_price',
@@ -304,7 +323,7 @@ export function usePurchase() {
           }
         }
 
-        return updatedRow;
+        return nextRow;
       });
 
       if (purchaseData) {
@@ -314,7 +333,7 @@ export function usePurchase() {
         });
       }
     },
-    [purchaseData, selectedDate],
+    [purchaseData, selectedDate, isAllReadOnly],
   );
 
   return {
