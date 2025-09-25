@@ -1,0 +1,25 @@
+.Spreadsheet {
+  font-size: 14px;
+}
+
+.Spreadsheet__cell--readonly {
+  background-color: #ffffff !important;
+  color: #6f6f6f !important;
+}
+
+.Spreadsheet__cell:not(.Spreadsheet__cell--readonly) {
+  background-color: #eff9fc !important;
+}
+
+.spreadsheet-readonly {
+  opacity: 0.9;
+}
+
+.spreadsheet-readonly .Spreadsheet__cell {
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+}
+
+.spreadsheet-readonly .Spreadsheet__cell--readonly {
+  background-color: #f0f0f0 !important;
+}

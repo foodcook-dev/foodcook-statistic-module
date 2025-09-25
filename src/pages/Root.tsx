@@ -9,6 +9,7 @@ import { MainDashboard, SalesDashboard } from '@/pages/dashboard/templates';
 import IntegratedSettlement from './integrated-settlement/templates';
 import DirectSettlement from './direct-settlement/templates';
 import ConsignmentSettlement from './consignment-settlement/templates';
+import VegetablePurchase from './vegetable-purchase/templates';
 
 export default function Root() {
   return (
@@ -23,6 +24,9 @@ export default function Root() {
         {/* Dashboard */}
         <Route path="/dashboard/main" element={<MainDashboard />} />
         <Route path="/dashboard/sales" element={<SalesDashboard />} />
+
+        {/* Purchase */}
+        <Route path="/purchase/vegetable" element={<VegetablePurchase />} />
       </Route>
       {/* <Route path="/*" element={<RestrictRoute allow={isSignIn} redirect="/signIn" />}>
         <Route path="integrated" element={<IntegratedSettlement />} />

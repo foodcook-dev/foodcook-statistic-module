@@ -26,6 +26,7 @@ type CreateRequest = {
   endpoint: string;
   params?: ParameterType;
   body?: BodyContentType;
+  baseURL?: string;
 };
 
 declare type Instance = (args: CreateRequest) => Promise<T>;
