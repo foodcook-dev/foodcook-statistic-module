@@ -17,12 +17,13 @@ export default function VegetablePurchase() {
     purchaseData,
     isCalendarOpen,
     availableDates,
+    isAllReadOnly,
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
     calculateSummaryBySupplier,
     handlePurchaseOrder,
-    isDateDisabled,
+    isDateUnavailable,
   } = usePurchase();
 
   const totalItems = purchaseData?.table_data?.length || 0;
@@ -61,7 +62,12 @@ export default function VegetablePurchase() {
               mode="single"
               selected={selectedDate}
               onSelect={handleDateSelect}
-              disabled={isDateDisabled}
+              modifiers={{
+                unavailable: isDateUnavailable,
+              }}
+              modifiersClassNames={{
+                unavailable: 'text-contrast/30',
+              }}
             />
           </PopoverContent>
         </Popover>
@@ -85,7 +91,9 @@ export default function VegetablePurchase() {
           </div>
         ) : (
           <div className="flex h-full flex-1 gap-4">
-            <div className="relative h-full flex-1 overflow-auto bg-white">
+            <div
+              className={`relative h-full flex-1 overflow-auto bg-white ${isAllReadOnly ? 'spreadsheet-readonly' : ''}`}
+            >
               <Spreadsheet
                 data={purchaseData?.table_data as any as Matrix<CellBase>}
                 onChange={handleChange}
@@ -133,7 +141,9 @@ export default function VegetablePurchase() {
                 </div>
               </div>
 
-              <Button onClick={handlePurchaseOrder}>매입하기</Button>
+              <Button disabled={isAllReadOnly} onClick={handlePurchaseOrder}>
+                매입하기
+              </Button>
             </div>
           </div>
         )}

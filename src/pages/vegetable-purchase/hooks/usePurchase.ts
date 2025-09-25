@@ -16,6 +16,7 @@ export function usePurchase() {
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isAllReadOnly, setIsAllReadOnly] = useState(false);
   const { showConfirm } = useConfirmStore();
   const { setAlertMessage } = useAlertStore();
 
@@ -46,6 +47,15 @@ export function usePurchase() {
   useEffect(() => {
     if (!isLoading) setPurchaseData(addReadOnlyAttributes(data));
   }, [isLoading, data]);
+
+  useEffect(() => {
+    if (selectedDate && availableDates?.available_date) {
+      const dateString = format(selectedDate, 'yyyy-MM-dd');
+      setIsAllReadOnly(!availableDates.available_date.includes(dateString));
+    } else {
+      setIsAllReadOnly(false);
+    }
+  }, [selectedDate, availableDates]);
 
   const { request: purchaseRequest } = useFetch({
     requestFn: async () => {
@@ -120,28 +130,42 @@ export function usePurchase() {
     return result;
   }, [purchaseData]);
 
-  const addReadOnlyAttributes = useCallback((inputData: OrderApiResponse): OrderApiResponse => {
-    return {
-      ...inputData,
-      table_data: inputData?.table_data.map((row) =>
-        row.map((cell, colIndex) => {
-          if (cell) {
-            const shouldBeReadOnly = readOnlyColumns.includes(colIndex);
-            return {
-              ...cell,
-              readOnly: shouldBeReadOnly,
-            } as CellBase;
-          }
-          return cell;
-        }),
-      ),
-    };
-  }, []);
+  const addReadOnlyAttributes = useCallback(
+    (inputData: OrderApiResponse): OrderApiResponse => {
+      return {
+        ...inputData,
+        table_data: inputData?.table_data.map((row) =>
+          row.map((cell, colIndex) => {
+            if (cell) {
+              const shouldBeReadOnly = isAllReadOnly || readOnlyColumns.includes(colIndex);
+              return {
+                ...cell,
+                readOnly: shouldBeReadOnly,
+              } as CellBase;
+            }
+            return cell;
+          }),
+        ),
+      };
+    },
+    [isAllReadOnly, purchaseData],
+  );
 
-  const handleDateSelect = useCallback((date: Date | undefined) => {
-    setSelectedDate(date);
-    setIsCalendarOpen(false);
-  }, []);
+  const isDateUnavailable = useCallback(
+    (date: Date) => {
+      const dateString = format(date, 'yyyy-MM-dd');
+      return !availableDates?.available_date?.includes(dateString);
+    },
+    [availableDates],
+  );
+
+  const handleDateSelect = useCallback(
+    (date: Date | undefined) => {
+      setSelectedDate(date);
+      setIsCalendarOpen(false);
+    },
+    [isDateUnavailable],
+  );
 
   const handlePurchaseOrder = useCallback(() => {
     if (!purchaseData?.table_data) {
@@ -264,21 +288,17 @@ export function usePurchase() {
     [purchaseData, selectedDate],
   );
 
-  const isDateDisabled = (date: Date) => {
-    const dateString = format(date, 'yyyy-MM-dd');
-    return !availableDates?.available_date?.includes(dateString);
-  };
-
   return {
     selectedDate,
     purchaseData,
     isCalendarOpen,
     availableDates,
+    isAllReadOnly,
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
     calculateSummaryBySupplier,
     handlePurchaseOrder,
-    isDateDisabled,
+    isDateUnavailable,
   };
 }
