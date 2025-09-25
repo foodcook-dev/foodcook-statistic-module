@@ -269,10 +269,39 @@ export function usePurchase() {
 
         if (qtyChanged || priceChanged) {
           // 수량과 단가가 모두 숫자이고 0이 아닐 때 계산 (마이너스 값도 허용)
-          updatedRow[9] = { value: qty !== 0 && price > 0 ? qty * price : 0 }; // 합계금액
+          const calculatedTotal = qty !== 0 && price > 0 ? qty * price : 0;
+          const prevCell = prevRow[9];
+
+          updatedRow[9] = {
+            ...prevCell,
+            value: calculatedTotal,
+          }; // 합계금액
+
+          // total_purchase_price 키를 가진 셀이라면 키도 유지
+          if ((prevCell as any)?.key === 'total_purchase_price') {
+            updatedRow[9] = {
+              ...prevCell,
+              value: calculatedTotal,
+              key: 'total_purchase_price',
+            } as any;
+          }
         } else if (totalChanged) {
           // 사용자가 합계를 직접 수정한 경우
-          updatedRow[9] = currentTotalCell; // 합계금액
+          const prevCell = prevRow[9];
+
+          updatedRow[9] = {
+            ...prevCell,
+            value: currentTotal,
+          }; // 합계금액
+
+          // total_purchase_price 키를 가진 셀이라면 키도 유지
+          if ((prevCell as any)?.key === 'total_purchase_price') {
+            updatedRow[9] = {
+              ...prevCell,
+              value: currentTotal,
+              key: 'total_purchase_price',
+            } as any;
+          }
         }
 
         return updatedRow;
