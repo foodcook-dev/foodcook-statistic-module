@@ -273,6 +273,7 @@ export function usePurchase() {
     selectedDate,
     purchaseData,
     isCalendarOpen,
+    availableDates,
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,

@@ -16,6 +16,7 @@ export default function VegetablePurchase() {
     selectedDate,
     purchaseData,
     isCalendarOpen,
+    availableDates,
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
@@ -25,13 +26,11 @@ export default function VegetablePurchase() {
   } = usePurchase();
 
   const totalItems = purchaseData?.table_data?.length || 0;
+  const availableDaysCount = availableDates?.available_date?.length || 0;
 
   return (
     <div className="bg-background text-contrast flex h-screen flex-col">
-      <div className="mb-2 flex items-center">
-        <p className="text-xl font-bold">야채 매입</p>
-        {/* <ThemeToggle /> */}
-      </div>
+      {/* <ThemeToggle /> */}
 
       <div className="border-border/50 flex items-center justify-between border p-4">
         <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -45,6 +44,17 @@ export default function VegetablePurchase() {
                   : '날짜를 선택해주세요'}
               </Button>
             </PopoverTrigger>
+            <div className="flex items-center gap-1 text-xs">
+              {availableDaysCount > 0 ? (
+                <span className="rounded-sm bg-blue-500/10 px-3 py-2 font-medium text-blue-600 dark:text-blue-400">
+                  매입 대기 {availableDaysCount}건
+                </span>
+              ) : (
+                <span className="bg-foreground/70 text-contrast/70 rounded-sm px-3 py-2 font-medium">
+                  매입 대기 건 없음
+                </span>
+              )}
+            </div>
           </div>
           <PopoverContent className="bg-background w-auto p-0" align="start">
             <Calendar
