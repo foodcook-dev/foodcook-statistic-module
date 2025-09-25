@@ -186,7 +186,7 @@ export function usePurchase() {
         '매입 진행 후에는 해당 날짜의 데이터를 수정할 수 없습니다.\n매입을 진행하시겠습니까?',
       onConfirm: () => {},
     });
-  }, [purchaseData, showConfirm, setAlertMessage]);
+  }, [purchaseData]);
 
   const handleChange = useCallback(
     (newData: Matrix<CellBase>) => {

@@ -8,6 +8,7 @@ import { Calendar } from '@/components/atoms/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/atoms/popover';
 import { usePurchase } from '../hooks/usePurchase';
 
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
 import '../index.css';
 
 export default function VegetablePurchase() {
@@ -29,6 +30,7 @@ export default function VegetablePurchase() {
     <div className="bg-background text-contrast flex h-full flex-col p-8">
       <div className="mb-2 flex items-center">
         <p className="text-xl font-bold">야채 매입</p>
+        {/* <ThemeToggle /> */}
       </div>
 
       <div className="border-border/50 flex items-center justify-between border p-4">
@@ -95,7 +97,7 @@ export default function VegetablePurchase() {
               </div>
             </div>
 
-            <div className="bg-background-50 flex h-full w-80 flex-col gap-4 rounded-lg p-2">
+            <div className="bg-background-50 flex h-full w-80 flex-col gap-4">
               <div className="bg-background border-border/50 rounded-md border p-4">
                 <div className="flex items-center gap-1">
                   <span className="text-xs">주문일자 :</span>
