@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/atoms/select';
 import { usePurchase } from '../hooks/usePurchase';
+import { spreadsheetHeader } from '../structure';
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 import '../index.css';
@@ -158,19 +159,7 @@ export default function VegetablePurchase() {
               <Spreadsheet
                 data={tableDataWithEditor as any as Matrix<CellBase>}
                 onChange={handleChange}
-                columnLabels={[
-                  '매입사',
-                  '상품ID',
-                  '상품명',
-                  '판매수량',
-                  '매입수량',
-                  '평균판매금액',
-                  '판매설정금액',
-                  '기준매입단가',
-                  '매입단가',
-                  '합계금액',
-                  '기준매입단가 수정여부',
-                ]}
+                columnLabels={spreadsheetHeader}
               />
             </div>
 

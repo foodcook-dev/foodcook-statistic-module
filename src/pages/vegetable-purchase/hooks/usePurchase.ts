@@ -7,9 +7,7 @@ import useFetch from '@/hooks/useFetch';
 import { OrderApiResponse } from '../types';
 import useConfirmStore from '@/store/confirm';
 import useAlertStore from '@/store/alert';
-
-// readonly 열 설정 (0: 매입사, 1: 상품ID, 2: 상품명, 3: 판매수량, 5: 평균판매금액, 6: 판매설정금액, 7: 기준매입단가)
-const readOnlyColumns = [0, 1, 2, 3, 5, 6, 7];
+import { readOnlyColumns, expectedKeys } from '../structure';
 
 export function usePurchase() {
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
@@ -44,8 +42,41 @@ export function usePurchase() {
   });
 
   useEffect(() => {
-    if (!isLoading) setPurchaseData(addReadOnlyAttributes(data));
-  }, [isLoading, data, isAllReadOnly]);
+    if (!isLoading) {
+      if (data?.table_data) {
+        try {
+          let mismatchFound = false;
+          outer: for (let rowIndex = 0; rowIndex < data.table_data.length; rowIndex++) {
+            const row: any[] = data.table_data[rowIndex];
+            for (let colIndex = 0; colIndex < expectedKeys.length; colIndex++) {
+              const expected = expectedKeys[colIndex];
+              const actual = row?.[colIndex]?.key;
+              if (actual && actual !== expected) {
+                console.warn('컬럼 key 순서 불일치로 데이터 바인딩 중단', {
+                  rowIndex,
+                  colIndex,
+                  expected,
+                  actual,
+                });
+                setSelectedDate(undefined);
+                setAlertMessage(
+                  `${rowIndex + 1}행 ${colIndex + 1}열 컬럼 키가 예상(${expected})과 다릅니다: ${actual}`,
+                );
+                mismatchFound = true;
+                break outer;
+              }
+            }
+          }
+          if (mismatchFound) return; // 데이터 연결 중단
+        } catch (e) {
+          console.warn('컬럼 key 순서 검사 중 오류', e);
+          setAlertMessage('컬럼 구조 검사 중 오류가 발생했습니다.');
+          return;
+        }
+      }
+      setPurchaseData(addReadOnlyAttributes(data));
+    }
+  }, [isLoading, data, isAllReadOnly, setAlertMessage]);
 
   const { request: purchaseRequest } = useFetch({
     requestFn: async () => {
