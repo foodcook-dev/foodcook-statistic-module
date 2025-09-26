@@ -183,6 +183,7 @@ export function usePurchase() {
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
+    setIsAllReadOnly(false);
     setIsCalendarOpen(false);
   };
 
