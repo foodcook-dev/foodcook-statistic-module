@@ -247,9 +247,9 @@ export function usePurchase() {
     }
 
     showConfirm({
-      title: '매입하기',
+      title: '야채 매입 작성',
       message:
-        '매입 진행 후에는 해당 날짜의 데이터를 수정할 수 없습니다.\n매입을 진행하시겠습니까?',
+        '해당 페이지에서의 매입 작성은 최초 1회만 가능합니다.\n수정은 해당 주문건 발주서 수정을 통해 가능합니다.',
       onConfirm: () => purchaseRequest(),
     });
   }, [purchaseData]);
