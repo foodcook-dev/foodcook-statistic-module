@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { type CellBase, type Matrix } from 'react-spreadsheet';
 import { format } from 'date-fns';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import useFetch from '@/hooks/useFetch';
 import { OrderApiResponse } from '../types';
@@ -12,7 +12,6 @@ import useAlertStore from '@/store/alert';
 const readOnlyColumns = [0, 1, 2, 3, 5, 6, 7];
 
 export function usePurchase() {
-  const queryClient = useQueryClient();
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -70,9 +69,33 @@ export function usePurchase() {
       });
     },
     onSuccess: () => {
-      setSelectedDate(undefined);
-      setAlertMessage('매입 주문이 생성되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['availableDates'] });
+      const resolveParentOrigin = () => {
+        const tryParse = (v?: string | null) => {
+          try {
+            return v ? new URL(v).origin : '';
+          } catch {
+            return '';
+          }
+        };
+
+        // 핸드셰이크로 잠긴 값 우선
+        const locked =
+          (window as any).__PARENT_ORIGIN || sessionStorage.getItem('parent_origin_locked');
+        const lockedOrigin = tryParse(locked);
+        if (lockedOrigin) return lockedOrigin;
+
+        // fallback
+        return '*';
+      };
+
+      const parentOrigin = resolveParentOrigin();
+      console.log('parentOrigin', parentOrigin);
+      window.parent?.postMessage(
+        { type: 'VEG_PURCHASE_SUCCESS', payload: { selectedDate } },
+        parentOrigin,
+      );
+      // setSelectedDate(undefined);
+      // queryClient.invalidateQueries({ queryKey: ['availableDates'] });
     },
     showSpinner: true,
     spinnerMessage: '매입 생성중',
@@ -210,15 +233,6 @@ export function usePurchase() {
           firstError = `${rowIndex + 1}행 ${name} 항목은 0 이상의 숫자만 입력 가능합니다.`;
           break outerLoop;
         }
-      }
-
-      // Y/N 유효성 검사 (기준매입단가수정여부)
-      const flagValue = String(row[10]?.value || '')
-        .trim()
-        .toUpperCase();
-      if (flagValue !== 'Y' && flagValue !== 'N') {
-        firstError = `${rowIndex + 1}행 기준매입단가 수정여부는 "Y" 또는 "N" 값만 입력 가능합니다.`;
-        break outerLoop;
       }
     }
 

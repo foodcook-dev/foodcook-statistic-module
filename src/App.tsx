@@ -1,7 +1,7 @@
 import { HashRouter } from 'react-router-dom';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import ResponseError from '@/libs/response-error';
 import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
 import Pages from '@/pages/Root';
@@ -15,6 +15,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 function AppContent() {
   const { setTheme } = useTheme();
+  const lockedOriginRef = useRef<string | null>(null);
 
   useEffect(() => {
     const token = getTokenFromUrl();
@@ -24,8 +25,45 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
+    const safeGetOrigin = (value?: string | null) => {
+      try {
+        return value ? new URL(value).origin : '';
+      } catch {
+        return '';
+      }
+    };
+
+    // 세션에 저장된 이전 락 값을 복원
+    lockedOriginRef.current =
+      sessionStorage.getItem('parent_origin_locked') || lockedOriginRef.current;
+
+    const expected =
+      safeGetOrigin(new URLSearchParams(window.location.search).get('parent_origin')) ||
+      safeGetOrigin((import.meta as any).env?.VITE_PARENT_ORIGIN as string | undefined);
+
     const handleMessage = (event: MessageEvent) => {
-      const { type, theme: newTheme } = event.data;
+      if (event.source !== window.parent) return;
+
+      const { type, theme: newTheme } = (event.data ?? {}) as any;
+
+      // origin 검증/락
+      let allow = false;
+      if (expected) {
+        allow = event.origin === expected;
+      } else if (!lockedOriginRef.current) {
+        // 최초 유효 메시지(THEME_CHANGE)의 origin을 락으로 저장
+        if (type === 'THEME_CHANGE') {
+          lockedOriginRef.current = event.origin;
+          (window as any).__PARENT_ORIGIN = event.origin;
+          sessionStorage.setItem('parent_origin_locked', event.origin);
+          allow = true;
+        }
+      } else {
+        allow = event.origin === lockedOriginRef.current;
+      }
+
+      if (!allow) return;
+
       if (type === 'THEME_CHANGE') setTheme(newTheme);
     };
 
