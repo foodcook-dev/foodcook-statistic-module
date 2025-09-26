@@ -230,6 +230,15 @@ export function usePurchase() {
           break outerLoop;
         }
       }
+
+      // Y/N 유효성 검사 (기준매입단가수정여부)
+      const flagValue = String(row[10]?.value || '')
+        .trim()
+        .toUpperCase();
+      if (flagValue !== 'Y' && flagValue !== 'N') {
+        firstError = `${rowIndex + 1}행 기준매입단가 수정여부는 "Y" 또는 "N" 값만 입력 가능합니다.`;
+        break outerLoop;
+      }
     }
 
     if (firstError) {
