@@ -45,16 +45,7 @@ export function usePurchase() {
 
   useEffect(() => {
     if (!isLoading) setPurchaseData(addReadOnlyAttributes(data));
-  }, [isLoading, data]);
-
-  useEffect(() => {
-    if (selectedDate && availableDates?.available_date) {
-      const dateString = format(selectedDate, 'yyyy-MM-dd');
-      setIsAllReadOnly(!availableDates.available_date.includes(dateString));
-    } else {
-      setIsAllReadOnly(false);
-    }
-  }, [selectedDate, availableDates]);
+  }, [isLoading, data, isAllReadOnly]);
 
   const { request: purchaseRequest } = useFetch({
     requestFn: async () => {
@@ -182,8 +173,13 @@ export function usePurchase() {
   );
 
   const handleDateSelect = (date: Date | undefined) => {
+    if (date && availableDates?.available_date) {
+      const dateString = format(date, 'yyyy-MM-dd');
+      setIsAllReadOnly(!availableDates.available_date.includes(dateString));
+    } else {
+      setIsAllReadOnly(false);
+    }
     setSelectedDate(date);
-    setIsAllReadOnly(false);
     setIsCalendarOpen(false);
   };
 
