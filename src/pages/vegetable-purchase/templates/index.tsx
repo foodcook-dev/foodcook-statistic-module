@@ -1,4 +1,5 @@
 import Spreadsheet from 'react-spreadsheet';
+import { useMemo } from 'react';
 import { TableProperties, CalendarDays } from 'lucide-react';
 import { type CellBase, type Matrix } from 'react-spreadsheet';
 import { format } from 'date-fns';
@@ -6,8 +7,7 @@ import { ko } from 'date-fns/locale';
 import { Button } from '@/components/atoms/button';
 import { Calendar } from '@/components/atoms/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/atoms/popover';
-import { usePurchase } from '../hooks/usePurchase';
-import { useMemo } from 'react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/atoms/tooltip';
 import {
   Select,
   SelectContent,
@@ -15,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/atoms/select';
+import { usePurchase } from '../hooks/usePurchase';
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 import '../index.css';
 
@@ -96,14 +98,19 @@ export default function VegetablePurchase() {
             </PopoverTrigger>
             <div className="flex items-center text-xs">
               {availableDaysCount > 0 ? (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="bg-blue-500/10 text-xs font-medium text-blue-600 hover:bg-blue-500/20 dark:text-blue-400"
-                  onClick={() => handleDateSelect(availableDates?.available_date[0])}
-                >
-                  매입 대기 {availableDaysCount}건
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="bg-blue-500/10 text-xs font-medium text-blue-600 hover:bg-blue-500/20 dark:text-blue-400"
+                      onClick={() => handleDateSelect(availableDates?.available_date[0])}
+                    >
+                      매입 대기 {availableDaysCount}건
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">가장 오래된 매입 대기 건으로 이동</TooltipContent>
+                </Tooltip>
               ) : (
                 <span className="bg-foreground/70 text-contrast/70 rounded-sm px-3 py-2 font-medium">
                   매입 대기 건 없음
@@ -170,13 +177,19 @@ export default function VegetablePurchase() {
             <div className="bg-background-50 flex h-full w-80 flex-col gap-4">
               <div className="bg-background border-border/50 rounded-md border p-4">
                 <div className="flex items-center gap-1">
-                  <span className="text-xs">주문일자 :</span>
+                  <span className="text-xs">주문일시 :</span>
                   <span className="text-xs">{purchaseData?.order_aggregation_period}</span>
                 </div>
               </div>
 
               <div className="bg-background border-border/50 flex min-h-0 flex-1 flex-col rounded-md border p-4">
-                <h3 className="mb-3 text-xs">매입요약</h3>
+                <div className="mb-3 flex items-end gap-2">
+                  <span className="text-xs">매입요약</span>
+                  <span className="text-contrast/50 text-[10px]">
+                    매입수량 * 매입단가 (미입력 항목 제외)
+                  </span>
+                </div>
+
                 <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
                   {Object.entries(calculateSummary()).map(([supplier, summary]) => (
                     <div key={supplier} className="bg-foreground rounded-md px-3 py-2 text-sm">

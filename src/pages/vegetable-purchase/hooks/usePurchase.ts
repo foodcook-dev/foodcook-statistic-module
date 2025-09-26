@@ -155,26 +155,23 @@ export function usePurchase() {
     return result;
   }, [purchaseData]);
 
-  const addReadOnlyAttributes = useCallback(
-    (inputData: OrderApiResponse): OrderApiResponse => {
-      return {
-        ...inputData,
-        table_data: inputData?.table_data.map((row) =>
-          row.map((cell, colIndex) => {
-            if (cell) {
-              const shouldBeReadOnly = isAllReadOnly || readOnlyColumns.includes(colIndex);
-              return {
-                ...cell,
-                readOnly: shouldBeReadOnly,
-              } as CellBase;
-            }
-            return cell;
-          }),
-        ),
-      };
-    },
-    [isAllReadOnly, purchaseData],
-  );
+  const addReadOnlyAttributes = (inputData: OrderApiResponse): OrderApiResponse => {
+    return {
+      ...inputData,
+      table_data: inputData?.table_data.map((row) =>
+        row.map((cell, colIndex) => {
+          if (cell) {
+            const shouldBeReadOnly = isAllReadOnly || readOnlyColumns.includes(colIndex);
+            return {
+              ...cell,
+              readOnly: shouldBeReadOnly,
+            } as CellBase;
+          }
+          return cell;
+        }),
+      ),
+    };
+  };
 
   const isDateUnavailable = useCallback(
     (date: Date) => {
