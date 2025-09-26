@@ -89,19 +89,21 @@ export function usePurchase() {
       };
 
       const parentOrigin = resolveParentOrigin();
-      console.log('parentOrigin', parentOrigin);
-      window.parent?.postMessage(
-        { type: 'VEG_PURCHASE_SUCCESS', payload: { selectedDate } },
-        parentOrigin,
-      );
-      // setSelectedDate(undefined);
-      // queryClient.invalidateQueries({ queryKey: ['availableDates'] });
+      if (selectedDate) {
+        window.parent?.postMessage(
+          {
+            type: 'VEG_PURCHASE_SUCCESS',
+            payload: { date: format(selectedDate, 'yyyy-MM-dd') },
+          },
+          parentOrigin,
+        );
+      }
     },
     showSpinner: true,
     spinnerMessage: '매입 생성중',
   });
 
-  const calculateSummaryBySupplier = useCallback(() => {
+  const calculateSummary = useCallback(() => {
     const supplierTotals: Record<string, number> = {};
     const productSets: Record<string, Set<string>> = {};
     let lastSupplier = '';
@@ -182,13 +184,10 @@ export function usePurchase() {
     [availableDates],
   );
 
-  const handleDateSelect = useCallback(
-    (date: Date | undefined) => {
-      setSelectedDate(date);
-      setIsCalendarOpen(false);
-    },
-    [isDateUnavailable],
-  );
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    setIsCalendarOpen(false);
+  };
 
   const handlePurchaseOrder = useCallback(() => {
     if (!purchaseData?.table_data) {
@@ -359,7 +358,7 @@ export function usePurchase() {
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
-    calculateSummaryBySupplier,
+    calculateSummary,
     handlePurchaseOrder,
     isDateUnavailable,
   };

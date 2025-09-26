@@ -58,7 +58,7 @@ export default function VegetablePurchase() {
     setIsCalendarOpen,
     handleDateSelect,
     handleChange,
-    calculateSummaryBySupplier,
+    calculateSummary,
     handlePurchaseOrder,
     isDateUnavailable,
   } = usePurchase();
@@ -94,11 +94,16 @@ export default function VegetablePurchase() {
                   : '날짜를 선택해주세요'}
               </Button>
             </PopoverTrigger>
-            <div className="flex items-center gap-1 text-xs">
+            <div className="flex items-center text-xs">
               {availableDaysCount > 0 ? (
-                <span className="rounded-sm bg-blue-500/10 px-3 py-2 font-medium text-blue-600 dark:text-blue-400">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="bg-blue-500/10 text-xs font-medium text-blue-600 hover:bg-blue-500/20 dark:text-blue-400"
+                  onClick={() => handleDateSelect(availableDates?.available_date[0])}
+                >
                   매입 대기 {availableDaysCount}건
-                </span>
+                </Button>
               ) : (
                 <span className="bg-foreground/70 text-contrast/70 rounded-sm px-3 py-2 font-medium">
                   매입 대기 건 없음
@@ -173,7 +178,7 @@ export default function VegetablePurchase() {
               <div className="bg-background border-border/50 flex min-h-0 flex-1 flex-col rounded-md border p-4">
                 <h3 className="mb-3 text-xs">매입요약</h3>
                 <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
-                  {Object.entries(calculateSummaryBySupplier()).map(([supplier, summary]) => (
+                  {Object.entries(calculateSummary()).map(([supplier, summary]) => (
                     <div key={supplier} className="bg-foreground rounded-md px-3 py-2 text-sm">
                       <div className="flex items-center gap-2 text-xs">
                         <div className="flex flex-1 gap-1 font-medium">
