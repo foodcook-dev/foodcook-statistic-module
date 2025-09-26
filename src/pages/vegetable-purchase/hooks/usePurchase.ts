@@ -284,7 +284,14 @@ export function usePurchase() {
 
   const handleChange = useCallback(
     (newData: Matrix<CellBase>) => {
-      const updatedData = newData.map((row, rowIndex) => {
+      // 붙여넣기 등으로 넘어온 newData가 기존 행 수보다 길면 잘라 강제 행 추가를 방지
+      const originalRowCount = purchaseData?.table_data.length ?? 0;
+      let constrainedData = newData;
+      if (originalRowCount && newData.length > originalRowCount) {
+        constrainedData = newData.slice(0, originalRowCount);
+      }
+
+      const updatedData = constrainedData.map((row, rowIndex) => {
         const prevRow = purchaseData?.table_data[rowIndex] || [];
 
         // prevRow와 new row의 최대 길이를 기준으로 병합
