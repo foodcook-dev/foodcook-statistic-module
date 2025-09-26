@@ -36,3 +36,18 @@
 .Spreadsheet__data-editor {
   line-height: 1.2;
 }
+
+/* 헤더 고정 (스크롤 시 상단 고정) */
+.Spreadsheet .Spreadsheet__header {
+  position: sticky;
+  top: -1px;
+  z-index: 10;
+  background: var(--color-foreground);
+  border: 0.5px solid var(--color-border);
+  color: color-mix(in srgb, var(--color-contrast) 60%, transparent);
+}
+
+.Spreadsheet .Spreadsheet__header--selected {
+  background: #525252;
+  color: #ffffff;
+}
