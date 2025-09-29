@@ -286,16 +286,29 @@ export function usePurchase() {
     (newData: Matrix<CellBase>) => {
       // 붙여넣기 등으로 넘어온 newData가 기존 행 수보다 길면 잘라 강제 행 추가를 방지
       const originalRowCount = purchaseData?.table_data.length ?? 0;
+      // 열 추가 방지: 기존 테이블의 최대 열 수 (항상 number 보장)
+      const originalColCount: number = purchaseData?.table_data
+        ? purchaseData.table_data.reduce((max, row) => Math.max(max, row.length), 0)
+        : 0;
+
       let constrainedData = newData;
       if (originalRowCount && newData.length > originalRowCount) {
         constrainedData = newData.slice(0, originalRowCount);
       }
 
+      // 각 행 열 수 제한
+      if (originalColCount > 0) {
+        constrainedData = constrainedData.map((r) =>
+          r.length > originalColCount ? r.slice(0, originalColCount) : r,
+        );
+      }
+
       const updatedData = constrainedData.map((row, rowIndex) => {
         const prevRow = purchaseData?.table_data[rowIndex] || [];
+        // prevRow와 new row의 최대 길이를 기존 열 수 한도로 제한
+        const targetCols = originalColCount || Math.max(prevRow.length, row.length);
+        const maxCols = targetCols;
 
-        // prevRow와 new row의 최대 길이를 기준으로 병합
-        const maxCols = Math.max(prevRow.length, row.length);
         const mergedRow: any[] = new Array(maxCols).fill(null).map((_, colIndex) => {
           const incomingCell = row[colIndex] as any;
           const prevCell = prevRow[colIndex] as any;
