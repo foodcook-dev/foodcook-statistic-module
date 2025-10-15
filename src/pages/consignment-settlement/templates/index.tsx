@@ -41,7 +41,7 @@ export default function ConsignmentSettlement() {
   );
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Tabs />
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
@@ -82,16 +82,16 @@ export default function ConsignmentSettlement() {
             storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
             gridApi={gridRef.current?.api}
           />
-          <Payment onSubmit={handlePaymentSubmit} />
+          <Payment onSubmit={handlePaymentSubmit} disabled={!selectedPartner?.id} />
         </div>
       </div>
       <InfoTable data={PARTNER_INFO} info={partnerInfo} />
-      <div className="w-full h-[500px]">
+      <div className="h-[500px] w-full">
         {!selectedPartner?.id ? (
-          <div className="flex items-center justify-center h-full bg-foreground border border-border rounded-lg">
+          <div className="bg-foreground border-border flex h-full items-center justify-center rounded-lg border">
             <div className="text-center">
               <p className="text-contrast text-lg font-medium">매입사를 선택해주세요</p>
-              <p className="text-gray-400 text-sm mt-2">조회할 매입사를 선택해주시기 바랍니다.</p>
+              <p className="mt-2 text-sm text-gray-400">조회할 매입사를 선택해주시기 바랍니다.</p>
             </div>
           </div>
         ) : (

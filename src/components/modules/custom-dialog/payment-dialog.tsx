@@ -17,6 +17,7 @@ import { cn } from '@/libs/utils';
 
 interface PaymentDialogProps {
   onSubmit: (data: PaymentData) => void;
+  disabled: boolean;
   title?: string;
   buttonText?: string;
   buttonClassName?: string;
@@ -33,6 +34,7 @@ export interface PaymentData {
 
 export default function PaymentDialog({
   onSubmit,
+  disabled,
   title = '결제 입력',
   buttonText = '결제 입력',
   buttonClassName = 'text-xs text-white bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover',
@@ -88,7 +90,7 @@ export default function PaymentDialog({
 
   return (
     <>
-      <Button className={buttonClassName} onClick={handleDialogOpen}>
+      <Button className={buttonClassName} onClick={handleDialogOpen} disabled={disabled}>
         {children || buttonText}
       </Button>
       <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
