@@ -82,7 +82,7 @@ export default function ConsignmentSettlement() {
             storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
             gridApi={gridRef.current?.api}
           />
-          <Payment onSubmit={handlePaymentSubmit} disabled={!selectedPartner?.id} />
+          <Payment onSubmit={handlePaymentSubmit} paymentDisabled={!selectedPartner?.id} />
         </div>
       </div>
       <InfoTable data={PARTNER_INFO} info={partnerInfo} />

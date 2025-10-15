@@ -68,6 +68,7 @@ const createActionButtonRenderer = (
             title: '결제 수정',
             buttonClassName: 'w-[32px] h-[30px] bg-blue-500 text-white hover:bg-blue-300',
             onSubmit: onEdit,
+            dateSelectDisabled: true,
             initialData: {
               id: params.data.detail_id,
               processDate: params.data?.process_date

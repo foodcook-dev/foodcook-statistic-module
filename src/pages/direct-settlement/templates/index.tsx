@@ -82,7 +82,7 @@ export default function DirectSettlement() {
             storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}
             gridApi={gridRef.current?.api}
           />
-          <Payment onSubmit={handlePaymentSubmit} disabled={!selectedBuyer?.id} />
+          <Payment onSubmit={handlePaymentSubmit} paymentDisabled={!selectedBuyer?.id} />
         </div>
       </div>
       <InfoTable data={BUYER_INFO} info={buyerInfo} />

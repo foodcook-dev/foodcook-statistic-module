@@ -17,7 +17,8 @@ import { cn } from '@/libs/utils';
 
 interface PaymentDialogProps {
   onSubmit: (data: PaymentData) => void;
-  disabled?: boolean;
+  paymentDisabled?: boolean;
+  dateSelectDisabled?: boolean;
   title?: string;
   buttonText?: string;
   buttonClassName?: string;
@@ -34,7 +35,8 @@ export interface PaymentData {
 
 export default function PaymentDialog({
   onSubmit,
-  disabled = false,
+  paymentDisabled = false,
+  dateSelectDisabled = false,
   title = '결제 입력',
   buttonText = '결제 입력',
   buttonClassName = 'text-xs text-white bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover',
@@ -91,7 +93,7 @@ export default function PaymentDialog({
 
   return (
     <>
-      <Button className={buttonClassName} onClick={handleDialogOpen} disabled={disabled}>
+      <Button className={buttonClassName} onClick={handleDialogOpen} disabled={paymentDisabled}>
         {children || buttonText}
       </Button>
       <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
@@ -108,9 +110,10 @@ export default function PaymentDialog({
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
+                    disabled={dateSelectDisabled}
                     className={cn(
                       'w-full justify-start text-left font-normal',
-                      !formData.processDate && 'text-muted-foreground',
+                      dateSelectDisabled && 'cursor-not-allowed opacity-50',
                     )}
                   >
                     <CalendarIcon className="h-4 w-4" />
