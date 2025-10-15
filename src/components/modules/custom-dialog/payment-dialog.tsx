@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,9 @@ import {
 import { Button } from '@/components/atoms/button';
 import { Input } from '@/components/atoms/input';
 import { Textarea } from '@/components/atoms/textarea';
+import { Calendar } from '@/components/atoms/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/atoms/popover';
+import { cn } from '@/libs/utils';
 
 interface PaymentDialogProps {
   onSubmit: (data: PaymentData) => void;
@@ -46,6 +50,7 @@ export default function PaymentDialog({
   });
 
   const [formData, setFormData] = useState<PaymentData>(getInitialFormData());
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -87,7 +92,7 @@ export default function PaymentDialog({
         {children || buttonText}
       </Button>
       <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] text-contrast">
+        <DialogContent className="text-contrast sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
@@ -96,15 +101,36 @@ export default function PaymentDialog({
               <label htmlFor="processDate" className="text-sm font-medium">
                 처리일자
               </label>
-              <Input
-                id="processDate"
-                type="text"
-                value={format(formData.processDate, 'yyyy-MM-dd')}
-                readOnly
-                disabled
-                tabIndex={-1}
-                className="text-gray-500 cursor-not-allowed"
-              />
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      !formData.processDate && 'text-muted-foreground',
+                    )}
+                  >
+                    <CalendarIcon className="h-4 w-4" />
+                    {formData.processDate ? (
+                      format(formData.processDate, 'yyyy-MM-dd')
+                    ) : (
+                      <span>날짜를 선택해주세요</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="bg-background w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={formData.processDate}
+                    onSelect={(date) => {
+                      if (date) {
+                        setFormData({ ...formData, processDate: date });
+                        setCalendarOpen(false);
+                      }
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="grid gap-2">
@@ -139,7 +165,7 @@ export default function PaymentDialog({
               취소
             </Button>
             <Button
-              className="bg-primary text-white border-primary hover:bg-primary-hover hover:border-primary-hover"
+              className="bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover text-white"
               onClick={handleSubmit}
             >
               저장
