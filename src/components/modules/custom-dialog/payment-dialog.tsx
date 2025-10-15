@@ -86,6 +86,7 @@ export default function PaymentDialog({
   const handleDialogOpen = () => {
     setFormData(getInitialFormData());
     setPaymentDialogOpen(true);
+    setCalendarOpen(false);
   };
 
   return (
@@ -130,6 +131,7 @@ export default function PaymentDialog({
                         setCalendarOpen(false);
                       }
                     }}
+                    disabled={(date) => date > new Date()}
                   />
                 </PopoverContent>
               </Popover>
