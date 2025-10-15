@@ -23,7 +23,8 @@ export function usePurchase() {
       createAxios({
         method: 'get',
         endpoint: '/order/available-vegetable-purchase-date',
-        baseURL: 'https://admin.cookerp.shop',
+        //baseURL: 'https://admin.cookerp.shop',
+        baseURL: 'https://admin.xn--wv4b09focz31b.com',
       }),
   });
 
@@ -33,7 +34,8 @@ export function usePurchase() {
       createAxios({
         method: 'get',
         endpoint: '/order/batch-vegetable-purchase-product-manual',
-        baseURL: 'https://admin.cookerp.shop',
+        //baseURL: 'https://admin.cookerp.shop',
+        baseURL: 'https://admin.xn--wv4b09focz31b.com',
         params: {
           estimated_delivery_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
         },
@@ -83,7 +85,8 @@ export function usePurchase() {
       return await createAxios({
         method: 'patch',
         endpoint: `/order/batch-vegetable-purchase-product-manual`,
-        baseURL: 'https://admin.cookerp.shop',
+        //baseURL: 'https://admin.cookerp.shop',
+        baseURL: 'https://admin.xn--wv4b09focz31b.com',
         body: {
           estimated_delivery_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
           table_data: purchaseData?.table_data as any,
