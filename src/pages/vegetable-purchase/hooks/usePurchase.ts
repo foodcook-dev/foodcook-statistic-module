@@ -8,6 +8,7 @@ import { OrderApiResponse } from '../types';
 import useConfirmStore from '@/store/confirm';
 import useAlertStore from '@/store/alert';
 import { readOnlyColumns, expectedKeys } from '../structure';
+import { ERP_BASE_URL } from '@/constants/api-path';
 
 export function usePurchase() {
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
@@ -23,8 +24,7 @@ export function usePurchase() {
       createAxios({
         method: 'get',
         endpoint: '/order/available-vegetable-purchase-date',
-        //baseURL: 'https://admin.cookerp.shop',
-        baseURL: 'https://admin.xn--wv4b09focz31b.com',
+        baseURL: ERP_BASE_URL.Prod,
       }),
   });
 
@@ -34,8 +34,7 @@ export function usePurchase() {
       createAxios({
         method: 'get',
         endpoint: '/order/batch-vegetable-purchase-product-manual',
-        //baseURL: 'https://admin.cookerp.shop',
-        baseURL: 'https://admin.xn--wv4b09focz31b.com',
+        baseURL: ERP_BASE_URL.Prod,
         params: {
           estimated_delivery_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
         },
@@ -85,8 +84,7 @@ export function usePurchase() {
       return await createAxios({
         method: 'patch',
         endpoint: `/order/batch-vegetable-purchase-product-manual`,
-        //baseURL: 'https://admin.cookerp.shop',
-        baseURL: 'https://admin.xn--wv4b09focz31b.com',
+        baseURL: ERP_BASE_URL.Prod,
         body: {
           estimated_delivery_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
           table_data: purchaseData?.table_data as any,
@@ -340,7 +338,7 @@ export function usePurchase() {
           return { ...(incomingCell as any), readOnly: shouldBeReadOnly } as any;
         });
 
-        // 2) 합계(9열) 계산/유지 로직
+        // 합계(9열) 계산/유지 로직
         const prevQty = parseFloat(String(prevRow[4]?.value ?? 0)) || 0; // 이전 수량
         const prevPrice = parseFloat(String(prevRow[8]?.value ?? 0)) || 0; // 이전 매입단가
         const prevTotal = (() => {
@@ -377,6 +375,13 @@ export function usePurchase() {
               key: 'total_purchase_price',
             } as any;
           }
+
+          // 수량 또는 가격이 변경된 경우 기준매입단가 수정여부를 Y로 설정
+          const prevFlagCell = prevRow[10] as any;
+          nextRow[10] = {
+            ...prevFlagCell,
+            value: 'Y',
+          } as any;
         } else if (totalChanged) {
           const prevCell = prevRow[9] as any;
           nextRow[9] = {
@@ -391,6 +396,13 @@ export function usePurchase() {
               key: 'total_purchase_price',
             } as any;
           }
+
+          // 합계금액이 직접 변경된 경우에도 기준매입단가 수정여부를 Y로 설정
+          const prevFlagCell = prevRow[10] as any;
+          nextRow[10] = {
+            ...prevFlagCell,
+            value: 'Y',
+          } as any;
         }
 
         return nextRow;

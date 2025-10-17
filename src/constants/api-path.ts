@@ -2,3 +2,8 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const PATH = { base: BASE_URL };
+
+export const ERP_BASE_URL = {
+  Dev: 'https://admin.cookerp.shop',
+  Prod: 'https://admin.xn--wv4b09focz31b.com',
+} as const;
