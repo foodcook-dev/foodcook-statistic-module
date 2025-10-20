@@ -375,13 +375,6 @@ export function usePurchase() {
               key: 'total_purchase_price',
             } as any;
           }
-
-          // 수량 또는 가격이 변경된 경우 기준매입단가 수정여부를 Y로 설정
-          const prevFlagCell = prevRow[10] as any;
-          nextRow[10] = {
-            ...prevFlagCell,
-            value: 'Y',
-          } as any;
         } else if (totalChanged) {
           const prevCell = prevRow[9] as any;
           nextRow[9] = {
@@ -396,15 +389,7 @@ export function usePurchase() {
               key: 'total_purchase_price',
             } as any;
           }
-
-          // 합계금액이 직접 변경된 경우에도 기준매입단가 수정여부를 Y로 설정
-          const prevFlagCell = prevRow[10] as any;
-          nextRow[10] = {
-            ...prevFlagCell,
-            value: 'Y',
-          } as any;
         }
-
         return nextRow;
       });
 
