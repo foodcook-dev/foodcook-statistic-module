@@ -41,6 +41,12 @@ export const useConsignmentSettlement = () => {
     name: location.state?.name || '',
   });
 
+  // TODO: 추후 useFetch 클로저 문제 개선 필요
+  const selectedPartnerIdRef = useRef<string>(selectedPartner.id);
+  useEffect(() => {
+    selectedPartnerIdRef.current = selectedPartner.id;
+  }, [selectedPartner.id]);
+
   const dateRangeRef = useRef(dateRange);
   useEffect(() => {
     dateRangeRef.current = dateRange;
@@ -60,7 +66,7 @@ export const useConsignmentSettlement = () => {
     return {
       getRows: async (params: IGetRowsParams) => {
         const { from, to } = dateRangeRef.current;
-        if (!selectedPartner.id || !from || !to) {
+        if (!selectedPartnerIdRef.current || !from || !to) {
           params.failCallback();
           return;
         }
@@ -72,7 +78,7 @@ export const useConsignmentSettlement = () => {
 
           const response = await createAxios({
             method: 'get',
-            endpoint: `/partner/partner_companies/${selectedPartner.id}/details/`,
+            endpoint: `/partner/partner_companies/${selectedPartnerIdRef.current}/details/`,
             params: {
               start_date: startDate,
               end_date: endDate,
@@ -105,7 +111,7 @@ export const useConsignmentSettlement = () => {
     requestFn: async (data: PaymentData) => {
       return await createAxios({
         method: 'post',
-        endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+        endpoint: `/partner/partner_companies/${selectedPartnerIdRef.current}/payment/`,
         body: {
           payment_date: format(data.processDate!, 'yyyy-MM-dd'),
           payment_amount: Number(data.amount),
@@ -123,7 +129,7 @@ export const useConsignmentSettlement = () => {
     requestFn: async (data: PaymentData) => {
       return await createAxios({
         method: 'patch',
-        endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+        endpoint: `/partner/partner_companies/${selectedPartnerIdRef.current}/payment/`,
         body: {
           detail_id: String(data.id),
           payment_amount: Number(data.amount),
@@ -142,7 +148,7 @@ export const useConsignmentSettlement = () => {
     requestFn: async (rowData: any) => {
       return await createAxios({
         method: 'delete',
-        endpoint: `/partner/partner_companies/${selectedPartner.id}/payment/`,
+        endpoint: `/partner/partner_companies/${selectedPartnerIdRef.current}/payment/`,
         params: { detail_id: rowData.detail_id },
       });
     },

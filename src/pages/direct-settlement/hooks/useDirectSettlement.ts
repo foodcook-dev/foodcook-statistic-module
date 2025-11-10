@@ -41,6 +41,12 @@ export const useDirectSettlement = () => {
     name: location.state?.name || '',
   });
 
+  // TODO: 추후 useFetch 클로저 문제 개선 필요
+  const selectedBuyerIdRef = useRef<string>(selectedBuyer.id);
+  useEffect(() => {
+    selectedBuyerIdRef.current = selectedBuyer.id;
+  }, [selectedBuyer.id]);
+
   const dateRangeRef = useRef(dateRange);
   useEffect(() => {
     dateRangeRef.current = dateRange;
@@ -60,7 +66,7 @@ export const useDirectSettlement = () => {
     return {
       getRows: async (params: IGetRowsParams) => {
         const { from, to } = dateRangeRef.current;
-        if (!selectedBuyer.id || !from || !to) {
+        if (!selectedBuyerIdRef.current || !from || !to) {
           params.failCallback();
           return;
         }
@@ -72,7 +78,7 @@ export const useDirectSettlement = () => {
 
           const response = await createAxios({
             method: 'get',
-            endpoint: `/purchase/buy_companies/${selectedBuyer.id}/details/`,
+            endpoint: `/purchase/buy_companies/${selectedBuyerIdRef.current}/details/`,
             params: {
               start_date: startDate,
               end_date: endDate,
@@ -105,7 +111,7 @@ export const useDirectSettlement = () => {
     requestFn: async (data: PaymentData) => {
       return await createAxios({
         method: 'post',
-        endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
+        endpoint: `/purchase/buy_companies/${selectedBuyerIdRef.current}/payment/`,
         body: {
           payment_date: format(data.processDate!, 'yyyy-MM-dd'),
           payment_amount: Number(data.amount),
@@ -123,7 +129,7 @@ export const useDirectSettlement = () => {
     requestFn: async (data: PaymentData) => {
       return await createAxios({
         method: 'patch',
-        endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
+        endpoint: `/purchase/buy_companies/${selectedBuyerIdRef.current}/payment/`,
         body: {
           detail_id: String(data.id),
           payment_amount: Number(data.amount),
@@ -142,7 +148,7 @@ export const useDirectSettlement = () => {
     requestFn: async (rowData: any) => {
       return await createAxios({
         method: 'delete',
-        endpoint: `/purchase/buy_companies/${selectedBuyer.id}/payment/`,
+        endpoint: `/purchase/buy_companies/${selectedBuyerIdRef.current}/payment/`,
         params: { detail_id: rowData.detail_id },
       });
     },
