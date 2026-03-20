@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import { useLocation } from 'react-router-dom';
 import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
@@ -9,8 +10,7 @@ import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-sta
 import { PaymentData } from '@/components/modules/custom-dialog/payment-dialog';
 import useFetch from '@/hooks/useFetch';
 import { useConfirm } from '@/hooks/useConfirm';
-import useAlertStore from '@/store/alert';
-import { useLocation } from 'react-router-dom';
+import { useAlert } from '@/hooks/useAlert';
 
 const PAGE_SIZE = 50;
 const MESSAGES = {
@@ -26,7 +26,7 @@ type SelectedBuyer = {
 export const useDirectSettlement = () => {
   const location = useLocation();
   const setConfirm = useConfirm();
-  const { setAlertMessage } = useAlertStore();
+  const setAlert = useAlert();
   const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
@@ -121,7 +121,7 @@ export const useDirectSettlement = () => {
     },
     onSuccess: () => {
       refreshGridData();
-      setAlertMessage(MESSAGES.PAYMENT_CREATED);
+      setAlert({ message: MESSAGES.PAYMENT_CREATED });
     },
   });
 
@@ -160,7 +160,7 @@ export const useDirectSettlement = () => {
   });
 
   const handleDelete = async (rowData: any) => {
-    const result = await setConfirm({ message: MESSAGES.DELETE_CONFIRM });
+    const result = await setConfirm({ title: '삭제 확인', message: MESSAGES.DELETE_CONFIRM });
     if (result) await deletePaymentRequest(rowData);
   };
 

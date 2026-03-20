@@ -7,10 +7,10 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import useAlertStore from '@/store/alert';
+import useAlertStore from '@/stores/alert';
 
 export default function Alert() {
-  const { message, isOpen, closeAlert } = useAlertStore();
+  const { title, message, isOpen, confirmText, closeAlert } = useAlertStore();
 
   if (!isOpen) return null;
 
@@ -18,11 +18,11 @@ export default function Alert() {
     <AlertDialog open={isOpen} onOpenChange={closeAlert}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>알림</AlertDialogTitle>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>닫기</AlertDialogCancel>
+          <AlertDialogCancel>{confirmText}</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

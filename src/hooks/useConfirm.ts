@@ -1,8 +1,11 @@
-import useConfirmStore from '@/store/confirm';
+import useConfirmStore from '@/stores/confirm';
 
 interface ConfirmOptions {
-  title?: string;
+  title: string;
   message: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm?: () => void;
 }
 
 export const useConfirm = () => {
@@ -13,7 +16,12 @@ export const useConfirm = () => {
       showConfirm({
         title: options.title,
         message: options.message,
-        onConfirm: () => resolve(true),
+        confirmText: options.confirmText,
+        cancelText: options.cancelText,
+        onConfirm: () => {
+          options.onConfirm?.();
+          resolve(true);
+        },
         onCancel: () => resolve(false),
       });
     });

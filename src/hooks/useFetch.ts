@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ResponseError from '@/libs/response-error';
-import useAlertStore from '@/store/alert';
-import useSpinnerStore from '@/store/spinner';
+import { useAlert } from '@/hooks/useAlert';
+import useSpinnerStore from '@/stores/spinner';
 
 export type FetchOptions<T, U> = {
   requestFn: (args: U) => Promise<T> | null | void;
@@ -22,7 +22,7 @@ export default function useFetch<T, U>({
   showSpinner = false,
   spinnerMessage = '처리 중...',
 }: FetchOptions<T, U>) {
-  const { setAlertMessage } = useAlertStore();
+  const setAlert = useAlert();
   const { setLoading } = useSpinnerStore();
   const [state, setState] = useState<any>();
 
@@ -44,9 +44,9 @@ export default function useFetch<T, U>({
         onError?.(e as ResponseError);
       } else {
         if (e instanceof ResponseError && typeof e.error === 'string') {
-          return setAlertMessage(e.error);
+          return setAlert({ message: e.error });
         }
-        return setAlertMessage(String(e));
+        return setAlert({ message: String(e) });
       }
     } finally {
       if (showSpinner) {

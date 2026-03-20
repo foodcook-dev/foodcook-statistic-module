@@ -8,10 +8,11 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import useConfirmStore from '@/store/confirm';
+import useConfirmStore from '@/stores/confirm';
 
 export default function Confirm() {
-  const { title, message, isOpen, onConfirm, onCancel, closeConfirm } = useConfirmStore();
+  const { title, message, isOpen, confirmText, cancelText, onConfirm, onCancel, closeConfirm } =
+    useConfirmStore();
 
   if (!isOpen) return null;
 
@@ -37,10 +38,8 @@ export default function Confirm() {
           <AlertDialogDescription>{message}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>취소</AlertDialogCancel>
-          <AlertDialogAction className="text-white" onClick={handleConfirm}>
-            확인
-          </AlertDialogAction>
+          <AlertDialogCancel onClick={handleCancel}>{cancelText}</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm}>{confirmText}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

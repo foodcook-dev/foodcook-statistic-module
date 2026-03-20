@@ -9,7 +9,7 @@ import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-sta
 import { PaymentData } from '@/components/modules/custom-dialog/payment-dialog';
 import { useConfirm } from '@/hooks/useConfirm';
 import useFetch from '@/hooks/useFetch';
-import useAlertStore from '@/store/alert';
+import { useAlert } from '@/hooks/useAlert';
 import { useLocation } from 'react-router-dom';
 
 const PAGE_SIZE = 50;
@@ -26,7 +26,7 @@ interface SelectedPartner {
 export const useConsignmentSettlement = () => {
   const location = useLocation();
   const setConfirm = useConfirm();
-  const { setAlertMessage } = useAlertStore();
+  const setAlert = useAlert();
   const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
@@ -121,7 +121,7 @@ export const useConsignmentSettlement = () => {
     },
     onSuccess: () => {
       refreshGridData();
-      setAlertMessage(MESSAGES.PAYMENT_CREATED);
+      setAlert({ message: MESSAGES.PAYMENT_CREATED });
     },
   });
 
@@ -160,7 +160,7 @@ export const useConsignmentSettlement = () => {
   });
 
   const handleDelete = async (rowData: any) => {
-    const result = await setConfirm({ message: MESSAGES.DELETE_CONFIRM });
+    const result = await setConfirm({ title: '삭제 확인', message: MESSAGES.DELETE_CONFIRM });
     if (result) await deletePaymentRequest(rowData);
   };
 

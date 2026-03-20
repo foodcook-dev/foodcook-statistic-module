@@ -1,14 +1,18 @@
 import { create } from 'zustand';
 
 interface ConfirmState {
+  isOpen: boolean;
   title: string;
   message: string;
-  isOpen: boolean;
+  confirmText: string;
+  cancelText: string;
   onConfirm: (() => void) | null;
   onCancel: (() => void) | null;
   showConfirm: (config: {
-    title?: string;
+    title: string;
     message: string;
+    confirmText?: string;
+    cancelText?: string;
     onConfirm?: () => void;
     onCancel?: () => void;
   }) => void;
@@ -16,24 +20,37 @@ interface ConfirmState {
 }
 
 const useConfirmStore = create<ConfirmState>((set) => ({
-  title: '알림',
-  message: '',
   isOpen: false,
+  title: '',
+  message: '',
+  confirmText: '확인',
+  cancelText: '취소',
   onConfirm: null,
   onCancel: null,
-  showConfirm: ({ title = '알림', message, onConfirm, onCancel }) =>
+  showConfirm: ({
+    title = '',
+    message,
+    confirmText = '확인',
+    cancelText = '취소',
+    onConfirm,
+    onCancel,
+  }) =>
     set({
       isOpen: true,
       title,
       message,
+      confirmText,
+      cancelText,
       onConfirm,
       onCancel,
     }),
   closeConfirm: () =>
     set({
       isOpen: false,
-      title: '알림',
+      title: '',
       message: '',
+      confirmText: '확인',
+      cancelText: '취소',
       onConfirm: null,
       onCancel: null,
     }),

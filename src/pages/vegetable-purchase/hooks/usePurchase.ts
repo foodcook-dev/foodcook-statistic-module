@@ -5,8 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import useFetch from '@/hooks/useFetch';
 import { OrderApiResponse } from '../types';
-import useConfirmStore from '@/store/confirm';
-import useAlertStore from '@/store/alert';
+import { useConfirm } from '@/hooks/useConfirm';
+import { useAlert } from '@/hooks/useAlert';
 import { readOnlyColumns, expectedKeys } from '../structure';
 import { ERP_BASE_URL } from '@/constants/api-path';
 
@@ -15,8 +15,8 @@ export function usePurchase() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isAllReadOnly, setIsAllReadOnly] = useState(false);
-  const { showConfirm } = useConfirmStore();
-  const { setAlertMessage } = useAlertStore();
+  const setConfirm = useConfirm();
+  const setAlert = useAlert();
 
   const { data: availableDates } = useQuery({
     queryKey: ['availableDates'],
@@ -60,9 +60,9 @@ export function usePurchase() {
                   actual,
                 });
                 setSelectedDate(undefined);
-                setAlertMessage(
-                  `${rowIndex + 1}행 ${colIndex + 1}열 컬럼 키가 예상(${expected})과 다릅니다: ${actual}`,
-                );
+                setAlert({
+                  message: `${rowIndex + 1}행 ${colIndex + 1}열 컬럼 키가 예상(${expected})과 다릅니다: ${actual}`,
+                });
                 mismatchFound = true;
                 break outer;
               }
@@ -71,13 +71,13 @@ export function usePurchase() {
           if (mismatchFound) return; // 데이터 연결 중단
         } catch (e) {
           console.warn('컬럼 key 순서 검사 중 오류', e);
-          setAlertMessage('컬럼 구조 검사 중 오류가 발생했습니다.');
+          setAlert({ message: '컬럼 구조 검사 중 오류가 발생했습니다.' });
           return;
         }
       }
       setPurchaseData(addReadOnlyAttributes(data));
     }
-  }, [isLoading, data, isAllReadOnly, setAlertMessage]);
+  }, [isLoading, data, isAllReadOnly, setAlert]);
 
   const { request: purchaseRequest } = useFetch({
     requestFn: async () => {
@@ -271,11 +271,11 @@ export function usePurchase() {
     }
 
     if (firstError) {
-      setAlertMessage(firstError);
+      setAlert({ message: firstError });
       return;
     }
 
-    showConfirm({
+    setConfirm({
       title: '야채 매입 작성',
       message:
         '해당 페이지에서의 매입 작성은 최초 1회만 가능합니다.\n수정은 해당 주문건 발주서 수정을 통해 가능합니다.',
