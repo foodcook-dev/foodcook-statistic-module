@@ -1,8 +1,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useGridFilter } from 'ag-grid-react';
 import { IDoesFilterPassParams, IRowNode } from 'ag-grid-community';
-import { Button } from '@/components/atoms/button';
-import { Checkbox } from '@/components/atoms/checkbox';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface SelectFilterState {
   filterType: 'set';

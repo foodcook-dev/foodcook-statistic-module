@@ -7,8 +7,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/atoms/select';
-import LoadingSpinner from '@/components/atoms/loading-spinner';
+} from '@/components/ui/select';
+import LoadingSpinner from '@/components/ui/loading-spinner';
 import StatCard from '../modules/stat-card';
 import DetailCard from '../modules/detail-card';
 import { useDashboard } from '../hooks/useDashboard';

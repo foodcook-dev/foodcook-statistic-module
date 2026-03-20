@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Logs } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/atoms/dialog';
-import { Button } from '@/components/atoms/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
 import { AgGridReact } from 'ag-grid-react';
@@ -34,7 +34,7 @@ export default function LogDialog({ endpoint, companyId, detailId }: LogDialogPr
     if (!data) return null;
     const rows = Array.isArray(data) ? data : data.items || [];
     if (!rows.length)
-      return <div className="h-full content-center text-contrast text-center py-8">No logs.</div>;
+      return <div className="text-contrast h-full content-center py-8 text-center">No logs.</div>;
 
     const columnDefs = [
       {
@@ -55,7 +55,7 @@ export default function LogDialog({ endpoint, companyId, detailId }: LogDialogPr
     };
 
     return (
-      <div className="text-xs h-full w-full">
+      <div className="h-full w-full text-xs">
         <AgGridReact rowData={rows} gridOptions={gridOptions} suppressDragLeaveHidesColumns />
       </div>
     );
@@ -64,17 +64,17 @@ export default function LogDialog({ endpoint, companyId, detailId }: LogDialogPr
   return (
     <>
       <Button
-        className="w-[32px] h-[30px] bg-gray-200 hover:bg-gray-300"
+        className="h-[30px] w-[32px] bg-gray-200 hover:bg-gray-300"
         onClick={handleDialogOpen}
       >
         <Logs size={16} />
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[1000px] text-contrast">
+        <DialogContent className="text-contrast sm:max-w-[1000px]">
           <DialogHeader>
             <DialogTitle>[{detailId}] Logs</DialogTitle>
           </DialogHeader>
-          <div className="py-4 min-h-[400px]">
+          <div className="min-h-[400px] py-4">
             {isLoading && <div className="text-center">Loading</div>}
             {isError && <div className="text-center">Failed to load data.</div>}
             {!isLoading && !isError && renderAgGrid()}

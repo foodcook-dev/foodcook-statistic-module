@@ -19,7 +19,7 @@ const createInstance = (baseURL?: string) => {
         newConfig.headers.Authorization = `Bearer ${token}`;
       }
 
-      // newConfig.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGhvbmVfbnVtIjoiMDEwMzQzMzU2NzMiLCJwaG9uZV9udW1iZXIiOiIwMTAzNDMzNTY3MyIsImVtYWlsIjoieWFyZ2V1NThAZ21haWwuY29tIn0.OyqgJy7_fE4gleCI5yvi7muDkoiRHtf0ZE0-vlro3zc`;
+      newConfig.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmlja25hbWUiOiJcdWJjMzBcdWMxYTFcdWQ1NThcdWM5YzBcdWI5YzhcdWMxMzhcdWM2OTRcdWQxNGNcdWMyYTRcdWQyYjhcdWM3ODVcdWIyYzhcdWIyZTQoYWRtaW4pIiwicGhvbmVfbnVtIjoiMDEwMzQzMzU2NzMiLCJwaG9uZV9udW1iZXIiOiIwMTAzNDMzNTY3MyIsImVtYWlsIjoieWFyZ2V1NThAZ21haWwuY29tIiwiY2FydCI6IjEiLCJwb2ludCI6eyJpZCI6NCwicG9pbnQiOjEwNjQ5fSwiZXhwIjoxNzc5MTcxNzkxLCJpYXQiOjE3NzM5ODc3OTF9.NjejLPfDqbAQnuscIsi-YUqoK-eFL7Iw0hGQ9rL77SE`;
       return newConfig;
     },
     (err) => Promise.reject(err),

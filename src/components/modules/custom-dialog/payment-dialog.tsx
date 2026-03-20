@@ -7,12 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/atoms/dialog';
-import { Button } from '@/components/atoms/button';
-import { Input } from '@/components/atoms/input';
-import { Textarea } from '@/components/atoms/textarea';
-import { Calendar } from '@/components/atoms/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/atoms/popover';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/libs/utils';
 
 interface PaymentDialogProps {

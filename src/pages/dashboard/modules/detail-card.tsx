@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { InfoIcon } from 'lucide-react';
-import { Button } from '@/components/atoms/button';
-import LoadingSpinner from '@/components/atoms/loading-spinner';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/atoms/tooltip';
+import { Button } from '@/components/ui/button';
+import LoadingSpinner from '@/components/ui/loading-spinner';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
 import {
   SimpleRowProps,

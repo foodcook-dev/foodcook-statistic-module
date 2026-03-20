@@ -4,17 +4,17 @@ import { TableProperties, CalendarDays } from 'lucide-react';
 import { type CellBase, type Matrix } from 'react-spreadsheet';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Button } from '@/components/atoms/button';
-import { Calendar } from '@/components/atoms/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/atoms/popover';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/atoms/tooltip';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/atoms/select';
+} from '@/components/ui/select';
 import { usePurchase } from '../hooks/usePurchase';
 import { spreadsheetHeader } from '../structure';
 // import { ThemeToggle } from '@/components/modules/theme-toggle';

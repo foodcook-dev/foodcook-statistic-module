@@ -4,15 +4,15 @@ import { type ColDef, type GridOptions } from 'ag-grid-community';
 import { SearchIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import createAxios from '@/libs/create-axios-instance';
-import { Input } from '@/components/atoms/input';
-import { Button } from '@/components/atoms/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/atoms/dialog';
+} from '@/components/ui/dialog';
 import SelectFilter from '@/components/modules/select-filter';
 
 type DataSelectorProps = {
@@ -81,14 +81,14 @@ export default function DataSelector({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button
-            className="whitespace-nowrap bg-primary text-white border-primary hover:bg-primary-hover hover:border-primary-hover"
+            className="bg-primary border-primary hover:bg-primary-hover hover:border-primary-hover whitespace-nowrap text-white"
             disabled={disabled}
           >
             <SearchIcon className="inline-block" />
             선택
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-[650px] border-border bg-background text-contrast max-h-[80vh]">
+        <DialogContent className="border-border bg-background text-contrast max-h-[80vh] w-[650px]">
           <DialogHeader>
             <DialogTitle>{label} 선택</DialogTitle>
           </DialogHeader>
@@ -102,7 +102,7 @@ export default function DataSelector({
               suppressDragLeaveHidesColumns
             />
             {bodyResponse.data?.length === 0 && (
-              <div className="text-center py-8 text-gray-500">데이터가 없습니다.</div>
+              <div className="py-8 text-center text-gray-500">데이터가 없습니다.</div>
             )}
           </div>
         </DialogContent>

@@ -10,7 +10,7 @@ import {
 import SelectFilter from '@/components/modules/select-filter';
 import { STATUS } from '@/constants/badge';
 import { STATUS_LIST, PAYMENT_LIST } from '@/constants/filter';
-import { Button } from '@/components/atoms/button';
+import { Button } from '@/components/ui/button';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import Log from '@/components/modules/custom-dialog/log-dialog';
 

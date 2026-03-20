@@ -6,7 +6,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogDescription,
-} from '@/components/atoms/alert-dialog';
+} from '@/components/ui/alert-dialog';
 import useAlertStore from '@/store/alert';
 
 export default function Alert() {

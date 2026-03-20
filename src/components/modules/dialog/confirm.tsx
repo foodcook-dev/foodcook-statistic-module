@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogDescription,
-} from '@/components/atoms/alert-dialog';
+} from '@/components/ui/alert-dialog';
 import useConfirmStore from '@/store/confirm';
 
 export default function Confirm() {

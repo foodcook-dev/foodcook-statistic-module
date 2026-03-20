@@ -1,6 +1,6 @@
 import React from 'react';
 import { GridApi } from 'ag-grid-community';
-import { Button } from '@/components/atoms/button';
+import { Button } from '@/components/ui/button';
 import { resetColumnState } from '@/libs/column-state';
 
 interface ColumnStateResetButtonProps {

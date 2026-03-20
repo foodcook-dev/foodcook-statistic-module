@@ -1,6 +1,6 @@
 import { InfoIcon } from 'lucide-react';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/atoms/tooltip';
-import LoadingSpinner from '@/components/atoms/loading-spinner';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import LoadingSpinner from '@/components/ui/loading-spinner';
 import { DashboardResponse } from '@/pages/dashboard/types/dashboard';
 import { STAT_LIST } from '../structure';
 
