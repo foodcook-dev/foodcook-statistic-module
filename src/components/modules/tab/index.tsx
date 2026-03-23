@@ -21,13 +21,11 @@ export function Tabs({ className = '' }: TabsProps) {
         return (
           <span
             key={tab.path}
-            className={`relative py-2 text-sm font-medium cursor-pointer transition-colors duration-200
-              ${
-                isActive
-                  ? 'text-primary border-b-2 border-primary'
-                  : 'text-gray-400 border-b-2 border-transparent hover:text-primary'
-              }
-            `}
+            className={`relative cursor-pointer py-2 text-sm font-medium transition-colors duration-200 ${
+              isActive
+                ? 'text-primary border-primary border-b-2'
+                : 'hover:text-primary border-b-2 border-transparent text-gray-400'
+            } `}
             onClick={() => navigate(tab.path)}
           >
             {tab.label}

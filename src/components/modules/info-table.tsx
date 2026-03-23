@@ -1,4 +1,4 @@
-import { groupIntoPairs } from '@/libs/utils';
+import { groupIntoPairs } from '@/utils/table';
 
 interface InfoItem {
   label: string;
@@ -13,11 +13,11 @@ interface InfoTableProps {
 
 export default function InfoTable({ data, info, groupSize = 3 }: InfoTableProps) {
   return (
-    <div className="flex flex-col border-t border-border text-sm text-gray-900">
+    <div className="border-border flex flex-col border-t text-sm text-gray-900">
       {groupIntoPairs(data, groupSize).map((rowPair, index) => (
         <div
           key={index}
-          className="flex items-center border-b border-border bg-background text-contrast p-3"
+          className="border-border bg-background text-contrast flex items-center border-b p-3"
         >
           {rowPair.map((item, itemIndex) => {
             const isLastRow = index === groupIntoPairs(data, groupSize).length - 1;
@@ -29,8 +29,8 @@ export default function InfoTable({ data, info, groupSize = 3 }: InfoTableProps)
 
             return (
               <div key={itemIndex} className={`flex ${widthClass}`}>
-                <div className="flex items-center font-semibold w-[135px]">{item.label}</div>
-                <div className="flex items-center flex-1">{info?.[item.value] || '-'}</div>
+                <div className="flex w-[135px] items-center font-semibold">{item.label}</div>
+                <div className="flex flex-1 items-center">{info?.[item.value] || '-'}</div>
               </div>
             );
           })}

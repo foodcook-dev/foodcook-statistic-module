@@ -1,27 +1,27 @@
 import { useState } from 'react';
 import { Logs } from 'lucide-react';
+import { AgGridReact } from 'ag-grid-react';
+import { useQuery } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
-import createAxios from '@/libs/create-axios-instance';
-import { AgGridReact } from 'ag-grid-react';
+import { getLog } from '@/libs/purchaser-dashboard-api';
 
 interface LogDialogProps {
-  endpoint: string;
+  type: 'direct' | 'consignment';
   companyId: string;
   detailId: string;
 }
 
-export default function LogDialog({ endpoint, companyId, detailId }: LogDialogProps) {
+export default function LogDialog({ type, companyId, detailId }: LogDialogProps) {
   const [open, setOpen] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['log', endpoint, companyId, detailId],
+    queryKey: ['log', type, companyId, detailId],
     queryFn: () =>
-      createAxios({
-        method: 'get',
-        endpoint,
-        params: { company_id: companyId, detail_id: detailId },
+      getLog({
+        type,
+        companyId,
+        detailId,
       }),
     enabled: open,
   });

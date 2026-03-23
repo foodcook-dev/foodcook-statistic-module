@@ -13,7 +13,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/libs/utils';
+
+import { cn } from '@/utils/common';
 
 interface PaymentDialogProps {
   onSubmit: (data: PaymentData) => void;

@@ -3,7 +3,7 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import ResponseError from '@/libs/response-error';
-import { getTokenFromUrl, setTokenToStorage } from '@/libs/utils';
+import { getTokenFromUrl, setTokenToStorage } from '@/utils/token';
 import Pages from '@/pages/Root';
 import { ThemeProvider } from '@/components/modules/theme-provider';
 import Alert from '@/components/modules/dialog/alert';

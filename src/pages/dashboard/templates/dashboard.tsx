@@ -9,10 +9,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import LoadingSpinner from '@/components/ui/loading-spinner';
-import StatCard from '../modules/stat-card';
-import DetailCard from '../modules/detail-card';
-import { useDashboard } from '../hooks/useDashboard';
-// import { ThemeToggle } from '@/components/modules/theme-toggle';
+import StatCard from '@/components/modules/dashboard/StatCard';
+import DetailCard from '@/components/modules/dashboard/DetailCard';
+import { useDashboard } from '@/hooks/dashboard/useDashboard';
 
 interface DashboardProps {
   isSelectable?: boolean;
@@ -79,7 +78,6 @@ export default function Dashboard({ isSelectable = false }: DashboardProps) {
             />
           )}
         </div>
-        {/* <ThemeToggle /> */}
       </div>
 
       <StatCard

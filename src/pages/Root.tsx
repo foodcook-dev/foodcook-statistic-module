@@ -1,10 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
 import BaseLayout from '@/routes/BaseLayout';
-import { MainDashboard, SalesDashboard } from '@/pages/dashboard/templates';
-import IntegratedSettlement from './integrated-settlement/templates';
-import DirectSettlement from './direct-settlement/templates';
-import ConsignmentSettlement from './consignment-settlement/templates';
-import VegetablePurchase from './vegetable-purchase/templates';
+import { MainDashboard, SalesDashboard } from '@/pages/dashboard';
+import IntegratedSettlement from '@/pages/purchaser-dashboard/integrated';
+import DirectSettlement from '@/pages/purchaser-dashboard/direct';
+import ConsignmentSettlement from '@/pages/purchaser-dashboard/consignment';
+import VegetablePurchase from '@/pages/vegetable-purchase';
+import UserManagementList from '@/pages/user-management/user-list';
+import UserManagementDetail from '@/pages/user-management/user-detail';
+import UserManagementCreate from '@/pages/user-management/user-create';
 
 export default function Root() {
   return (
@@ -22,6 +25,11 @@ export default function Root() {
 
         {/* Purchase */}
         <Route path="/purchase/vegetable" element={<VegetablePurchase />} />
+
+        {/* User Management */}
+        <Route path="/user-management" element={<UserManagementList />} />
+        <Route path="/user-management/create" element={<UserManagementCreate />} />
+        <Route path="/user-management/:id" element={<UserManagementDetail />} />
       </Route>
     </Routes>
   );

@@ -3,7 +3,6 @@ import { AgGridReact } from 'ag-grid-react';
 import { type ColDef, type GridOptions } from 'ag-grid-community';
 import { SearchIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import createAxios from '@/libs/create-axios-instance';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,11 +13,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import SelectFilter from '@/components/modules/select-filter';
+import { getCompany } from '@/libs/purchaser-dashboard-api';
 
 type DataSelectorProps = {
   placeholder?: string;
   label: string;
-  endpoint: string; // API 엔드포인트
+  type: 'direct' | 'consignment'; // API 엔드포인트 구분을 위한 타입
   value?: string;
   onSelect: (value: any, displayValue: string) => void;
   valueKey?: string; // 실제 값으로 사용할 키 (기본값: 'id')
@@ -32,24 +32,20 @@ type DataSelectorProps = {
 export default function DataSelector({
   placeholder = '',
   label,
+  type,
   value = '',
   onSelect,
   valueKey = 'id',
   displayKey = 'name',
   className = '',
   disabled = false,
-  endpoint,
   columnDefs,
 }: DataSelectorProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const bodyResponse = useQuery({
-    queryKey: ['dataSelector', endpoint],
-    queryFn: () =>
-      createAxios({
-        method: 'get',
-        endpoint,
-      }),
+    queryKey: ['dataSelector', type],
+    queryFn: () => getCompany(type),
     enabled: isDialogOpen,
   });
 

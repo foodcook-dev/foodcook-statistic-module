@@ -1,0 +1,42 @@
+import { UserInfoForm, SalesCompanyInfo } from '@/types/user-management';
+
+export const initialUserInfo: UserInfoForm = {
+  username: '',
+  password: '',
+  nickname: '',
+  phone_num: '',
+  email: '',
+  referral_code: '',
+  recommender: null,
+  tier: 0,
+  memo: '',
+};
+
+export const initialSalesInfo: SalesCompanyInfo = {
+  owner_name: '',
+  b_nm: '',
+  b_no: '',
+  address: '',
+  address_detail: '',
+  cert_image: null,
+  zip_code: '',
+  tax_type: '',
+  driver: null,
+  platform: '',
+  franchise: null,
+  manager: null,
+  start_dt: '',
+  email: '',
+  b_sector: '',
+  b_type: '',
+  note: '',
+  is_meet_pay_available: false,
+  is_card_pay_available: false,
+  is_deposit_pay_available: false,
+  is_fixed_account_pay_available: false,
+  is_test: false,
+  delivery_available_days: {},
+  dongwon_sales_company_code: '',
+  jette_sales_company_code: '',
+  foodist_sales_company_code: '',
+};

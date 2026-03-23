@@ -4,11 +4,11 @@ import * as React from 'react';
 import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 
-import { cn } from '@/libs/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useDatePicker } from './model/useDatePicker';
+import { useDatePicker } from '../../../hooks/useDatePicker';
+import { cn } from '@/utils/common';
 
 interface DateRangePickerProps extends React.HTMLAttributes<HTMLButtonElement> {
   className?: string;
