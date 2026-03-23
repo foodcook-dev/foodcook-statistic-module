@@ -1,6 +1,9 @@
-import { API } from '@/libs/api';
+import { createInstance } from '@/libs/api';
 import { PATH } from '@/constants/api-path';
 import { UserListResponse, UserDetailResponse } from '@/types/user-management';
+import { ERP_BASE_URL } from '@/constants/api-path';
+
+const API = createInstance(ERP_BASE_URL.Dev);
 
 export const getUserList = async (params: {
   page: number;

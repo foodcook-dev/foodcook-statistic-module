@@ -12,6 +12,8 @@ import { UserRow } from './config/row-structure';
 import { USER_FILTERS } from './config/filter-field';
 import { Button } from '@/components/ui/button';
 
+import { ThemeToggle } from '@/components/modules/theme-toggle';
+
 const PAGE_SIZE = 50;
 
 interface SearchParams {
@@ -121,10 +123,11 @@ export default function UserManagementList() {
   }, [refreshGrid]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-6 p-8">
+    <div className="flex h-full w-full flex-col gap-6">
       <div className="flex items-center justify-between">
         <SearchBar onSearch={handleSearch} onReset={handleSearchReset} />
         <Button onClick={() => navigate('/user-management/create')}>사용자 생성</Button>
+        <ThemeToggle />
       </div>
       <Filter fields={USER_FILTERS} onFilter={handleFilter} onReset={handleFilterReset} />
       <AgGridReact<UserRow>

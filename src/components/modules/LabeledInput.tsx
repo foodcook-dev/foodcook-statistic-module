@@ -36,7 +36,7 @@ export function LabeledInput(props: LabeledInputProps) {
         {...rest}
       />
       {error && <p className="text-xs text-red-500">{error}</p>}
-      {!error && helperText && <p className="text-muted-foreground text-xs">{helperText}</p>}
+      {!error && helperText && <p className="text-contrast/40 text-xs">{helperText}</p>}
     </div>
   );
 }

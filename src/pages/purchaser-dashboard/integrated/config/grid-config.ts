@@ -8,18 +8,20 @@ const typeRenderer = createBadgeRenderer(TYPE);
 const paymentRenderer = createTypeRenderer();
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
-  { headerName: 'ID', field: 'company_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
+  {
+    headerName: 'ID',
+    field: 'company_id',
+    pinned: 'left',
+    cellClass: 'ag-cell-center',
+  },
   {
     headerName: '매입사명',
     field: 'b_nm',
     pinned: 'left',
     sortable: true,
     filter: 'agTextColumnFilter',
-    filterParams: {
-      filterOptions: ['contains'],
-      maxNumConditions: 0,
-    },
-    cellStyle: { cursor: 'pointer' },
+    filterParams: { filterOptions: ['contains'], maxNumConditions: 0 },
+    cellClass: 'ag-cell-pointer',
   },
   {
     field: 'type',
@@ -27,7 +29,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     filter: SelectFilter,
     filterParams: { type: 'checkbox', structure: TYPE_LIST },
     cellRenderer: typeRenderer,
-    cellStyle: { textAlign: 'center' },
+    cellClass: 'ag-cell-center',
   },
   {
     field: 'payment_period',
@@ -35,7 +37,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     filter: SelectFilter,
     filterParams: { type: 'checkbox', structure: PAYMENT_LIST },
     cellRenderer: paymentRenderer,
-    cellStyle: { textAlign: 'center' },
+    cellClass: 'ag-cell-center',
   },
   { headerName: '사업자번호', field: 'b_no' },
   createNumericColumn('previous_balance', '전기이월액', { sortable: true }),
@@ -47,15 +49,11 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     headerName: '매입정보',
     headerClass: 'ag-header-3 centered',
     children: [
-      createNumericColumn('tax_purchase', '매입 과세액', {
-        columnGroupShow: 'open',
-      }),
-      createNumericColumn('tax_free_purchase', '매입 면세액', {
-        columnGroupShow: 'open',
-      }),
+      createNumericColumn('tax_purchase', '매입 과세액', { columnGroupShow: 'open' }),
+      createNumericColumn('tax_free_purchase', '매입 면세액', { columnGroupShow: 'open' }),
       createNumericColumn('purchase_amount', '매입액', {
         sortable: true,
-        cellStyle: { backgroundColor: 'rgb(255 247 220)' },
+        cellClass: 'ag-cell-accent',
       }),
     ],
   },
@@ -65,13 +63,13 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     children: [
       createNumericColumn('commission_rate', '정산 수수료(%)', {
         columnGroupShow: 'open',
-        cellStyle: { textAlign: 'right' },
+        cellClass: 'ag-cell-right',
       }),
       createNumericColumn('app_fee', '앱 수수료', { columnGroupShow: 'open' }),
       createNumericColumn('other_fee', '기타 수수료', { columnGroupShow: 'open' }),
       createNumericColumn('expected_settlement', '정산 예정액', {
         sortable: true,
-        cellStyle: { backgroundColor: 'rgb(255 247 220)' },
+        cellClass: 'ag-cell-accent',
       }),
     ],
   },
@@ -82,7 +80,7 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
         sortable: true,
-        cellStyle: { backgroundColor: 'rgb(255 247 220)' },
+        cellClass: 'ag-cell-accent',
       }),
       createNumericColumn('invoice_total', '계산서발행 총액', { sortable: true }),
     ],
@@ -91,20 +89,20 @@ const columnDefs: (ColDef | ColGroupDef)[] = [
     minWidth: 180,
     pinned: 'right',
     sortable: true,
-    headerStyle: { backgroundColor: 'rgb(255 252 151)', color: 'red' },
-    cellStyle: { backgroundColor: 'rgb(253 255 217)', color: 'red', fontWeight: 'bold' },
+    headerClass: 'ag-header-accent centered',
+    cellClass: 'ag-cell-highlight',
   }),
   {
     headerName: '최종 매입일',
     field: 'last_purchase_date',
     sortable: true,
-    cellStyle: { textAlign: 'right' },
+    cellClass: 'ag-cell-right',
   },
   {
     headerName: '최종 지급일',
     field: 'last_payment_date',
     sortable: true,
-    cellStyle: { textAlign: 'right' },
+    cellClass: 'ag-cell-right',
   },
   createNumericColumn('total_product_inventory_value', '상품재고액(전일자 기준)', {
     sortable: true,

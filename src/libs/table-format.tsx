@@ -47,7 +47,3 @@ export function createNumericColumn(
     ...options,
   };
 }
-
-export function getNegativeValueStyle(params: any) {
-  return params.value < 0 ? { color: 'red' } : null;
-}

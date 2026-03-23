@@ -1,16 +1,24 @@
+@import 'tw-animate-css';
 @import 'tailwindcss';
 
+body {
+  --ag-value-change-value-highlight-background-color: rgba(207, 233, 79, 0.639);
+}
+
 #root {
-  width: 100%;
+  @apply w-full;
 }
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-}
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-:root {
   --primary: oklch(0.6997 0.1951 37.04);
   --primary-hover: oklch(0.648 0.1805 38.16);
 
@@ -20,6 +28,7 @@
   --contrast: oklch(0.2101 0.0318 264.66);
   --placeholder: oklch(0.6481 0 264.66);
   --border: oklch(0.8603 0 264.66);
+  --ring: oklch(0.704 0.04 256.788);
 
   /* grid */
   --header-background: oklch(0.6997 0.1951 37.04);
@@ -30,25 +39,22 @@
   --header-background-accent: oklch(0.6383 0.204 34.61);
   --grid-border: oklch(0.8855 0 38.16);
 
-  /* input */
-  --input-background: oklch(1 0 0);
-  --input-border: oklch(0.8603 0 264.66);
-  --input-disabled: oklch(0.8603 0 264.66 / 50%);
+  --scrollbar-track: var(--background);
+  --scrollbar-thumb: var(--border);
+  --scrollbar-thumb-hover: var(--ring);
 
-  /* button */
-  --accent: oklch(0 0 264.66 / 17%);
-
-  --outline-background: oklch(1 0 0);
-  --outline-border: oklch(0.8603 0 264.66);
+  --cell-accent: rgb(255 247 220);
+  --cell-highlight: rgb(253 255 217);
 }
 
 .dark {
   --background: oklch(0.2101 0.0318 264.66);
-  --foreground: oklch(0.3914 0.0543 264.66);
+  --foreground: oklch(0.3214 0.0543 264.66);
   --dark-foreground: oklch(0.3353 0.0543 264.66);
   --contrast: oklch(1 0 0);
   --placeholder: oklch(0.7004 0 264.66);
   --border: oklch(0.5882 0.0789 264.66);
+  --ring: oklch(0.1914 0.0543 264.66);
 
   /* grid */
   --header-background: oklch(0.3914 0.0543 264.66);
@@ -69,6 +75,13 @@
 
   --outline-background: oklch(0.3353 0.0543 264.66);
   --outline-border: oklch(0.3353 0.0543 264.66);
+
+  --scrollbar-track: var(--background);
+  --scrollbar-thumb: var(--border);
+  --scrollbar-thumb-hover: var(--ring);
+
+  --cell-accent: oklch(0.35 0.04 80); /* 어두운 황갈색 */
+  --cell-highlight: oklch(0.32 0.04 100); /* 어두운 황록색 */
 }
 
 @theme inline {
@@ -81,6 +94,7 @@
   --color-contrast: var(--contrast);
   --color-placeholder: var(--placeholder);
   --color-border: var(--border);
+  --color-ring: var(--ring);
 
   --color-grid-header-background: var(--header-background);
   --color-grid-header-background-2: var(--header-background-2);
@@ -98,6 +112,9 @@
 
   --color-outline-background: var(--outline-background);
   --color-outline-border: var(--outline-border);
+
+  --color-cell-accent: var(--cell-accent);
+  --color-cell-highlight: var(--cell-highlight);
 }
 
 a {
@@ -153,6 +170,9 @@ button {
 }
 
 @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
   body {
     @apply bg-background text-contrast;
   }

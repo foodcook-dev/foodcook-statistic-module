@@ -1,10 +1,12 @@
 import { AgGridReact } from 'ag-grid-react';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import { gridOptions } from './config/grid-config';
-import { useIntegratedSettlement } from '../../../hooks/purchaser-dashboard/useIntegratedSettlement';
+import { useIntegratedSettlement } from '@/hooks/purchaser-dashboard/useIntegratedSettlement';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { Tabs } from '@/components/modules/tab';
+
+// import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function IntegratedSettlement() {
   const { gridRef, dateRange, handleCellClick, setDateRange, onGridReady, error } =
@@ -29,6 +31,7 @@ export default function IntegratedSettlement() {
             gridApi={gridRef.current?.api}
           />
         </div>
+        {/* <ThemeToggle /> */}
         <div className="text-xs text-gray-400">
           데이터는 매일 오전 1시에 전일 기준으로 업데이트됩니다.
         </div>

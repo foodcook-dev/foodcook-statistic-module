@@ -51,7 +51,7 @@ export default function UserManagementDetail() {
   const formatPhone = (num: string) => num.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
 
   return (
-    <div className="flex h-full w-full flex-col gap-6 p-8">
+    <div className="flex h-full w-full flex-col gap-6">
       <div className="flex w-full max-w-[350px] flex-col gap-2.5">
         <div className="bg-background border-border overflow-hidden rounded-xl border shadow-sm">
           <div className="border-border bg-foreground flex items-center gap-3.5 border-b px-5 py-4">

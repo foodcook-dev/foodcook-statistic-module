@@ -109,16 +109,11 @@ export default function UserManagementCreate() {
       formData.append(`sales_company_info.${key}`, value);
     });
 
-    // FormData 확인
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-
     createUser(formData);
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
+    <div className="flex h-full w-full flex-col items-center gap-4">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection ref={userInfoRef} />
         <SalesCompanySection ref={salesInfoRef} />

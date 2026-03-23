@@ -109,7 +109,7 @@ export function LabeledSelect(props: LabeledSelectProps) {
             aria-expanded={isOpen}
             disabled={isLoading}
             className={cn(
-              'border-border bg-background h-9 w-full justify-between font-normal',
+              'bg-background h-9 w-full justify-between font-normal',
               error && 'border-red-500/60',
               className,
             )}
@@ -133,9 +133,9 @@ export function LabeledSelect(props: LabeledSelectProps) {
         >
           <div className="flex flex-col">
             {searchable && (
-              <div className="border-b px-3 py-2">
+              <div className="border-border border-b px-3 py-2">
                 <input
-                  className="placeholder:text-muted-foreground w-full bg-transparent text-sm outline-none"
+                  className="placeholder:text-contrast/40 w-full bg-transparent text-sm outline-none"
                   placeholder="검색어를 입력해주세요"
                   value={search}
                   onChange={(e) => {
@@ -162,9 +162,7 @@ export function LabeledSelect(props: LabeledSelectProps) {
             )}
 
             {filteredOptions.length === 0 ? (
-              <div className="text-muted-foreground py-6 text-center text-sm">
-                검색 결과가 없습니다
-              </div>
+              <div className="text-contrast/40 py-6 text-center text-sm">검색 결과가 없습니다</div>
             ) : (
               <div ref={listRef} style={{ height: `${listHeight}px`, overflow: 'auto' }}>
                 <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>

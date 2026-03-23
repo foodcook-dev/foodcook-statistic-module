@@ -30,6 +30,42 @@
   }
 }
 
+.ag-cell-pointer {
+  cursor: pointer !important;
+}
+
+.ag-cell-accent {
+  background-color: var(--cell-accent) !important;
+}
+
+.ag-cell-highlight {
+  background-color: var(--cell-highlight) !important;
+  color: red !important;
+  font-weight: bold !important;
+}
+
+.ag-cell-danger {
+  color: red !important;
+}
+
+.ag-cell-right {
+  text-align: right !important;
+}
+
+.ag-cell-center {
+  text-align: center !important;
+}
+
+/* 음수값 강조 */
+.ag-cell-negative {
+  color: red !important;
+}
+
+/* 관리 버튼 셀 패딩 */
+.ag-cell-padding-sm {
+  padding: 4px !important;
+}
+
 .ag-body {
   font-weight: 500;
 }
@@ -74,4 +110,102 @@
 }
 .badge-green {
   background-color: #00ab36;
+}
+
+/* 콘텐츠 행 — 기본 */
+.ag-row {
+  background-color: var(--color-background);
+  color: var(--color-contrast);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 호버 */
+.ag-row:hover {
+  background-color: var(--color-foreground);
+}
+
+/* 선택된 행 */
+.ag-row-selected {
+  background-color: color-mix(in oklch, var(--primary) 12%, var(--color-background)) !important;
+  color: var(--color-contrast) !important;
+}
+.ag-row-selected:hover {
+  background-color: color-mix(in oklch, var(--primary) 18%, var(--color-background)) !important;
+}
+
+/* 셀 포커스 */
+.ag-cell-focus {
+  border: 1px solid var(--primary) !important;
+  outline: none;
+}
+
+/* 이미 선택된 행 — 기존 유지 */
+.ag-row-already-selected {
+  background-color: var(--color-dark-foreground) !important;
+  color: var(--color-placeholder) !important;
+  pointer-events: none;
+}
+.ag-row-already-selected:hover {
+  background-color: var(--color-dark-foreground) !important;
+}
+.ag-row-already-selected .ag-selection-checkbox {
+  display: none !important;
+}
+
+.ag-theme-alpine,
+.ag-theme-alpine-dark,
+.ag-theme-quartz,
+.ag-theme-quartz-dark,
+[class*='ag-theme-'] {
+  --ag-background-color: var(--color-background) !important;
+  --ag-odd-row-background-color: var(--color-background) !important;
+  --ag-row-hover-color: var(--color-foreground) !important;
+  --ag-modal-overlay-background-color: var(--color-background) !important;
+  --ag-loading-overlay-background-color: var(--color-background) !important;
+}
+
+/* 로딩 행 — 핵심 */
+.ag-row-loading {
+  background-color: var(--color-background) !important;
+}
+
+/* AG Grid 내부에서 흰 배경을 직접 칠하는 클래스들 */
+.ag-center-cols-container,
+.ag-center-cols-clipper,
+.ag-body-viewport,
+.ag-body-horizontal-scroll-viewport,
+.ag-virtual-list-viewport {
+  background-color: var(--color-background) !important;
+}
+
+/* 로딩 skeleton */
+.ag-loading-cell-renderer {
+  background-color: var(--color-background) !important;
+  color: transparent !important;
+}
+
+.ag-loading-cell-renderer::after {
+  content: '';
+  display: block;
+  height: 14px;
+  width: 60%;
+  border-radius: 4px;
+  background: var(--color-foreground);
+  animation: skeleton-shimmer 1.2s infinite;
+  background: linear-gradient(
+    90deg,
+    var(--color-dark-foreground) 25%,
+    var(--color-foreground) 50%,
+    var(--color-dark-foreground) 75%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

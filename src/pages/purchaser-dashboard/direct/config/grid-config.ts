@@ -1,12 +1,7 @@
 import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
 import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
-import {
-  createBadgeRenderer,
-  createTypeRenderer,
-  createNumericColumn,
-  getNegativeValueStyle,
-} from '@/libs/table-format';
+import { createBadgeRenderer, createTypeRenderer, createNumericColumn } from '@/libs/table-format';
 import SelectFilter from '@/components/modules/select-filter';
 import { STATUS } from '@/constants/badge';
 import { STATUS_LIST, PAYMENT_LIST } from '@/constants/filter';
@@ -17,17 +12,18 @@ import Log from '@/components/modules/custom-dialog/log-dialog';
 const paymentRenderer = createTypeRenderer();
 
 export const companyColumnDefs: ColDef[] = [
-  { headerName: 'ID', field: 'buy_company_id', flex: 0.3, cellStyle: { textAlign: 'center' } },
+  {
+    headerName: 'ID',
+    field: 'buy_company_id',
+    flex: 0.3,
+    cellClass: 'ag-cell-center',
+  },
   {
     headerName: '매입사명',
     field: 'b_nm',
-    headerClass: '',
     flex: 1,
     filter: 'agTextColumnFilter',
-    filterParams: {
-      filterOptions: ['contains'],
-      maxNumConditions: 0,
-    },
+    filterParams: { filterOptions: ['contains'], maxNumConditions: 0 },
   },
   {
     field: 'payment_period',
@@ -38,7 +34,7 @@ export const companyColumnDefs: ColDef[] = [
     filterParams: { type: 'checkbox', structure: PAYMENT_LIST },
     floatingFilter: false,
     cellRenderer: paymentRenderer,
-    cellStyle: { textAlign: 'center' },
+    cellClass: 'ag-cell-center',
   },
 ];
 
@@ -105,14 +101,19 @@ export const createColumnDefs = (
   onDelete: (data: any) => void,
   selectedBuyerId: string,
 ): (ColDef | ColGroupDef)[] => [
-  { headerName: 'ID', field: 'detail_id', pinned: 'left', cellStyle: { textAlign: 'center' } },
+  {
+    headerName: 'ID',
+    field: 'detail_id',
+    pinned: 'left',
+    cellClass: 'ag-cell-center',
+  },
   {
     headerName: '전표상태',
     field: 'type',
     pinned: 'left',
     filter: SelectFilter,
     filterParams: { type: 'checkbox', structure: STATUS_LIST },
-    cellStyle: { textAlign: 'center' },
+    cellClass: 'ag-cell-center',
     cellRenderer: statusRenderer,
   },
   { headerName: '처리일자', field: 'process_date', pinned: 'left' },
@@ -122,17 +123,15 @@ export const createColumnDefs = (
     children: [
       createNumericColumn('purchase_tax_amount', '매입 과세액', {
         columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
+        cellClassRules: { 'ag-cell-negative': (p) => p.value < 0 },
       }),
       createNumericColumn('purchase_tax_free_amount', '매입 면세액', {
         columnGroupShow: 'open',
-        cellStyle: getNegativeValueStyle,
+        cellClassRules: { 'ag-cell-negative': (p) => p.value < 0 },
       }),
       createNumericColumn('purchase_amount', '매입액', {
-        cellStyle: (params) => {
-          const baseStyle = { backgroundColor: 'rgb(255 247 220)' };
-          return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
-        },
+        cellClass: 'ag-cell-accent',
+        cellClassRules: { 'ag-cell-negative': (p) => p.value < 0 },
       }),
     ],
   },
@@ -142,17 +141,15 @@ export const createColumnDefs = (
     children: [
       createNumericColumn('discount_amount', '결제 차감액[할인]'),
       createNumericColumn('payment_amount', '결제 완료액', {
-        cellStyle: { backgroundColor: 'rgb(255 247 220)' },
+        cellClass: 'ag-cell-accent',
       }),
       createNumericColumn('invoice_total', '계산서발행 총액'),
     ],
   },
   createNumericColumn('balance', '잔액', {
     headerClass: 'ag-header-accent ag-right-aligned-header',
-    cellStyle: (params) => {
-      const baseStyle = { backgroundColor: 'rgb(253 255 217)' };
-      return params.value < 0 ? { ...baseStyle, color: 'red' } : baseStyle;
-    },
+    cellClass: 'ag-cell-highlight',
+    cellClassRules: { 'ag-cell-negative': (p) => p.value < 0 },
   }),
   { headerName: '비고', field: 'memo', flex: 1, minWidth: 500 },
   {
@@ -163,7 +160,7 @@ export const createColumnDefs = (
     sortable: false,
     filter: false,
     pinned: 'right',
-    cellStyle: { textAlign: 'center', padding: '4px' },
+    cellClass: 'ag-cell-center ag-cell-padding-sm',
   },
 ];
 
