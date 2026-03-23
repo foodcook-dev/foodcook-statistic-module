@@ -2,9 +2,9 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 const API = {
-  getVegetableAvailableDate: `/order/available-vegetable-purchase-date/`,
-  getBatchVegetablePurchaseProductManual: `/order/batch-vegetable-purchase-product-manual/`,
-  patchBatchVegetablePurchaseProductManual: `/order/batch-vegetable-purchase-product-manual/`,
+  getVegetableAvailableDate: `/order/available-vegetable-purchase-date`,
+  getBatchVegetablePurchaseProductManual: `/order/batch-vegetable-purchase-product-manual`,
+  patchBatchVegetablePurchaseProductManual: `/order/batch-vegetable-purchase-product-manual`,
 
   getCompany: `/dashboard/companies/`,
 

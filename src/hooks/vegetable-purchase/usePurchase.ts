@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { type CellBase, type Matrix } from 'react-spreadsheet';
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import {
 } from '@/libs/vegetable-purchase-api';
 
 export function usePurchase() {
+  const isAllReadOnlyRef = useRef(false);
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -21,12 +22,12 @@ export function usePurchase() {
   const setConfirm = useConfirm();
   const setAlert = useAlert();
 
-  const { data: availableDates } = useQuery({
+  const { data: availableDates, refetch: refetchAvailableDates } = useQuery({
     queryKey: ['availableDates'],
     queryFn: () => getAvailableDate(),
   });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['purchaseData', selectedDate],
     queryFn: () =>
       getBatchVegetablePurchaseProductManual(
@@ -35,42 +36,64 @@ export function usePurchase() {
     enabled: !!selectedDate,
   });
 
+  const addReadOnlyAttributes = useCallback(
+    (inputData: OrderApiResponse, allReadOnly: boolean): OrderApiResponse => {
+      if (!inputData?.table_data) return inputData;
+
+      let changed = false;
+      const newTableData = inputData.table_data.map((row) =>
+        row.map((cell, colIndex) => {
+          if (!cell) return cell;
+          const shouldBeReadOnly = allReadOnly || readOnlyColumns.includes(colIndex);
+          if (cell.readOnly === shouldBeReadOnly) return cell;
+          changed = true;
+          return { ...cell, readOnly: shouldBeReadOnly } as CellBase;
+        }),
+      );
+
+      if (!changed) return inputData;
+      return { ...inputData, table_data: newTableData };
+    },
+    [], // 외부 상태 의존 없음
+  );
+
   useEffect(() => {
-    if (!isLoading) {
-      if (data?.table_data) {
-        try {
-          let mismatchFound = false;
-          outer: for (let rowIndex = 0; rowIndex < data.table_data.length; rowIndex++) {
-            const row: any[] = data.table_data[rowIndex];
-            for (let colIndex = 0; colIndex < expectedKeys.length; colIndex++) {
-              const expected = expectedKeys[colIndex];
-              const actual = row?.[colIndex]?.key;
-              if (actual && actual !== expected) {
-                console.warn('컬럼 key 순서 불일치로 데이터 바인딩 중단', {
-                  rowIndex,
-                  colIndex,
-                  expected,
-                  actual,
-                });
-                setSelectedDate(undefined);
-                setAlert({
-                  message: `${rowIndex + 1}행 ${colIndex + 1}열 컬럼 키가 예상(${expected})과 다릅니다: ${actual}`,
-                });
-                mismatchFound = true;
-                break outer;
-              }
+    if (isLoading || !data) return;
+
+    if (data?.table_data) {
+      try {
+        let mismatchFound = false;
+        outer: for (let rowIndex = 0; rowIndex < data.table_data.length; rowIndex++) {
+          const row: any[] = data.table_data[rowIndex];
+          for (let colIndex = 0; colIndex < expectedKeys.length; colIndex++) {
+            const expected = expectedKeys[colIndex];
+            const actual = row?.[colIndex]?.key;
+            if (actual && actual !== expected) {
+              setSelectedDate(undefined);
+              setAlert({
+                message: `${rowIndex + 1}행 ${colIndex + 1}열 컬럼 키가 예상(${expected})과 다릅니다: ${actual}`,
+              });
+              mismatchFound = true;
+              break outer;
             }
           }
-          if (mismatchFound) return; // 데이터 연결 중단
-        } catch (e) {
-          console.warn('컬럼 key 순서 검사 중 오류', e);
-          setAlert({ message: '컬럼 구조 검사 중 오류가 발생했습니다.' });
-          return;
         }
+        if (mismatchFound) return;
+      } catch (e) {
+        setAlert({ message: '컬럼 구조 검사 중 오류가 발생했습니다.' });
+        return;
       }
-      setPurchaseData(addReadOnlyAttributes(data));
     }
-  }, [isLoading, data, isAllReadOnly, setAlert]);
+
+    setPurchaseData(addReadOnlyAttributes(data, isAllReadOnlyRef.current));
+  }, [isLoading, data]);
+
+  useEffect(() => {
+    setPurchaseData((prev) => {
+      if (!prev) return prev;
+      return addReadOnlyAttributes(prev, isAllReadOnly);
+    });
+  }, [isAllReadOnly]);
 
   const { request: purchaseRequest } = useFetch({
     requestFn: async () => {
@@ -80,6 +103,12 @@ export function usePurchase() {
       });
     },
     onSuccess: () => {
+      refetch();
+      refetchAvailableDates();
+
+      isAllReadOnlyRef.current = true;
+      setIsAllReadOnly(true);
+
       const resolveParentOrigin = () => {
         const tryParse = (v?: string | null) => {
           try {
@@ -166,24 +195,6 @@ export function usePurchase() {
     return result;
   }, [purchaseData]);
 
-  const addReadOnlyAttributes = (inputData: OrderApiResponse): OrderApiResponse => {
-    return {
-      ...inputData,
-      table_data: inputData?.table_data.map((row) =>
-        row.map((cell, colIndex) => {
-          if (cell) {
-            const shouldBeReadOnly = isAllReadOnly || readOnlyColumns.includes(colIndex);
-            return {
-              ...cell,
-              readOnly: shouldBeReadOnly,
-            } as CellBase;
-          }
-          return cell;
-        }),
-      ),
-    };
-  };
-
   const isDateUnavailable = useCallback(
     (date: Date) => {
       const dateString = format(date, 'yyyy-MM-dd');
@@ -193,12 +204,13 @@ export function usePurchase() {
   );
 
   const handleDateSelect = (date: Date | undefined) => {
-    if (date && availableDates?.available_date) {
-      const dateString = format(date, 'yyyy-MM-dd');
-      setIsAllReadOnly(!availableDates.available_date.includes(dateString));
-    } else {
-      setIsAllReadOnly(false);
-    }
+    const nextReadOnly =
+      date && availableDates?.available_date
+        ? !availableDates.available_date.includes(format(date, 'yyyy-MM-dd'))
+        : false;
+
+    isAllReadOnlyRef.current = nextReadOnly; // ref 먼저 업데이트
+    setIsAllReadOnly(nextReadOnly);
     setSelectedDate(date);
     setIsCalendarOpen(false);
   };
