@@ -5,10 +5,7 @@ import { useAddressSearch } from '@/hooks/user-management/useAddressSearch';
 import { SalesCompanyErrors } from '@/types/user-management';
 import { postCertFileUpload } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
-import {
-  initialUserInfo,
-  initialSalesInfo,
-} from '@/constants/user-management/userFormInitialValues';
+import { initialUserInfo, initialSalesInfo } from '@/constants/user-management/user-values';
 
 export function useUserInfoForm() {
   const [userInfoForm, setUserInfoForm] = useState<UserInfoForm>(initialUserInfo);
