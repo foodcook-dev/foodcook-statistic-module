@@ -1,5 +1,5 @@
-// TODO: 추후 실서버, 개발서버, 로컬서버에 따라 BASE_URL을 변경할 수 있도록 설정해야함
 const BASE_URL = import.meta.env.VITE_API_URL;
+const ERP_BASE_URL = import.meta.env.VITE_ERP_BASE_URL;
 
 const API = {
   getVegetableAvailableDate: `/order/available-vegetable-purchase-date`,
@@ -29,9 +29,4 @@ const API = {
   postCertFileUpload: `/user-dashboard/sales-company/ocr-result/`,
 };
 
-export const PATH = { base: BASE_URL, api: API };
-
-export const ERP_BASE_URL = {
-  Dev: 'https://admin.cookerp.shop',
-  Prod: 'https://admin.xn--wv4b09focz31b.com',
-} as const;
+export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };

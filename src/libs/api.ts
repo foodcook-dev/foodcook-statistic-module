@@ -2,6 +2,7 @@ import axios from 'axios';
 import { PATH } from '@/constants/api-path';
 import { getCurrentToken } from '@/utils/token';
 
+// 기본 API 인스턴스
 const createInstance = (baseURL?: string) => {
   const instance = axios.create({
     baseURL: baseURL || PATH.base,
@@ -48,5 +49,9 @@ const createInstance = (baseURL?: string) => {
   return instance;
 };
 
-export const API = createInstance();
-export { createInstance };
+// 대시보드 API 인스턴스
+const API = createInstance();
+// ERP API 인스턴스 (야채매입, 사용자통합관리)
+const ERP_API = createInstance(PATH.erp);
+
+export { API, ERP_API };
