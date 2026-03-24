@@ -1,5 +1,4 @@
 import { useMemo, useEffect, useCallback, useState } from 'react';
-import { RotateCcw } from 'lucide-react';
 import { FilterField } from '@/types/filter';
 import {
   Select,
@@ -9,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { RotateCcw } from 'lucide-react';
 
 interface FilterValues {
   [key: string]: string;
@@ -18,24 +18,24 @@ interface FilterProps {
   fields: FilterField[];
   onFilter: (values: FilterValues) => void;
   onReset?: () => void;
+  defaultValues?: FilterValues;
 }
 
-export function Filter({ fields, onFilter, onReset }: FilterProps) {
-  const defaultValues = useMemo(
+export function Filter({ fields, onFilter, onReset, defaultValues: urlValues }: FilterProps) {
+  const emptyValues = useMemo(
     () => Object.fromEntries(fields.map((field) => [field.name, field.defaultValue ?? ''])),
     [fields],
   );
 
-  const [values, setValues] = useState<FilterValues>(defaultValues);
+  const initialValues = useMemo(() => ({ ...emptyValues, ...urlValues }), []);
 
-  // 활성화된 필터 개수 계산
-  const activeFilterCount = useMemo(() => {
-    return Object.entries(values).filter(
-      ([key, value]) => value !== '' && value !== defaultValues[key],
-    ).length;
-  }, [values, defaultValues]);
+  const [values, setValues] = useState<FilterValues>(initialValues);
 
-  // 필터가 기본값과 다른지 확인
+  const activeFilterCount = useMemo(
+    () => Object.entries(values).filter(([key, value]) => value !== emptyValues[key]).length,
+    [values, emptyValues],
+  );
+
   const hasActiveFilters = activeFilterCount > 0;
 
   useEffect(() => {
@@ -47,17 +47,15 @@ export function Filter({ fields, onFilter, onReset }: FilterProps) {
   }, []);
 
   const handleReset = useCallback(() => {
-    setValues(defaultValues);
+    setValues(emptyValues);
     onReset?.();
-  }, [defaultValues, onReset]);
+  }, [emptyValues, onReset]);
 
   return (
-    <div className="bg-foreground/80 rounded-lg px-5 py-3">
+    <div className="bg-foreground/80 rounded-md px-5 py-3">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex flex-1 flex-wrap items-center gap-4">
           {fields.map((field) => {
-            const isActive = values[field.name] !== '' && values[field.name] !== field.defaultValue;
-
             return (
               <div key={field.name} className="flex items-center gap-2.5">
                 <label
@@ -73,9 +71,7 @@ export function Filter({ fields, onFilter, onReset }: FilterProps) {
                   >
                     <SelectTrigger
                       id={`filter-${field.name}`}
-                      className={`border-border bg-background h-9 min-w-[140px] transition-all ${
-                        isActive ? 'border-primary ring-primary/20 ring-1' : ''
-                      }`}
+                      className="border-border bg-background h-9 min-w-[140px] transition-all"
                     >
                       <SelectValue placeholder="전체" />
                     </SelectTrigger>

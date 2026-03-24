@@ -16,8 +16,13 @@ export interface SalesCompanySectionRef {
   getFormData: () => SalesCompanyInfo;
 }
 
-export const SalesCompanySection = forwardRef<SalesCompanySectionRef>(
-  function SalesCompanySection(_, ref) {
+interface SalesCompanySectionProps {
+  initialData?: Partial<SalesCompanyInfo>;
+  certImageUrl?: string;
+}
+
+export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompanySectionProps>(
+  function SalesCompanySection({ initialData, certImageUrl }, ref) {
     const {
       form,
       errors,
@@ -29,7 +34,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef>(
       openAddressSearch,
       validate,
       isUploading,
-    } = useSalesCompanyInfoForm();
+    } = useSalesCompanyInfoForm(initialData);
 
     useImperativeHandle(
       ref,
@@ -43,8 +48,12 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef>(
     const hasError = Object.values(errors).some((v) => !!v);
 
     return (
-      <SectionCard title="사업자 정보" defaultOpen={false} hasError={hasError}>
-        <BusinessLicenseUpload onChange={onLicenseChange} isLoading={isUploading} />
+      <SectionCard title="사업자 정보" hasError={hasError}>
+        <BusinessLicenseUpload
+          onChange={onLicenseChange}
+          isLoading={isUploading}
+          initialUrl={certImageUrl}
+        />
 
         <div className="grid grid-cols-2 gap-3">
           <div className="col-span-2">

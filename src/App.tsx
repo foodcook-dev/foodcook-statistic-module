@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/components/modules/theme-provider';
 import Alert from '@/components/modules/dialog/alert';
 import Confirm from '@/components/modules/dialog/confirm';
 import Spinner from '@/components/modules/spinner';
+import { ToastContainer } from 'react-toastify';
 import { useTheme } from '@/components/modules/theme-provider';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -79,6 +80,7 @@ function AppContent() {
       <Alert />
       <Confirm />
       <Pages />
+      <ToastContainer />
     </HashRouter>
   );
 }

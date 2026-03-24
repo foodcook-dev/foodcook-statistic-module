@@ -10,9 +10,9 @@ import {
   SalesCompanySection,
   SalesCompanySectionRef,
 } from '@/components/modules/user-management/SalesCompanySection';
+import { showToastMessage } from '@/libs/toast-message';
 import { postReferralCodeValidate, postUserCreate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
-import { showToastMessage } from '@/libs/toast-message';
 
 export default function UserManagementCreate() {
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ export default function UserManagementCreate() {
       platform: salesInfo.platform || '',
       franchise: String(salesInfo.franchise || ''),
       manager: String(salesInfo.manager || ''),
-      start_dt: salesInfo.start_dt,
+      start_dt: salesInfo.start_dt || '',
       email: salesInfo.email,
       b_sector: salesInfo.b_sector || '',
       b_type: salesInfo.b_type || '',

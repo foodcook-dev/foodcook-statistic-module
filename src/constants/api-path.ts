@@ -23,10 +23,16 @@ const API = {
   getCompanies: `/dashboard/companies/`,
   getUserList: `/user-dashboard/users/`,
   getUserDetail: (userId: number) => `/user-dashboard/users/${userId}/`,
+  getSalesCompanyDetail: (companyId: number) => `/user-dashboard/sales-company/${companyId}/`,
   getOptions: `/user-dashboard/select-options/`,
   postUserCreate: `/user-dashboard/users/`,
   postReferralCodeValidate: `/v3/user/validate-referral-code/`,
   postCertFileUpload: `/user-dashboard/sales-company/ocr-result/`,
+  postConfirmSalesCompany: (companyId: number) =>
+    `/user-dashboard/sales-company/${companyId}/confirm/`,
+  patchUserInfo: (userId: number) => `/user-dashboard/users/${userId}/`,
+  patchSalesCompanyUpdate: (companyId: number) =>
+    `/user-dashboard/sales-company/${companyId}/update/`,
 };
 
 export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };

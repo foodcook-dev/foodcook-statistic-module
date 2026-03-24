@@ -1,8 +1,9 @@
 import { useRef, useState, useCallback } from 'react';
-import { cn } from '@/utils/common';
 import { Loader2, X, FileText, UploadCloud } from 'lucide-react';
+import { cn } from '@/utils/common';
 
-type UploadedFile = { type: 'image'; file: File; previewUrl: string } | { type: 'pdf'; file: File };
+const ACCEPTED = ['image/jpeg', 'image/png', 'application/pdf'];
+const MAX_SIZE_MB = 10;
 
 interface BusinessLicenseUploadProps {
   onChange: (file: File | null) => void;
@@ -10,13 +11,30 @@ interface BusinessLicenseUploadProps {
   isLoading?: boolean;
 }
 
-const ACCEPTED = ['image/jpeg', 'image/png', 'application/pdf'];
-const MAX_SIZE_MB = 10;
+type UploadedFile =
+  | { type: 'image'; file: File; previewUrl: string }
+  | { type: 'image-url'; previewUrl: string }
+  | { type: 'pdf'; file: File };
 
-export function BusinessLicenseUpload({ onChange, error, isLoading }: BusinessLicenseUploadProps) {
+interface BusinessLicenseUploadProps {
+  onChange: (file: File | null) => void;
+  error?: string;
+  isLoading?: boolean;
+  initialUrl?: string;
+}
+
+export function BusinessLicenseUpload({
+  onChange,
+  error,
+  isLoading,
+  initialUrl,
+}: BusinessLicenseUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [uploaded, setUploaded] = useState<UploadedFile | null>(null);
+  // initialUrl이 있으면 미리보기 상태로 초기화
+  const [uploaded, setUploaded] = useState<UploadedFile | null>(
+    initialUrl ? { type: 'image-url', previewUrl: initialUrl } : null,
+  );
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleFile = useCallback(
@@ -61,6 +79,59 @@ export function BusinessLicenseUpload({ onChange, error, isLoading }: BusinessLi
 
   const displayError = validationError ?? error;
 
+  // image-url 타입: URL 미리보기 (파일명/용량 없음)
+  const imagePreview =
+    uploaded?.type === 'image' || uploaded?.type === 'image-url' ? (
+      <div className="bg-background border-border relative overflow-hidden rounded-lg border">
+        <img
+          src={uploaded.previewUrl}
+          alt="사업자등록증 미리보기"
+          className="bg-secondary h-32 w-full object-contain"
+        />
+
+        {isLoading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+            <Loader2 className="h-6 w-6 animate-spin text-white" />
+            <span className="text-sm text-white">사업자등록증 인식 중...</span>
+          </div>
+        )}
+
+        <div className="border-border flex items-center justify-between border-t px-3 py-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <FileText className="text-muted-foreground h-4 w-4 shrink-0" />
+            {uploaded.type === 'image' ? (
+              <>
+                <span className="text-contrast truncate text-sm">{uploaded.file.name}</span>
+                <span className="text-muted-foreground shrink-0 text-xs">
+                  ({(uploaded.file.size / 1024 / 1024).toFixed(1)}MB)
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-contrast truncate text-sm">등록된 사업자등록증</span>
+                <a
+                  href={uploaded.previewUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/70 flex items-center text-[11px] font-medium"
+                >
+                  파일 보기
+                </a>
+              </>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleRemove}
+            disabled={isLoading}
+            className="text-muted-foreground hover:text-contrast ml-2 shrink-0 rounded p-1 transition-colors disabled:opacity-40"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    ) : null;
+
   return (
     <div className="flex w-full flex-col gap-1.5">
       <label className="text-sm leading-none font-medium">사업자등록증</label>
@@ -102,40 +173,7 @@ export function BusinessLicenseUpload({ onChange, error, isLoading }: BusinessLi
             }}
           />
         </div>
-      ) : uploaded.type === 'image' ? (
-        <div className="bg-background border-border relative overflow-hidden rounded-lg border">
-          <img
-            src={uploaded.previewUrl}
-            alt="사업자등록증 미리보기"
-            className="bg-secondary h-32 w-full object-contain"
-          />
-
-          {isLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
-              <Loader2 className="h-6 w-6 animate-spin text-white" />
-              <span className="text-sm text-white">사업자등록증 인식 중...</span>
-            </div>
-          )}
-
-          <div className="border-border flex items-center justify-between border-t px-3 py-2">
-            <div className="flex min-w-0 items-center gap-2">
-              <FileText className="text-muted-foreground h-4 w-4 shrink-0" />
-              <span className="text-contrast truncate text-sm">{uploaded.file.name}</span>
-              <span className="text-muted-foreground shrink-0 text-xs">
-                ({(uploaded.file.size / 1024 / 1024).toFixed(1)}MB)
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={handleRemove}
-              disabled={isLoading}
-              className="text-muted-foreground hover:text-contrast ml-2 shrink-0 rounded p-1 transition-colors disabled:opacity-40"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      ) : (
+      ) : uploaded.type === 'pdf' ? (
         <div className="bg-background border-border relative flex items-center gap-3 rounded-lg border px-4 py-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20">
             <FileText className="h-5 w-5 text-blue-500" />
@@ -146,13 +184,11 @@ export function BusinessLicenseUpload({ onChange, error, isLoading }: BusinessLi
               PDF · {(uploaded.file.size / 1024 / 1024).toFixed(1)}MB
             </p>
           </div>
-
           {isLoading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
               <Loader2 className="h-6 w-6 animate-spin text-white" />
             </div>
           )}
-
           <button
             type="button"
             onClick={handleRemove}
@@ -162,6 +198,8 @@ export function BusinessLicenseUpload({ onChange, error, isLoading }: BusinessLi
             <X className="h-4 w-4" />
           </button>
         </div>
+      ) : (
+        imagePreview
       )}
 
       {displayError && <p className="text-xs text-red-500">{displayError}</p>}

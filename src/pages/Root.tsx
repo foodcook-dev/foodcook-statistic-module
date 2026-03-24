@@ -8,6 +8,8 @@ import VegetablePurchase from '@/pages/vegetable-purchase';
 import UserManagementList from '@/pages/user-management/user-list';
 import UserManagementDetail from '@/pages/user-management/user-detail';
 import UserManagementCreate from '@/pages/user-management/user-create';
+import UserManagementEdit from '@/pages/user-management/user-edit';
+import SalesCompanyEdit from '@/pages/user-management/sales-company-edit';
 
 export default function Root() {
   return (
@@ -30,6 +32,11 @@ export default function Root() {
         <Route path="/user-management" element={<UserManagementList />} />
         <Route path="/user-management/create" element={<UserManagementCreate />} />
         <Route path="/user-management/:id" element={<UserManagementDetail />} />
+        <Route path="/user-management/:id/edit" element={<UserManagementEdit />} />
+        <Route
+          path="/user-management/sales-company/:companyId/edit"
+          element={<SalesCompanyEdit />}
+        />
       </Route>
     </Routes>
   );

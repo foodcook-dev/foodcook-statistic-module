@@ -8,7 +8,7 @@ export const initialUserInfo: UserInfoForm = {
   email: '',
   referral_code: '',
   recommender: null,
-  tier: 0,
+  tier: 1,
   memo: '',
 };
 

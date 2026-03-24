@@ -12,7 +12,7 @@ export function SectionCard({ title, children, defaultOpen = true, hasError }: S
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-border bg-foreground flex w-full flex-col rounded-xl border px-6 py-4">
+    <div className="border-border bg-foreground flex w-full flex-col rounded-md border px-6 py-4">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}

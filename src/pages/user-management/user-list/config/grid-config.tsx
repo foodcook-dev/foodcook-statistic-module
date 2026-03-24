@@ -30,6 +30,16 @@ export const columnDefs: ColDef<UserRow>[] = [
   { headerName: '이메일', field: 'email' },
   { headerName: '연락처', field: 'phone_num' },
   {
+    headerName: '플랫폼',
+    field: 'platform_display',
+    flex: 0.7,
+    headerClass: 'centered',
+    cellStyle: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+  },
+  {
     headerName: '사업자인증',
     field: 'is_sales_verified',
     flex: 0.7,

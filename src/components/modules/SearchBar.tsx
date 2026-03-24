@@ -10,10 +10,11 @@ interface SearchBarParams {
 interface SearchBarProps {
   onSearch: (params: SearchBarParams) => void;
   onReset?: () => void;
+  defaultValue?: string;
 }
 
-export function SearchBar({ onSearch, onReset }: SearchBarProps) {
-  const [keyword, setKeyword] = useState('');
+export function SearchBar({ onSearch, onReset, defaultValue }: SearchBarProps) {
+  const [keyword, setKeyword] = useState(defaultValue ?? '');
 
   const handleSearch = useCallback(() => {
     onSearch({ keyword: keyword.trim() || undefined });

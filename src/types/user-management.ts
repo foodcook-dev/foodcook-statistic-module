@@ -26,10 +26,14 @@ export type UserDetailResponse = {
   email: string | null;
   phone_num: string;
   date_joined: string;
-  recommender: string | null;
+  recommender: number | null;
+  recommender_display: string | null;
   referral_code: string | null;
   last_month_sales: number;
   b_nm: string;
+  tier: number | null;
+  tier_display: string | null;
+  memo: string;
   is_sales_verified: boolean;
   is_deleted: boolean;
   is_nice_verified: boolean;
@@ -46,6 +50,69 @@ export type UserDetailResponse = {
     mobile_no: string;
     verified_at: string;
   };
+};
+
+export type SalesCompanyDetailResponse = {
+  id: number;
+  branch: number;
+  branch_display: string;
+  platform: string;
+  platform_display: string;
+  franchise: number | null;
+  franchise_display: string | null;
+  b_nm: string;
+  b_no: string;
+  owner_name: string;
+  zip_code: string | null;
+  address: string;
+  start_dt: string;
+  tax_type: string;
+  tax_type_display: string;
+  b_sector: string;
+  b_type: string;
+  cert_image: string;
+  email: string;
+  note: string | null;
+  driver: number | null;
+  driver_display: string | null;
+  manager: number | null;
+  manager_display: string | null;
+  is_meet_pay_available: boolean;
+  is_card_pay_available: boolean;
+  is_deposit_pay_available: boolean;
+  is_fixed_account_pay_available: boolean;
+  delivery_available_days: Record<string, unknown>;
+  dongwon_sales_company_code: string | null;
+  jette_sales_company_code: string | null;
+  foodist_sales_company_code: string | null;
+  is_test: boolean;
+  is_confirmed: boolean;
+  sales_branch_info: [
+    {
+      id: number;
+      type: string;
+      allias: string;
+      manager: number | null;
+      manager_display: string | null;
+      b_no: string;
+      owner_name: string;
+      start_dt: string;
+      b_sector: string;
+      b_type: string;
+      cert_image: string | null;
+      zip_code: string | null;
+      address: string;
+      address_detail: string;
+      delivery_memo: string | null;
+      gate_password: string | null;
+      delivery_available_days: Record<string, unknown> | null;
+      is_active: boolean;
+      is_confirmed: boolean;
+      is_default: boolean;
+      created_at: string;
+      updated_at: string;
+    },
+  ];
 };
 
 export type UserInfoForm = {

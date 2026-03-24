@@ -7,8 +7,14 @@ import { postCertFileUpload } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { initialUserInfo, initialSalesInfo } from '@/constants/user-management/user-values';
 
-export function useUserInfoForm() {
-  const [userInfoForm, setUserInfoForm] = useState<UserInfoForm>(initialUserInfo);
+export function useUserInfoForm(
+  initialData?: Partial<UserInfoForm>,
+  mode: 'create' | 'edit' = 'create',
+) {
+  const [userInfoForm, setUserInfoForm] = useState<UserInfoForm>({
+    ...initialUserInfo,
+    ...initialData,
+  });
   const [errors, setErrors] = useState<Partial<Record<keyof UserInfoForm, string>>>({});
 
   const onChange = useCallback(
@@ -33,8 +39,11 @@ export function useUserInfoForm() {
 
   const validate = useCallback(() => {
     const next: Partial<Record<keyof UserInfoForm, string>> = {};
-    if (!userInfoForm.username.trim()) next.username = '아이디를 입력해주세요.';
-    if (!userInfoForm.password) next.password = '비밀번호를 입력해주세요.';
+    // 수정 모드에서는 아이디/비밀번호 검증 스킵
+    if (mode === 'create') {
+      if (!userInfoForm.username.trim()) next.username = '아이디를 입력해주세요.';
+      if (!userInfoForm.password) next.password = '비밀번호를 입력해주세요.';
+    }
     if (!userInfoForm.nickname.trim()) next.nickname = '실명을 입력해주세요.';
     if (!userInfoForm.phone_num.trim()) next.phone_num = '연락처를 입력해주세요.';
     if (userInfoForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfoForm.email)) {
@@ -42,14 +51,17 @@ export function useUserInfoForm() {
     }
     setErrors(next);
     return Object.keys(next).length === 0;
-  }, [userInfoForm]);
+  }, [userInfoForm, mode]);
 
   return { form: userInfoForm, errors, onChange, onSelectChange, validate };
 }
 
-export function useSalesCompanyInfoForm() {
+export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>) {
   const setAlert = useAlert();
-  const [salesInfoForm, setSalesInfoForm] = useState<SalesCompanyInfo>(initialSalesInfo);
+  const [salesInfoForm, setSalesInfoForm] = useState<SalesCompanyInfo>({
+    ...initialSalesInfo,
+    ...initialData,
+  });
   const [errors, setErrors] = useState<SalesCompanyErrors>({});
 
   const onAddressComplete = useCallback(
