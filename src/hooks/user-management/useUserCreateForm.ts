@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { UserInfoForm, SalesCompanyInfo } from '@/types/user-management';
 import { useAddressSearch } from '@/hooks/user-management/useAddressSearch';
 import { SalesCompanyErrors } from '@/types/user-management';
-import { postCertFileUpload } from '@/libs/user-management-api';
+import { postCertFileUpload, getFranchisePayment } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { initialUserInfo, initialSalesInfo } from '@/constants/user-management/user-values';
 
@@ -133,10 +133,12 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     return isNaN(Number(value)) ? value : Number(value);
   };
 
-  const onSelectChange = useCallback((field: keyof SalesCompanyInfo, value: string) => {
+  const onSelectChange = useCallback(async (field: keyof SalesCompanyInfo, value: string) => {
+    const parsed = parseSelectValue(field, value);
+
     setSalesInfoForm((prev) => ({
       ...prev,
-      [field]: parseSelectValue(field, value),
+      [field]: parsed,
       ...(field === 'franchise' && {
         is_meet_pay_available: false,
         is_card_pay_available: false,
@@ -144,12 +146,26 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
         is_fixed_account_pay_available: false,
       }),
     }));
+
     setErrors((prev) => {
       const next = prev[field] ? { ...prev, [field]: undefined } : prev;
       return field === 'franchise' && next.payment_methods
         ? { ...next, payment_methods: undefined }
         : next;
     });
+
+    // franchise 선택 시 기본 결제수단 API 호출
+    if (field === 'franchise' && parsed) {
+      try {
+        const result = await getFranchisePayment(parsed.toString());
+        setSalesInfoForm((prev) => ({
+          ...prev,
+          ...result.default_payment_methods,
+        }));
+      } catch (error) {
+        console.error('프랜차이즈 결제수단 조회 실패:', error);
+      }
+    }
   }, []);
 
   const onPaymentToggle = useCallback((field: keyof SalesCompanyInfo, checked: boolean) => {
@@ -179,7 +195,6 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     if (!salesInfoForm.tax_type.trim()) next.tax_type = '과세유형을 선택해주세요.';
     if (!salesInfoForm.platform.trim()) next.platform = '플랫폼을 선택해주세요.';
     if (
-      !salesInfoForm.franchise &&
       !salesInfoForm.is_card_pay_available &&
       !salesInfoForm.is_deposit_pay_available &&
       !salesInfoForm.is_fixed_account_pay_available &&

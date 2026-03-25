@@ -200,7 +200,7 @@ export default function SalesCompanyCard({
           </p>
           <div className="flex flex-col gap-2">
             {data.sales_branch_info.map((branch) => (
-              <BranchItem key={branch.id} branch={branch} />
+              <BranchItem key={branch.id} companyId={companyId} branch={branch} />
             ))}
           </div>
         </div>

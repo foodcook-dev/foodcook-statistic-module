@@ -24,6 +24,8 @@ const API = {
   getUserList: `/user-dashboard/users/`,
   getUserDetail: (userId: number) => `/user-dashboard/users/${userId}/`,
   getSalesCompanyDetail: (companyId: number) => `/user-dashboard/sales-company/${companyId}/`,
+  getFranchisePayment: (franchiesId: string) =>
+    `/user-dashboard/franchise/${franchiesId}/default-payments/`,
   getOptions: `/user-dashboard/select-options/`,
   postUserCreate: `/user-dashboard/users/`,
   postReferralCodeValidate: `/v3/user/validate-referral-code/`,
@@ -33,6 +35,7 @@ const API = {
   patchUserInfo: (userId: number) => `/user-dashboard/users/${userId}/`,
   patchSalesCompanyUpdate: (companyId: number) =>
     `/user-dashboard/sales-company/${companyId}/update/`,
+  patchSalesBranchUpdate: (branchId: number) => `/user-dashboard/sales-branch/${branchId}/update/`,
 };
 
 export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };

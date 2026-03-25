@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Loader2, ChevronsUpDown, Check } from 'lucide-react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { getOptions } from '@/libs/user-management-api';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-
+import { Loader2, ChevronsUpDown, Check } from 'lucide-react';
 import { cn } from '@/utils/common';
 
 const ITEM_HEIGHT = 36;
@@ -223,7 +222,7 @@ function Field({
       </label>
       {children}
       {error && <p className="text-xs text-red-500">{error}</p>}
-      {!error && helperText && <p className="text-muted-foreground text-xs">{helperText}</p>}
+      {!error && helperText && <p className="text-contrast/70 text-xs">{helperText}</p>}
     </div>
   );
 }

@@ -28,9 +28,9 @@ export function DeliveryDaysPicker({ value, onChange }: DeliveryDaysPickerProps)
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-end gap-2">
-        <p className="text-contrast text-sm font-medium">배송 가능 요일</p>
+        <p className="text-contrast text-sm leading-none font-medium">배송 가능 요일</p>
 
-        <p className="text-contrast/60 text-[12px]">
+        <p className="text-contrast/60 text-[12px] leading-none font-medium">
           모든 요일 배송은 &apos;전체&apos;를 선택하세요.
         </p>
       </div>

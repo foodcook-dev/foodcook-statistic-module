@@ -51,7 +51,7 @@ export function PaymentMethodsPicker({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-end gap-2">
-        <p className="text-contrast text-sm font-medium">결제수단</p>
+        <p className="text-contrast text-sm leading-none font-medium">결제수단</p>
         {disabled && (
           <p className="text-contrast/70 text-xs">결제수단은 프랜차이즈 설정을 따릅니다.</p>
         )}

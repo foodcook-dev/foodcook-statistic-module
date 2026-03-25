@@ -10,6 +10,7 @@ import UserManagementDetail from '@/pages/user-management/user-detail';
 import UserManagementCreate from '@/pages/user-management/user-create';
 import UserManagementEdit from '@/pages/user-management/user-edit';
 import SalesCompanyEdit from '@/pages/user-management/sales-company-edit';
+import SalesBranchEdit from '@/pages/user-management/sales-branch-edit';
 
 export default function Root() {
   return (
@@ -36,6 +37,10 @@ export default function Root() {
         <Route
           path="/user-management/sales-company/:companyId/edit"
           element={<SalesCompanyEdit />}
+        />
+        <Route
+          path="/user-management/sales-company/:companyId/branch/:branchId/edit"
+          element={<SalesBranchEdit />}
         />
       </Route>
     </Routes>

@@ -68,9 +68,11 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
                 placeholder="주소를 입력해주세요"
                 error={errors.address}
               />
-              <Button type="button" variant="outline" onClick={openAddressSearch}>
-                주소 검색
-              </Button>
+              <div className={errors.address ? 'mb-[22px]' : ''}>
+                <Button type="button" variant="outline" onClick={openAddressSearch}>
+                  주소 검색
+                </Button>
+              </div>
             </div>
             <LabeledInput
               id="address_detail"
@@ -189,29 +191,6 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             error={errors.platform}
           />
           <LabeledSelect
-            id="driver"
-            label="배송기사"
-            placeholder="배송기사를 선택해주세요"
-            value={form.driver ?? ''}
-            onChange={(value) => onSelectChange('driver', value)}
-            optionType="driver"
-            enableNone
-            searchable
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <LabeledSelect
-            id="franchise"
-            label="프랜차이즈"
-            placeholder="프랜차이즈를 선택해주세요"
-            value={form.franchise ?? ''}
-            onChange={(value) => onSelectChange('franchise', value)}
-            optionType="franchise"
-            enableNone
-            searchable
-          />
-          <LabeledSelect
             id="manager"
             label="담당자"
             placeholder="담당자를 선택해주세요"
@@ -223,12 +202,17 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
           />
         </div>
 
-        <hr className="border-border my-1" />
-
-        <div className="grid grid-cols-2 gap-2">
-          <DeliveryDaysPicker
-            value={form.delivery_available_days as Record<string, boolean>}
-            onChange={onDeliveryDaysChange}
+        <div className="grid grid-cols-2 gap-3">
+          <LabeledSelect
+            id="franchise"
+            label="프랜차이즈"
+            placeholder="프랜차이즈를 선택해주세요"
+            helperText="프랜차이즈 설정 시, 해당 프랜차이즈의 기본 결제 수단이 자동으로 적용됩니다."
+            value={form.franchise ?? ''}
+            onChange={(value) => onSelectChange('franchise', value)}
+            optionType="franchise"
+            enableNone
+            searchable
           />
           <PaymentMethodsPicker
             values={{
@@ -238,8 +222,26 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
               is_fixed_account_pay_available: form.is_fixed_account_pay_available,
             }}
             onToggle={(key, checked) => onPaymentToggle(key as keyof SalesCompanyInfo, checked)}
-            disabled={!!form.franchise}
             error={errors.payment_methods}
+          />
+        </div>
+
+        <hr className="border-border my-1" />
+
+        <div className="grid grid-cols-2 gap-3">
+          <LabeledSelect
+            id="driver"
+            label="배송기사"
+            placeholder="배송기사를 선택해주세요"
+            value={form.driver ?? ''}
+            onChange={(value) => onSelectChange('driver', value)}
+            optionType="driver"
+            enableNone
+            searchable
+          />
+          <DeliveryDaysPicker
+            value={form.delivery_available_days as Record<string, boolean>}
+            onChange={onDeliveryDaysChange}
           />
         </div>
 

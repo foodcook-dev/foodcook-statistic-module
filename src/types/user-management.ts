@@ -105,6 +105,7 @@ export type SalesCompanyDetailResponse = {
       address_detail: string;
       delivery_memo: string | null;
       gate_password: string | null;
+      phone_num: string | null;
       delivery_available_days: Record<string, unknown> | null;
       is_active: boolean;
       is_confirmed: boolean;
@@ -163,3 +164,25 @@ export interface CreateUserPayload extends UserInfoForm {
 export type SalesCompanyErrors = Partial<Record<keyof SalesCompanyInfo, string>> & {
   payment_methods?: string;
 };
+
+export interface SalesBranchInfo {
+  cert_image: File | null;
+  branch_type: string;
+  allias: string;
+  manager: number | null;
+  b_no: string;
+  owner_name: string;
+  start_dt: string;
+  b_sector: string;
+  b_type: string;
+  zip_code: string;
+  address: string;
+  address_detail: string;
+  delivery_memo: string;
+  phone_num: string;
+  gate_password: string;
+  delivery_available_days: Record<string, boolean>;
+  is_active: boolean;
+  is_confirmed: boolean;
+  is_default: boolean;
+}

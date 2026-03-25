@@ -31,13 +31,6 @@ export function Filter({ fields, onFilter, onReset, defaultValues: urlValues }: 
 
   const [values, setValues] = useState<FilterValues>(initialValues);
 
-  const activeFilterCount = useMemo(
-    () => Object.entries(values).filter(([key, value]) => value !== emptyValues[key]).length,
-    [values, emptyValues],
-  );
-
-  const hasActiveFilters = activeFilterCount > 0;
-
   useEffect(() => {
     onFilter(values);
   }, [values]);
@@ -90,10 +83,7 @@ export function Filter({ fields, onFilter, onReset, defaultValues: urlValues }: 
         </div>
 
         <div className="flex items-center gap-2">
-          {hasActiveFilters && (
-            <span className="text-muted-foreground text-xs">{activeFilterCount}개 필터 적용됨</span>
-          )}
-          <Button onClick={handleReset} variant="outline" disabled={!hasActiveFilters}>
+          <Button onClick={handleReset} variant="outline">
             <RotateCcw className="h-4 w-4" />
           </Button>
         </div>

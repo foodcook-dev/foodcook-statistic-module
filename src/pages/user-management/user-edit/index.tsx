@@ -6,7 +6,11 @@ import {
   UserInfoSection,
   UserInfoSectionRef,
 } from '@/components/modules/user-management/UserInfoSection';
-import { getUserDetail, patchUserUpdate } from '@/libs/user-management-api';
+import {
+  getUserDetail,
+  postReferralCodeValidate,
+  patchUserUpdate,
+} from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
 
@@ -22,6 +26,22 @@ export default function UserManagementEdit() {
     enabled: !!id,
   });
 
+  const { mutateAsync: validateReferralCode } = useMutation({
+    mutationFn: (code: string) => postReferralCodeValidate(code),
+    onSuccess: (data) => {
+      if (data.detail === '유효하지 않은 추천인 코드입니다.') {
+        throw new Error(data.detail);
+      }
+    },
+    onError: (error: any) => {
+      setAlert({
+        message:
+          error.message || error.detail || '추천인 코드 검증에 실패했습니다. 다시 시도해주세요.',
+      });
+      return;
+    },
+  });
+
   const { mutate: updateUser, isPending } = useMutation({
     mutationFn: (data: FormData) => patchUserUpdate(Number(id), data),
     onSuccess: () => {
@@ -33,12 +53,17 @@ export default function UserManagementEdit() {
     },
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const isValid = userInfoRef.current?.validate() ?? false;
     if (!isValid) return;
 
     const userForm = userInfoRef.current!.getFormData();
     const formData = new FormData();
+
+    // 추천인 코드가 입력된 경우에만 검증 수행
+    if (userForm.referral_code) {
+      await validateReferralCode(userForm.referral_code);
+    }
 
     formData.append('nickname', userForm.nickname);
     formData.append('phone_num', userForm.phone_num);
@@ -54,7 +79,7 @@ export default function UserManagementEdit() {
   if (isLoading || !userInfo) return null;
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection
           ref={userInfoRef}

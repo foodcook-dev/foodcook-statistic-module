@@ -1,4 +1,4 @@
-import { UserInfoForm, SalesCompanyInfo } from '@/types/user-management';
+import { UserInfoForm, SalesCompanyInfo, SalesBranchInfo } from '@/types/user-management';
 
 export const initialUserInfo: UserInfoForm = {
   username: '',
@@ -39,4 +39,26 @@ export const initialSalesInfo: SalesCompanyInfo = {
   dongwon_sales_company_code: '',
   jette_sales_company_code: '',
   foodist_sales_company_code: '',
+};
+
+export const initialBranchInfo: SalesBranchInfo = {
+  cert_image: null,
+  branch_type: 'main',
+  allias: '',
+  manager: null,
+  b_no: '',
+  owner_name: '',
+  start_dt: '',
+  b_sector: '',
+  b_type: '',
+  zip_code: '',
+  address: '',
+  address_detail: '',
+  delivery_memo: '',
+  phone_num: '',
+  gate_password: '',
+  delivery_available_days: {},
+  is_active: true,
+  is_confirmed: false,
+  is_default: false,
 };
