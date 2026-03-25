@@ -191,6 +191,7 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
           <DeliveryDaysPicker
             value={branchInfoForm.delivery_available_days ?? {}}
             onChange={onDeliveryDaysChange}
+            type="branch"
           />
           <div className="grid grid-cols-3 gap-3">
             {BRANCH_TOGGLE_FIELDS.map(({ field, label, onText, offText }) => {

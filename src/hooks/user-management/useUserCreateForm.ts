@@ -139,12 +139,6 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     setSalesInfoForm((prev) => ({
       ...prev,
       [field]: parsed,
-      ...(field === 'franchise' && {
-        is_meet_pay_available: false,
-        is_card_pay_available: false,
-        is_deposit_pay_available: false,
-        is_fixed_account_pay_available: false,
-      }),
     }));
 
     setErrors((prev) => {

@@ -9,7 +9,7 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const formatDate = (iso: string) => dayjs(iso).format('YYYY년 MM월 DD일');
-  const isAllDays = Object.keys(branch.delivery_available_days ?? {}).length === 0;
+  const isDefault = Object.keys(branch.delivery_available_days ?? {}).length === 0;
 
   return (
     <div className="bg-foreground overflow-hidden rounded-md">
@@ -66,32 +66,35 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
           <InfoRow label="상세주소" value={branch.address_detail ?? ''} />
           <InfoRow label="배송 메모" value={branch.delivery_memo ?? ''} />
           <InfoRow label="출입문 비밀번호" value={branch.gate_password ?? ''} />
-          <InfoRow label="등록일" value={branch.created_at && formatDate(branch.created_at)} />
-
           {branch.delivery_available_days !== null && (
             <div className="flex items-center py-[5px]">
               <p className="text-contrast/70 w-[40%]">배송 가능 요일</p>
-              <div className="flex gap-1">
-                {DAYS.map(({ id, name }) => {
-                  const available = isAllDays
-                    ? true
-                    : (branch.delivery_available_days as Record<string, boolean>)?.[id];
-                  return (
-                    <span
-                      key={id}
-                      className={`rounded border px-1.5 py-0.5 text-[11px] font-medium ${
-                        available
-                          ? 'border-primary/10 bg-primary/10 text-primary'
-                          : 'border-border bg-foreground text-contrast/40'
-                      }`}
-                    >
-                      {name}
-                    </span>
-                  );
-                })}
-              </div>
+              {isDefault ? (
+                <span className="text-contrast font-medium">판매사업자 설정 따름</span>
+              ) : (
+                <div className="flex gap-1">
+                  {DAYS.map(({ id, name }) => {
+                    const available = (branch.delivery_available_days as Record<string, boolean>)?.[
+                      id
+                    ];
+                    return (
+                      <span
+                        key={id}
+                        className={`rounded border px-1.5 py-0.5 text-[11px] font-medium ${
+                          available
+                            ? 'border-primary/10 bg-primary/10 text-primary'
+                            : 'border-border bg-foreground text-contrast/40'
+                        }`}
+                      >
+                        {name}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
+          <InfoRow label="등록일" value={branch.created_at && formatDate(branch.created_at)} />
         </div>
       )}
     </div>
