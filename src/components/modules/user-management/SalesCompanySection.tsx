@@ -229,6 +229,10 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
         <hr className="border-border my-1" />
 
         <div className="grid grid-cols-2 gap-3">
+          <DeliveryDaysPicker
+            value={form.delivery_available_days as Record<string, boolean>}
+            onChange={onDeliveryDaysChange}
+          />
           <LabeledSelect
             id="driver"
             label="배송기사"
@@ -238,10 +242,6 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             optionType="driver"
             enableNone
             searchable
-          />
-          <DeliveryDaysPicker
-            value={form.delivery_available_days as Record<string, boolean>}
-            onChange={onDeliveryDaysChange}
           />
         </div>
 
