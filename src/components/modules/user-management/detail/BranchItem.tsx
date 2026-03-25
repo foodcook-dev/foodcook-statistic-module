@@ -46,21 +46,6 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
 
       {open && (
         <div className="border-border border-t px-4 pt-2.5 pb-3 text-[12px]">
-          <div className="flex items-center">
-            <span className="text-contrast/70 w-[40%] py-[5px]">사업자등록증</span>
-            {branch.cert_image ? (
-              <a
-                href={branch.cert_image}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/70 flex items-center gap-1 py-[5px] text-[10px] font-medium transition-colors"
-              >
-                <FileText className="h-3 w-3" /> 파일 보기
-              </a>
-            ) : (
-              <span className="text-contrast/40 py-[5px]">미등록</span>
-            )}
-          </div>
           <InfoRow label="사업자번호" value={branch.b_no} />
           <InfoRow label="주소" value={branch.address} />
           <InfoRow label="상세주소" value={branch.address_detail ?? ''} />

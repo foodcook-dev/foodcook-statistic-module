@@ -98,6 +98,12 @@ export const patchSalesCompanyUpdate = async (companyId: number, data: FormData)
   return response.data;
 };
 
+// 판매사업장 지점 정보 생성
+export const postSalesBranchCreate = async (companyId: number, data: FormData) => {
+  const response = await ERP_API.post(PATH.api.postSalesBranchCreate(companyId), data);
+  return response.data;
+};
+
 // 판매사업장 지점 정보 수정
 export const patchSalesBranchUpdate = async (branchId: number, data: FormData) => {
   const response = await ERP_API.patch(PATH.api.patchSalesBranchUpdate(branchId), data);

@@ -27,7 +27,7 @@ export default function UserManagementDetail() {
   if (!userInfo) return null;
 
   return (
-    <div className="flex h-full w-full gap-6 overflow-hidden">
+    <div className="flex h-full w-full gap-6 overflow-hidden p-8">
       <div className="sticky top-0 h-fit w-[330px] shrink-0">
         <button
           onClick={() => navigate(-1)}
@@ -38,14 +38,14 @@ export default function UserManagementDetail() {
         <UserCard userId={id!} data={userInfo} />
       </div>
 
-      <div className="min-w-0 flex-1 overflow-y-auto">
-        <Tabs defaultValue="sales-company">
-          <div className="bg-background sticky top-0 z-10">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <Tabs defaultValue="sales-company" className="flex flex-1 flex-col overflow-hidden">
+          <div className="bg-background z-10">
             <TabsList>
               <TabsTrigger value="sales-company">판매사업자</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="sales-company" className="pt-4">
+          <TabsContent value="sales-company" className="flex-1 overflow-y-auto pt-4">
             {salesCompanyInfo ? (
               <SalesCompanyCard companyId={companyId} data={salesCompanyInfo} />
             ) : (

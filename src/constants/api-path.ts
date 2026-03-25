@@ -35,6 +35,8 @@ const API = {
   patchUserInfo: (userId: number) => `/user-dashboard/users/${userId}/`,
   patchSalesCompanyUpdate: (companyId: number) =>
     `/user-dashboard/sales-company/${companyId}/update/`,
+  postSalesBranchCreate: (companyId: number) =>
+    `/user-dashboard/sales-company/${companyId}/sales-branch/`,
   patchSalesBranchUpdate: (branchId: number) => `/user-dashboard/sales-branch/${branchId}/update/`,
 };
 

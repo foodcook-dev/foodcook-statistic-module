@@ -49,7 +49,7 @@ body {
 
 .dark {
   --background: oklch(0.2101 0.0318 264.66);
-  --foreground: oklch(0.3214 0.0543 264.66);
+  --foreground: oklch(0.2814 0.0543 264.66);
   --dark-foreground: oklch(0.3353 0.0543 264.66);
   --contrast: oklch(1 0 0);
   --placeholder: oklch(0.7004 0 264.66);

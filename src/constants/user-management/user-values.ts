@@ -43,7 +43,7 @@ export const initialSalesInfo: SalesCompanyInfo = {
 
 export const initialBranchInfo: SalesBranchInfo = {
   cert_image: null,
-  branch_type: 'main',
+  branch_type: 'sub',
   allias: '',
   manager: null,
   b_no: '',
@@ -59,6 +59,6 @@ export const initialBranchInfo: SalesBranchInfo = {
   gate_password: '',
   delivery_available_days: {},
   is_active: true,
-  is_confirmed: false,
+  is_confirmed: true,
   is_default: false,
 };

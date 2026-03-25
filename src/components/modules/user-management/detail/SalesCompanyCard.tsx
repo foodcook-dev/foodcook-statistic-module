@@ -9,6 +9,7 @@ import { useAlert } from '@/hooks/useAlert';
 import { useConfirm } from '@/hooks/useConfirm';
 import { InfoRow } from './InfoRow';
 import { BranchItem } from './BranchItem';
+import { Button } from '@/components/ui/button';
 
 export default function SalesCompanyCard({
   companyId,
@@ -54,7 +55,7 @@ export default function SalesCompanyCard({
   ];
 
   return (
-    <div className="bg-background border-border flex w-full max-w-[900px] flex-col overflow-hidden rounded-md border shadow-sm">
+    <div className="bg-background border-border flex w-full max-w-[900px] flex-col overflow-hidden rounded-md border">
       <div className="border-border bg-foreground flex h-[80px] items-center gap-3 border-b px-5">
         <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
           <Building2 className="text-primary h-6 w-6" />
@@ -144,7 +145,7 @@ export default function SalesCompanyCard({
       )}
 
       {/* 배송 가능 요일 + 결제 수단 */}
-      <div className="border-border flex border-b">
+      <div className="flex">
         <div className="flex-1 px-5 py-4">
           <p className="text-contrast/90 mb-2.5 text-sm font-medium tracking-widest">
             배송 가능 요일
@@ -194,10 +195,19 @@ export default function SalesCompanyCard({
 
       {/* 지점 목록 */}
       {!!data.sales_branch_info?.length && (
-        <div className="px-5 py-4">
-          <p className="text-contrast/90 mb-2.5 text-sm font-medium tracking-widest">
-            지점 정보 ({data.sales_branch_info.length})
-          </p>
+        <div className="border-border border-t px-5 py-4">
+          <div className="mb-2.5 flex items-center justify-between">
+            <p className="text-contrast/90 text-sm font-medium tracking-widest">
+              지점 정보 ({data.sales_branch_info.length})
+            </p>
+            <Button
+              variant="outline"
+              className="h-6 px-3 py-4 text-[12px]"
+              onClick={() => navigate(`/user-management/sales-company/${companyId}/branch/create`)}
+            >
+              + 추가
+            </Button>
+          </div>
           <div className="flex flex-col gap-2">
             {data.sales_branch_info.map((branch) => (
               <BranchItem key={branch.id} companyId={companyId} branch={branch} />

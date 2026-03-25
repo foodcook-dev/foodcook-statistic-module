@@ -10,7 +10,7 @@ export default function UserCard({ userId, data }: { userId: string; data: any }
   const formatPhone = (num: string) => num.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
 
   return (
-    <div className="bg-background border-border overflow-hidden rounded-md border shadow-sm">
+    <div className="bg-background border-border overflow-hidden rounded-md border">
       <div className="border-border bg-foreground flex h-[80px] items-center gap-3.5 border-b pr-3 pl-5">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -39,14 +39,15 @@ export default function UserCard({ userId, data }: { userId: string; data: any }
       </div>
 
       {/* 기본 정보 */}
-      <div className="border-border border-b px-5 py-4">
+      <div className="px-5 py-4">
         <p className="text-contrast/90 mb-2.5 text-sm font-medium tracking-widest">기본 정보</p>
         <div className="text-[12px]">
           <InfoRow label="상호명" value={data.b_nm} />
           <InfoRow label="연락처" value={formatPhone(data.phone_num)} />
           <InfoRow label="이메일" value={data.email ?? undefined} />
+          <InfoRow label="등급" value={data.tier_display ?? undefined} />
           <InfoRow label="추천인" value={data.recommender_display ?? undefined} />
-          <InfoRow label="추천 코드" value={data.referral_code ?? undefined} />
+          <InfoRow label="추천인 코드" value={data.referral_code ?? undefined} />
           <InfoRow label="지난달 매출" value={`${data.last_month_sales.toLocaleString()}원`} />
           <InfoRow label="가입일" value={formatDate(data.date_joined)} />
         </div>
@@ -54,7 +55,7 @@ export default function UserCard({ userId, data }: { userId: string; data: any }
 
       {/* NICE 인증 정보 */}
       {data.nice_verification_info && (
-        <div className="px-5 py-4">
+        <div className="border-border border-t px-5 py-4">
           <p className="text-contrast/90 mb-2.5 text-sm font-medium tracking-widest">
             NICE 본인인증 정보
           </p>
