@@ -1,4 +1,5 @@
 import { Checkbox } from '@/components/ui/checkbox';
+import { PAYMENT_METHODS } from '@/constants/user-management/methods';
 import { cn } from '@/utils/common';
 
 export function CheckCard({
@@ -29,13 +30,6 @@ export function CheckCard({
     </label>
   );
 }
-
-const PAYMENT_METHODS = [
-  { key: 'is_meet_pay_available', label: '만나서 결제' },
-  { key: 'is_card_pay_available', label: '카드 결제' },
-  { key: 'is_deposit_pay_available', label: '예치금 결제' },
-  { key: 'is_fixed_account_pay_available', label: '고정계좌 결제' },
-] as const;
 
 export function PaymentMethodsPicker({
   values,

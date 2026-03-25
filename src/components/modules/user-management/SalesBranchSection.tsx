@@ -2,13 +2,13 @@ import { forwardRef, useImperativeHandle } from 'react';
 import { LabeledInput, Label } from '@/components/modules/LabeledInput';
 import { LabeledSelect } from '@/components/modules/LabeledSelect';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { SectionCard } from './SectionCard';
 import { DeliveryDaysPicker } from './DeliveryDaysPicker';
 import { BusinessLicenseUpload } from './BusinessLicenseUpload';
 import { useSalesBranchForm } from '@/hooks/user-management/useSalesBranchForm';
 import { SalesBranchInfo } from '@/types/user-management';
+import { BRANCH_TOGGLE_FIELDS } from '@/constants/user-management/methods';
 
 export interface SalesBranchSectionRef {
   validate: () => boolean;
@@ -193,25 +193,40 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
             onChange={onDeliveryDaysChange}
           />
           <div className="grid grid-cols-3 gap-3">
-            {(
-              [
-                { field: 'is_active', label: '활성 여부' },
-                { field: 'is_confirmed', label: '승인 여부' },
-                { field: 'is_default', label: '기본배송지 설정' },
-              ] as const
-            ).map(({ field, label }) => (
-              <div
-                key={field}
-                className="border-border flex items-center justify-between rounded-lg border px-4 py-2.5"
-              >
-                <Label id={field} label={label} />
-                <Switch
-                  id={field}
-                  checked={branchInfoForm[field]}
-                  onCheckedChange={(checked) => onToggle(field, checked)}
-                />
-              </div>
-            ))}
+            {BRANCH_TOGGLE_FIELDS.map(({ field, label, onText, offText }) => {
+              const isOn = branchInfoForm[field];
+              return (
+                <button
+                  key={field}
+                  type="button"
+                  onClick={() => onToggle(field, !isOn)}
+                  className={`bg-background flex items-center justify-between rounded-md border px-3.5 py-2.5 text-left transition-colors ${
+                    isOn ? 'border-primary/50' : 'border-border hover:bg-secondary'
+                  }`}
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span className={`text-contrast text-[11px] font-medium`}>{label}</span>
+                    <span
+                      className={`text-[13px] font-medium ${isOn ? 'text-primary' : 'text-contrast/50'}`}
+                    >
+                      {isOn ? onText : offText}
+                    </span>
+                  </div>
+                  <span
+                    className={`flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium ${
+                      isOn
+                        ? 'bg-primary/30 text-primary'
+                        : 'bg-secondary text-contrast/40 border-border border'
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${isOn ? 'bg-primary' : 'bg-contrast/30'}`}
+                    />
+                    {isOn ? 'ON' : 'OFF'}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
