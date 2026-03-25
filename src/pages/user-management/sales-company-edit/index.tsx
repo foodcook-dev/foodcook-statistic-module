@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
   SalesCompanySection,
@@ -11,6 +11,7 @@ import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
 
 export default function SalesCompanyEdit() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { companyId } = useParams<{ companyId: string }>();
   const setAlert = useAlert();
@@ -25,6 +26,7 @@ export default function SalesCompanyEdit() {
   const { mutate: updateSalesCompany, isPending } = useMutation({
     mutationFn: (data: FormData) => patchSalesCompanyUpdate(Number(companyId), data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['salesCompanyDetail', companyId] });
       showToastMessage({ content: '판매사업자 정보가 수정되었습니다.' });
       navigate(-1);
     },
