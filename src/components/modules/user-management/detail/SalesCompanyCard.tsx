@@ -65,7 +65,7 @@ export default function SalesCompanyCard({
             <p className="text-contrast text-md truncate font-medium">{data.b_nm}</p>
             <button
               onClick={() => navigate(`/user-management/sales-company/${companyId}/edit`)}
-              className="text-contrast hover:text-contrast/50 border-border flex shrink-0 items-center gap-1 rounded-md border p-1 transition-colors"
+              className="bg-background text-contrast hover:text-contrast/50 border-border flex shrink-0 items-center gap-1 rounded-md border p-1 transition-colors"
             >
               <Pencil className="h-3 w-3" />
             </button>

@@ -53,8 +53,8 @@ body {
   --dark-foreground: oklch(0.3353 0.0543 264.66);
   --contrast: oklch(1 0 0);
   --placeholder: oklch(0.7004 0 264.66);
-  --border: oklch(0.5882 0.0789 264.66);
-  --ring: oklch(0.1914 0.0543 264.66);
+  --border: oklch(0.4882 0.0789 264.66);
+  --ring: oklch(0.52 0.012 285);
 
   /* grid */
   --header-background: oklch(0.3914 0.0543 264.66);

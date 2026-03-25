@@ -26,7 +26,7 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
               e.stopPropagation();
               navigate(`/user-management/sales-company/${companyId}/branch/${branch.id}/edit`);
             }}
-            className="text-contrast hover:text-contrast/50 border-border flex shrink-0 items-center gap-1 rounded-md border p-1 transition-colors"
+            className="bg-background text-contrast hover:text-contrast/50 border-border flex shrink-0 items-center gap-1 rounded-md border p-1 transition-colors"
           >
             <Pencil className="h-3 w-3" />
           </button>
