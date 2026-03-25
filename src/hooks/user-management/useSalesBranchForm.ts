@@ -100,7 +100,7 @@ export function useSalesBranchForm(initialData?: Partial<SalesBranchInfo>) {
 
   const validate = useCallback(() => {
     const next: Partial<Record<keyof SalesBranchInfo, string>> = {};
-    if (!branchInfoForm.allias.trim()) next.allias = '지점명을 입력해주세요.';
+    if (!branchInfoForm.allias.trim()) next.allias = '지점 별칭을 입력해주세요.';
     if (!branchInfoForm.owner_name.trim()) next.owner_name = '대표자명을 입력해주세요.';
     if (!branchInfoForm.b_no.trim()) next.b_no = '사업자번호를 입력해주세요.';
     if (!branchInfoForm.address.trim()) next.address = '주소를 입력해주세요.';

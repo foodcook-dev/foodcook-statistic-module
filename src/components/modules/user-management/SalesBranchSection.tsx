@@ -53,7 +53,7 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
           isLoading={isUploading}
           initialUrl={certImageUrl}
         />
-        {/* 지점 유형 + 지점명 */}
+        {/* 지점 유형 + 지점 별칭 */}
         <div className="grid grid-cols-2 gap-3">
           <LabeledSelect
             id="branch_type"
@@ -69,11 +69,11 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
           <LabeledInput
             id="allias"
             name="allias"
-            label="지점명"
+            label="지점 별칭"
             required
             value={branchInfoForm.allias}
             onChange={onChange}
-            placeholder="지점명을 입력해주세요"
+            placeholder="지점 별칭을 입력해주세요"
             error={errors.allias}
           />
         </div>
