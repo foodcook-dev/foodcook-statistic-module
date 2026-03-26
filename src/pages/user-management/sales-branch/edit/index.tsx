@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import {
   SalesBranchSection,
   SalesBranchSectionRef,
-} from '@/components/modules/user-management/SalesBranchSection';
+} from '@/components/modules/user-management/form/SalesBranchSection';
 import { getSalesCompanyDetail, patchSalesBranchUpdate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';

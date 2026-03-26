@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import {
   UserInfoSection,
   UserInfoSectionRef,
-} from '@/components/modules/user-management/UserInfoSection';
+} from '@/components/modules/user-management/form/UserInfoSection';
 import {
   getUserDetail,
   postReferralCodeValidate,

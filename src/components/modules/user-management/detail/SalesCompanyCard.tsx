@@ -49,9 +49,9 @@ export default function SalesCompanyCard({
 
   const paymentMethods = [
     { label: '만나서 결제', value: data.is_meet_pay_available },
-    { label: '카드', value: data.is_card_pay_available },
-    { label: '계좌이체', value: data.is_deposit_pay_available },
-    { label: '고정계좌', value: data.is_fixed_account_pay_available },
+    { label: '카드 결제', value: data.is_card_pay_available },
+    { label: '예치금 결제', value: data.is_deposit_pay_available },
+    { label: '고정계좌 결제', value: data.is_fixed_account_pay_available },
   ];
 
   return (

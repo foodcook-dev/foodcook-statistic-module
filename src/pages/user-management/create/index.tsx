@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import {
   UserInfoSection,
   UserInfoSectionRef,
-} from '@/components/modules/user-management/UserInfoSection';
+} from '@/components/modules/user-management/form/UserInfoSection';
 import {
   SalesCompanySection,
   SalesCompanySectionRef,
-} from '@/components/modules/user-management/SalesCompanySection';
+} from '@/components/modules/user-management/form/SalesCompanySection';
 import { showToastMessage } from '@/libs/toast-message';
 import { postReferralCodeValidate, postUserCreate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
