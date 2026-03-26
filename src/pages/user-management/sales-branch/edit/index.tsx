@@ -9,6 +9,8 @@ import {
 import { getSalesCompanyDetail, patchSalesBranchUpdate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
+import { buildFormData } from '@/libs/form-data-builder';
+import { toSalesBranchFields } from '@/constants/user-management/form-data-field';
 
 export default function SalesBranchEdit() {
   const queryClient = useQueryClient();
@@ -43,38 +45,7 @@ export default function SalesBranchEdit() {
     if (!branchRef.current?.validate()) return;
 
     const branchInfo = branchRef.current.getFormData();
-    const formData = new FormData();
-
-    const fields = {
-      branch_type: branchInfo.branch_type,
-      allias: branchInfo.allias,
-      manager: String(branchInfo.manager || ''),
-      b_no: branchInfo.b_no,
-      owner_name: branchInfo.owner_name,
-      start_dt: branchInfo.start_dt || '',
-      b_sector: branchInfo.b_sector || '',
-      b_type: branchInfo.b_type || '',
-      zip_code: branchInfo.zip_code,
-      address: branchInfo.address,
-      address_detail: branchInfo.address_detail || '',
-      delivery_memo: branchInfo.delivery_memo || '',
-      phone_num: branchInfo.phone_num || '',
-      gate_password: branchInfo.gate_password || '',
-      delivery_available_days: JSON.stringify(branchInfo.delivery_available_days || {}),
-      is_active: String(branchInfo.is_active),
-      is_confirmed: String(branchInfo.is_confirmed),
-      is_default: String(branchInfo.is_default),
-    };
-
-    if (branchInfo.cert_image instanceof File) {
-      formData.append('cert_image', branchInfo.cert_image);
-    }
-
-    Object.entries(fields).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    updateBranch(formData);
+    updateBranch(buildFormData(toSalesBranchFields(branchInfo)));
   };
 
   if (isLoading || !salesCompanyInfo) return null;

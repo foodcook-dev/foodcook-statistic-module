@@ -13,8 +13,10 @@ import {
 } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
+import { buildFormData } from '@/libs/form-data-builder';
+import { toUserEditFields } from '@/constants/user-management/form-data-field';
 
-export default function UserManagementEdit() {
+export default function UserEdit() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const setAlert = useAlert();
@@ -54,26 +56,14 @@ export default function UserManagementEdit() {
   });
 
   const handleSubmit = async () => {
-    const isValid = userInfoRef.current?.validate() ?? false;
-    if (!isValid) return;
+    if (!userInfoRef.current?.validate()) return;
 
     const userForm = userInfoRef.current!.getFormData();
-    const formData = new FormData();
 
     // 추천인 코드가 입력된 경우에만 검증 수행
-    if (userForm.referral_code) {
-      await validateReferralCode(userForm.referral_code);
-    }
+    if (userForm.referral_code) await validateReferralCode(userForm.referral_code);
 
-    formData.append('nickname', userForm.nickname);
-    formData.append('phone_num', userForm.phone_num);
-    formData.append('email', userForm.email);
-    formData.append('tier', String(userForm.tier || ''));
-    formData.append('recommender', String(userForm.recommender || ''));
-    formData.append('referral_code', userForm.referral_code || '');
-    formData.append('memo', userForm.memo || '');
-
-    updateUser(formData);
+    updateUser(buildFormData(toUserEditFields(userForm)));
   };
 
   if (isLoading || !userInfo) return null;

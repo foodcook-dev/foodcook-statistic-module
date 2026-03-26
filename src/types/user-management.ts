@@ -116,7 +116,7 @@ export type SalesCompanyDetailResponse = {
   ];
 };
 
-export type UserInfoForm = {
+export type UserInfo = {
   username: string;
   password: string;
   nickname: string;
@@ -157,7 +157,7 @@ export interface SalesCompanyInfo {
   foodist_sales_company_code: string;
 }
 
-export interface CreateUserPayload extends UserInfoForm {
+export interface CreateUserPayload extends UserInfo {
   sales_company_info: SalesCompanyInfo;
 }
 

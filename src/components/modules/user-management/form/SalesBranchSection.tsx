@@ -91,9 +91,11 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
               placeholder="주소를 입력해주세요"
               error={errors.address}
             />
-            <Button type="button" variant="outline" onClick={openAddressSearch}>
-              주소 검색
-            </Button>
+            <div className={errors.address ? 'mb-[22px]' : ''}>
+              <Button type="button" variant="outline" onClick={openAddressSearch}>
+                주소 검색
+              </Button>
+            </div>
           </div>
           <LabeledInput
             id="address_detail"

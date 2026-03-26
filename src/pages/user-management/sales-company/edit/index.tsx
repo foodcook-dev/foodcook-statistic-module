@@ -9,6 +9,8 @@ import {
 import { getSalesCompanyDetail, patchSalesCompanyUpdate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
+import { buildFormData } from '@/libs/form-data-builder';
+import { toSalesCompanyFields } from '@/constants/user-management/form-data-field';
 
 export default function SalesCompanyEdit() {
   const queryClient = useQueryClient();
@@ -36,48 +38,10 @@ export default function SalesCompanyEdit() {
   });
 
   const handleSubmit = () => {
-    const isValid = salesInfoRef.current?.validate() ?? false;
-    if (!isValid) return;
+    if (!salesInfoRef.current?.validate()) return;
 
     const salesInfo = salesInfoRef.current!.getFormData();
-    const formData = new FormData();
-
-    const fields = {
-      owner_name: salesInfo.owner_name,
-      b_nm: salesInfo.b_nm,
-      b_no: salesInfo.b_no,
-      address: salesInfo.address + ', ' + salesInfo.address_detail,
-      zip_code: salesInfo.zip_code,
-      tax_type: salesInfo.tax_type,
-      driver: String(salesInfo.driver || ''),
-      platform: salesInfo.platform || '',
-      franchise: String(salesInfo.franchise || ''),
-      manager: String(salesInfo.manager || ''),
-      start_dt: salesInfo.start_dt || '',
-      email: salesInfo.email,
-      b_sector: salesInfo.b_sector || '',
-      b_type: salesInfo.b_type || '',
-      note: salesInfo.note || '',
-      is_meet_pay_available: String(salesInfo.is_meet_pay_available),
-      is_card_pay_available: String(salesInfo.is_card_pay_available),
-      is_deposit_pay_available: String(salesInfo.is_deposit_pay_available),
-      is_fixed_account_pay_available: String(salesInfo.is_fixed_account_pay_available),
-      is_test: String(salesInfo.is_test),
-      delivery_available_days: JSON.stringify(salesInfo.delivery_available_days || {}),
-      dongwon_sales_company_code: salesInfo.dongwon_sales_company_code || '',
-      jette_sales_company_code: salesInfo.jette_sales_company_code || '',
-      foodist_sales_company_code: salesInfo.foodist_sales_company_code || '',
-    };
-
-    if (salesInfo.cert_image instanceof File) {
-      formData.append('cert_image', salesInfo.cert_image);
-    }
-
-    Object.entries(fields).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    updateSalesCompany(formData);
+    updateSalesCompany(buildFormData(toSalesCompanyFields(salesInfo)));
   };
 
   if (isLoading || !salesCompanyInfo) return null;
@@ -87,7 +51,7 @@ export default function SalesCompanyEdit() {
   const address_detail = addressDetailParts.join(', ');
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <SalesCompanySection
           ref={salesInfoRef}

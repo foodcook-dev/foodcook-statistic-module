@@ -2,17 +2,17 @@ import { forwardRef, useImperativeHandle } from 'react';
 import { LabeledInput, Label } from '@/components/modules/LabeledInput';
 import { LabeledSelect } from '@/components/modules/LabeledSelect';
 import { Textarea } from '@/components/ui/textarea';
-import { UserInfoForm } from '@/types/user-management';
+import { UserInfo } from '@/types/user-management';
 import { SectionCard } from './SectionCard';
 import { useUserInfoForm } from '@/hooks/user-management/useUserCreateForm';
 
 export interface UserInfoSectionRef {
   validate: () => boolean;
-  getFormData: () => UserInfoForm;
+  getFormData: () => UserInfo;
 }
 
 interface UserInfoSectionProps {
-  initialData?: Partial<UserInfoForm>;
+  initialData?: Partial<UserInfo>;
   mode?: 'create' | 'edit';
 }
 

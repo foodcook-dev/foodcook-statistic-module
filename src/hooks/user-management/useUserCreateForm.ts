@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { UserInfoForm, SalesCompanyInfo } from '@/types/user-management';
+import { UserInfo, SalesCompanyInfo } from '@/types/user-management';
 import { useAddressSearch } from '@/hooks/user-management/useAddressSearch';
 import { SalesCompanyErrors } from '@/types/user-management';
 import { postCertFileUpload, getFranchisePayment } from '@/libs/user-management-api';
@@ -8,19 +8,19 @@ import { useAlert } from '@/hooks/useAlert';
 import { initialUserInfo, initialSalesInfo } from '@/constants/user-management/user-values';
 
 export function useUserInfoForm(
-  initialData?: Partial<UserInfoForm>,
+  initialData?: Partial<UserInfo>,
   mode: 'create' | 'edit' = 'create',
 ) {
-  const [userInfoForm, setUserInfoForm] = useState<UserInfoForm>({
+  const [userInfoForm, setUserInfoForm] = useState<UserInfo>({
     ...initialUserInfo,
     ...initialData,
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof UserInfoForm, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof UserInfo, string>>>({});
 
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
-      const field = name as keyof UserInfoForm;
+      const field = name as keyof UserInfo;
       let nextValue: string | number | null = value;
       if (field === 'phone_num') nextValue = value.replace(/[^0-9]/g, '').slice(0, 11);
       setUserInfoForm((prev) => ({ ...prev, [field]: nextValue }));
@@ -29,7 +29,7 @@ export function useUserInfoForm(
     [],
   );
 
-  const onSelectChange = useCallback((field: keyof UserInfoForm, value: string) => {
+  const onSelectChange = useCallback((field: keyof UserInfo, value: string) => {
     setUserInfoForm((prev) => ({
       ...prev,
       [field]: value === '' ? null : Number(value),
@@ -38,7 +38,7 @@ export function useUserInfoForm(
   }, []);
 
   const validate = useCallback(() => {
-    const next: Partial<Record<keyof UserInfoForm, string>> = {};
+    const next: Partial<Record<keyof UserInfo, string>> = {};
     // 수정 모드에서는 아이디/비밀번호 검증 스킵
     if (mode === 'create') {
       if (!userInfoForm.username.trim()) next.username = '아이디를 입력해주세요.';

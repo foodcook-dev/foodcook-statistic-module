@@ -13,6 +13,8 @@ import {
 import { showToastMessage } from '@/libs/toast-message';
 import { postReferralCodeValidate, postUserCreate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
+import { buildFormData } from '@/libs/form-data-builder';
+import { toSalesCompanyFields, toUserFields } from '@/constants/user-management/form-data-field';
 
 export default function UserManagementCreate() {
   const navigate = useNavigate();
@@ -50,70 +52,21 @@ export default function UserManagementCreate() {
   });
 
   const handleSubmit = async () => {
-    const isUserValid = userInfoRef.current?.validate() ?? false;
-    const isSalesValid = salesInfoRef.current?.validate() ?? false;
-    if (!isUserValid || !isSalesValid) return;
+    if (!userInfoRef.current?.validate() || !salesInfoRef.current?.validate()) return;
 
     const userInfo = userInfoRef.current!.getFormData();
     const salesInfo = salesInfoRef.current!.getFormData();
 
     // 추천인 코드가 입력된 경우에만 검증 수행
-    if (userInfo.referral_code) {
-      await validateReferralCode(userInfo.referral_code);
-    }
+    if (userInfo.referral_code) await validateReferralCode(userInfo.referral_code);
 
-    const formData = new FormData();
-
-    formData.append('username', userInfo.username);
-    formData.append('password', userInfo.password);
-    formData.append('nickname', userInfo.nickname);
-    formData.append('phone_num', userInfo.phone_num);
-    formData.append('email', userInfo.email);
-    formData.append('recommender', String(userInfo.recommender || ''));
-    formData.append('tier', String(userInfo.tier || ''));
-    formData.append('referral_code', userInfo.referral_code || '');
-    formData.append('memo', userInfo.memo || '');
-
-    const salesCompanyFields = {
-      owner_name: salesInfo.owner_name,
-      b_nm: salesInfo.b_nm,
-      b_no: salesInfo.b_no,
-      address: salesInfo.address + ', ' + salesInfo.address_detail,
-      zip_code: salesInfo.zip_code,
-      tax_type: salesInfo.tax_type,
-      driver: String(salesInfo.driver || ''),
-      platform: salesInfo.platform || '',
-      franchise: String(salesInfo.franchise || ''),
-      manager: String(salesInfo.manager || ''),
-      start_dt: salesInfo.start_dt || '',
-      email: salesInfo.email,
-      b_sector: salesInfo.b_sector || '',
-      b_type: salesInfo.b_type || '',
-      note: salesInfo.note || '',
-      is_meet_pay_available: String(salesInfo.is_meet_pay_available),
-      is_card_pay_available: String(salesInfo.is_card_pay_available),
-      is_deposit_pay_available: String(salesInfo.is_deposit_pay_available),
-      is_fixed_account_pay_available: String(salesInfo.is_fixed_account_pay_available),
-      is_test: String(salesInfo.is_test),
-      delivery_available_days: JSON.stringify(salesInfo.delivery_available_days || {}),
-      dongwon_sales_company_code: salesInfo.dongwon_sales_company_code || '',
-      jette_sales_company_code: salesInfo.jette_sales_company_code || '',
-      foodist_sales_company_code: salesInfo.foodist_sales_company_code || '',
-    };
-
-    if (salesInfo.cert_image instanceof File) {
-      formData.append('sales_company_info.cert_image', salesInfo.cert_image);
-    }
-
-    Object.entries(salesCompanyFields).forEach(([key, value]) => {
-      formData.append(`sales_company_info.${key}`, value);
-    });
-
-    createUser(formData);
+    createUser(
+      buildFormData(toUserFields(userInfo), toSalesCompanyFields(salesInfo, 'sales_company_info')),
+    );
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection ref={userInfoRef} />
         <SalesCompanySection ref={salesInfoRef} />
