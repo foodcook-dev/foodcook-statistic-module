@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Pencil } from 'lucide-react';
 import dayjs from 'dayjs';
-import { VerificationBadge } from '@/components/modules/user-management/VerificationBadge';
+import { VerificationBadge } from '@/components/modules/user-management/detail/VerificationBadge';
 import { InfoRow } from './InfoRow';
 
 export default function UserCard({ userId, data }: { userId: string; data: any }) {
