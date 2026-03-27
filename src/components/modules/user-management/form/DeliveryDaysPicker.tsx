@@ -20,14 +20,15 @@ export function DeliveryDaysPicker({ value, onChange, type = 'company' }: Delive
   const isDefault = selected.size === 0;
 
   const onToggle = (id: string) => {
-    setAlert({ message: '지점별 배송요일 수정은 현재 지원하지않습니다.' });
-    // const next = new Set(selected);
-    // next.has(id) ? next.delete(id) : next.add(id);
+    if (!isCompany) return setAlert({ message: '지점별 배송요일 수정은 현재 지원하지않습니다.' });
 
-    // // 모든 요일에 대해 true/false 값 설정
-    // const allDays = Object.fromEntries(DAYS.map(({ id: dayId }) => [dayId, next.has(dayId)]));
+    const next = new Set(selected);
+    next.has(id) ? next.delete(id) : next.add(id);
 
-    // onChange(allDays);
+    // 모든 요일에 대해 true/false 값 설정
+    const allDays = Object.fromEntries(DAYS.map(({ id: dayId }) => [dayId, next.has(dayId)]));
+
+    onChange(allDays);
   };
 
   return (
