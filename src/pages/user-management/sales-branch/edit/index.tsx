@@ -42,7 +42,8 @@ export default function SalesBranchEdit() {
   });
 
   const handleSubmit = () => {
-    if (!branchRef.current?.validate()) return;
+    if (!branchRef.current?.validate())
+      return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const branchInfo = branchRef.current.getFormData();
     updateBranch(buildFormData(toSalesBranchFields(branchInfo)));

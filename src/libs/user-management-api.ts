@@ -109,3 +109,11 @@ export const patchSalesBranchUpdate = async (branchId: number, data: FormData) =
   const response = await ERP_API.patch(PATH.api.patchSalesBranchUpdate(branchId), data);
   return response.data;
 };
+
+// 임시 비밀번호 발급
+export const postTempPassword = async (userId: number, reason: string) => {
+  const response = await ERP_API.post(PATH.api.postTempPassword(userId), {
+    reason,
+  });
+  return response.data;
+};

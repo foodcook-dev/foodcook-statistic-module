@@ -38,7 +38,8 @@ export default function SalesCompanyEdit() {
   });
 
   const handleSubmit = () => {
-    if (!salesInfoRef.current?.validate()) return;
+    if (!salesInfoRef.current?.validate())
+      return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const salesInfo = salesInfoRef.current!.getFormData();
     updateSalesCompany(buildFormData(toSalesCompanyFields(salesInfo)));
@@ -49,6 +50,8 @@ export default function SalesCompanyEdit() {
   // address를 주소/상세주소로 분리 (', ' 기준)
   const [address, ...addressDetailParts] = (salesCompanyInfo.address ?? '').split(', ');
   const address_detail = addressDetailParts.join(', ');
+
+  console.log('salesCompanyInfo', salesCompanyInfo);
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-4 p-8">

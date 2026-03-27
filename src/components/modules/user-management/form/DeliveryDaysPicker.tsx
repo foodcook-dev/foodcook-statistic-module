@@ -1,4 +1,5 @@
 import { DAYS } from '@/constants/user-management/day';
+import { useAlert } from '@/hooks/useAlert';
 
 import { cn } from '@/utils/common';
 
@@ -9,6 +10,7 @@ interface DeliveryDaysPickerProps {
 }
 
 export function DeliveryDaysPicker({ value, onChange, type = 'company' }: DeliveryDaysPickerProps) {
+  const setAlert = useAlert();
   const isCompany = type === 'company';
   const selected = new Set(
     Object.entries(value)
@@ -18,13 +20,14 @@ export function DeliveryDaysPicker({ value, onChange, type = 'company' }: Delive
   const isDefault = selected.size === 0;
 
   const onToggle = (id: string) => {
-    const next = new Set(selected);
-    next.has(id) ? next.delete(id) : next.add(id);
+    setAlert({ message: '지점별 배송요일 수정은 현재 지원하지않습니다.' });
+    // const next = new Set(selected);
+    // next.has(id) ? next.delete(id) : next.add(id);
 
-    // 모든 요일에 대해 true/false 값 설정
-    const allDays = Object.fromEntries(DAYS.map(({ id: dayId }) => [dayId, next.has(dayId)]));
+    // // 모든 요일에 대해 true/false 값 설정
+    // const allDays = Object.fromEntries(DAYS.map(({ id: dayId }) => [dayId, next.has(dayId)]));
 
-    onChange(allDays);
+    // onChange(allDays);
   };
 
   return (

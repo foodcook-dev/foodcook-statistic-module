@@ -8,7 +8,7 @@ type toastProps = {
   iconType?: string;
 };
 
-export const showToastMessage = ({ content, autoClose = 5000, theme = 'dark' }: toastProps) => {
+export const showToastMessage = ({ content, autoClose = 2000, theme = 'dark' }: toastProps) => {
   const message = () => {
     if (typeof content === 'string') {
       return <div style={toastWrapper}>{content}</div>;

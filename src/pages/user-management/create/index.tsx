@@ -52,7 +52,11 @@ export default function UserManagementCreate() {
   });
 
   const handleSubmit = async () => {
-    if (!userInfoRef.current?.validate() || !salesInfoRef.current?.validate()) return;
+    const isUserValid = userInfoRef.current?.validate() ?? false;
+    const isSalesValid = salesInfoRef.current?.validate() ?? false;
+
+    if (!isUserValid || !isSalesValid)
+      return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const userInfo = userInfoRef.current!.getFormData();
     const salesInfo = salesInfoRef.current!.getFormData();

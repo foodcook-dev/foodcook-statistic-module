@@ -38,6 +38,7 @@ const API = {
   postSalesBranchCreate: (companyId: number) =>
     `/user-dashboard/sales-company/${companyId}/sales-branch/`,
   patchSalesBranchUpdate: (branchId: number) => `/user-dashboard/sales-branch/${branchId}/update/`,
+  postTempPassword: (userId: number) => `/user-dashboard/users/${userId}/temp-password/`,
 };
 
 export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };

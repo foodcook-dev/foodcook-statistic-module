@@ -9,8 +9,8 @@ export function InfoRow({
 }) {
   return (
     <div className="flex">
-      <div className="text-contrast/70 w-[40%] py-[5px]">{label}</div>
-      <div className="text-contrast py-[5px] font-medium">{value || fallback}</div>
+      <div className="text-contrast/70 w-[40%] py-[4px]">{label}</div>
+      <div className="text-contrast py-[4px] font-medium">{value || fallback}</div>
     </div>
   );
 }

@@ -56,7 +56,8 @@ export default function UserEdit() {
   });
 
   const handleSubmit = async () => {
-    if (!userInfoRef.current?.validate()) return;
+    if (!userInfoRef.current?.validate())
+      return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const userForm = userInfoRef.current!.getFormData();
 

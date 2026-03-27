@@ -63,6 +63,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
                 name="address"
                 label="주소"
                 required
+                readOnly
                 value={form.address}
                 onChange={onChange}
                 placeholder="주소를 입력해주세요"
@@ -161,7 +162,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             name="email"
             type="email"
             label="이메일"
-            value={form.email}
+            value={form.email ?? ''}
             onChange={onChange}
             placeholder="user@example.com"
             error={errors.email}
@@ -171,7 +172,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             name="start_dt"
             label="개업일자"
             type="date"
-            value={form.start_dt}
+            value={form.start_dt ?? ''}
             onChange={onChange}
           />
         </div>
@@ -230,7 +231,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
 
         <div className="grid grid-cols-2 gap-3">
           <DeliveryDaysPicker
-            value={form.delivery_available_days as Record<string, boolean>}
+            value={(form.delivery_available_days as Record<string, boolean>) ?? {}}
             onChange={onDeliveryDaysChange}
           />
           <LabeledSelect
@@ -253,7 +254,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             name="dongwon_sales_company_code"
             label="동원 사업장 코드"
             type="text"
-            value={form.dongwon_sales_company_code}
+            value={form.dongwon_sales_company_code ?? ''}
             onChange={onChange}
             placeholder="동원 사업장 코드를 입력해주세요"
           />
@@ -262,7 +263,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             name="jette_sales_company_code"
             label="제때 사업장 코드"
             type="text"
-            value={form.jette_sales_company_code}
+            value={form.jette_sales_company_code ?? ''}
             onChange={onChange}
             placeholder="제때 사업장 코드를 입력해주세요"
           />
@@ -271,7 +272,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
             name="foodist_sales_company_code"
             label="푸디스트 사업장 코드"
             type="text"
-            value={form.foodist_sales_company_code}
+            value={form.foodist_sales_company_code ?? ''}
             onChange={onChange}
             placeholder="푸디스트 사업장 코드를 입력해주세요"
           />
