@@ -1,6 +1,6 @@
-import { UserInfoForm, SalesCompanyInfo, SalesBranchInfo } from '@/types/user-management';
+import { UserInfo, SalesCompanyInfo, SalesBranchInfo } from '@/types/user-management';
 
-export const initialUserInfo: UserInfoForm = {
+export const initialUserInfo: UserInfo = {
   username: '',
   password: '',
   nickname: '',

@@ -155,7 +155,7 @@ export const postPartnerCompanyPayment = async ({
     note: string;
   };
 }): Promise<any> => {
-  const response = await API.post(PATH.api.buyCompanyPayment(companyId), {
+  const response = await API.post(PATH.api.partnerCompanyPayment(companyId), {
     payment_date: params.date,
     payment_amount: params.amount,
     payment_note: params.note,
@@ -174,7 +174,7 @@ export const patchPartnerCompanyPayment = async ({
     note: string;
   };
 }): Promise<any> => {
-  const response = await API.patch(PATH.api.buyCompanyPayment(companyId), {
+  const response = await API.patch(PATH.api.partnerCompanyPayment(companyId), {
     detail_id: params.id,
     payment_amount: params.amount,
     payment_note: params.note,

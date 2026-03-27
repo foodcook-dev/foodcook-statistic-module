@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronUp, FileText, Pencil } from 'lucide-react';
+import { ChevronDown, ChevronUp, Pencil } from 'lucide-react';
 import { DAYS } from '@/constants/user-management/day';
 import { InfoRow } from './InfoRow';
 import dayjs from 'dayjs';

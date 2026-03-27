@@ -12,7 +12,7 @@ import { useAlert } from '@/hooks/useAlert';
 import { useLocation } from 'react-router-dom';
 import {
   getPartnerCompany,
-  getBuyCompanyDetails,
+  getPartnerCompanyDetails,
   postPartnerCompanyPayment,
   patchPartnerCompanyPayment,
   deletePartnerCompanyPayment,
@@ -75,7 +75,7 @@ export const useConsignmentSettlement = () => {
           const startDate = format(from, 'yyyy-MM-dd');
           const endDate = format(to, 'yyyy-MM-dd');
 
-          const response = await getBuyCompanyDetails({
+          const response = await getPartnerCompanyDetails({
             companyId: selectedPartnerIdRef.current,
             params: {
               startDate,
