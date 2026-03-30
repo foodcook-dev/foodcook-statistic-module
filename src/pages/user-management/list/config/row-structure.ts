@@ -10,6 +10,7 @@ export type UserRow = {
   last_month_sales: number;
   sales_company_id: number;
   b_nm: string;
+  franchise_display: string;
   is_sales_verified: boolean;
   is_nice_verified: boolean;
   is_deleted: boolean;

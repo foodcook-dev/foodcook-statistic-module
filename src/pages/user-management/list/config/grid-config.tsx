@@ -26,7 +26,8 @@ export const columnDefs: ColDef<UserRow>[] = [
   },
   { headerName: '사용자 ID', field: 'username' },
   { headerName: '닉네임', field: 'nickname' },
-  { headerName: '사업자명', field: 'b_nm' },
+  { headerName: '상호명', field: 'b_nm' },
+  { headerName: '프랜차이즈', field: 'franchise_display' },
   { headerName: '이메일', field: 'email' },
   { headerName: '연락처', field: 'phone_num' },
   {
