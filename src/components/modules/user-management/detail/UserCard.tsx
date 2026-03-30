@@ -7,7 +7,7 @@ import { InfoRow } from './InfoRow';
 export default function UserCard({ userId, data }: { userId: string; data: any }) {
   const navigate = useNavigate();
   const formatDate = (iso: string) => dayjs(iso).format('YYYY년 MM월 DD일 HH:mm');
-  const formatPhone = (num: string) => num.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+  const formatPhone = (num: string) => num?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
 
   return (
     <div className="bg-background border-border overflow-hidden rounded-md border">
