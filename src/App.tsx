@@ -18,12 +18,8 @@ function AppContent() {
   const { setTheme } = useTheme();
   const lockedOriginRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    const token = getTokenFromUrl();
-    if (token) {
-      setTokenToStorage(token);
-    }
-  }, []);
+  const token = getTokenFromUrl();
+  if (token) setTokenToStorage(token);
 
   useEffect(() => {
     const safeGetOrigin = (value?: string | null) => {
