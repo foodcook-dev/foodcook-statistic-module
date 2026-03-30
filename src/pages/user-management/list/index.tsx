@@ -149,6 +149,7 @@ export default function UserManagementList() {
           onSearch={handleSearch}
           onReset={handleSearchReset}
           defaultValue={searchParamsRef.current.keyword}
+          placeholder="사용자 ID, 닉네임, 상호명, 프랜차이즈를 검색하세요"
         />
         <Button onClick={() => navigate('/user-management/create')}>사용자 생성</Button>
       </div>

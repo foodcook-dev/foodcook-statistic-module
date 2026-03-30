@@ -70,7 +70,7 @@ export default function UserEdit() {
   if (isLoading || !userInfo) return null;
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
+    <div className="flex h-full w-full flex-col items-center gap-4">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection
           ref={userInfoRef}

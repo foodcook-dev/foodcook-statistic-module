@@ -47,7 +47,7 @@ export default function UserManagementDetail() {
   if (!userInfo) return null;
 
   return (
-    <div className="flex h-full w-full gap-6 overflow-hidden p-8">
+    <div className="flex h-full w-full gap-6 overflow-hidden">
       <div className="sticky top-0 h-fit w-[330px] shrink-0">
         <button
           onClick={() => navigate(-1)}

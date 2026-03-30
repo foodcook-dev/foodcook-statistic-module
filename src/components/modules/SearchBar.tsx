@@ -11,9 +11,15 @@ interface SearchBarProps {
   onSearch: (params: SearchBarParams) => void;
   onReset?: () => void;
   defaultValue?: string;
+  placeholder?: string;
 }
 
-export function SearchBar({ onSearch, onReset, defaultValue }: SearchBarProps) {
+export function SearchBar({
+  onSearch,
+  onReset,
+  defaultValue,
+  placeholder = '검색어를 입력하세요',
+}: SearchBarProps) {
   const [keyword, setKeyword] = useState(defaultValue ?? '');
 
   const handleSearch = useCallback(() => {
@@ -35,10 +41,10 @@ export function SearchBar({ onSearch, onReset, defaultValue }: SearchBarProps) {
 
   return (
     <div className="flex gap-2">
-      <div className="relative w-[300px]">
+      <div className="relative w-[400px]">
         <SearchIcon className="text-contrast/80 absolute top-2.5 left-2.5 h-4 w-4" />
         <Input
-          placeholder="Search"
+          placeholder={placeholder}
           className="pr-8 pl-8"
           onKeyDown={handleKeyDown}
           value={keyword}

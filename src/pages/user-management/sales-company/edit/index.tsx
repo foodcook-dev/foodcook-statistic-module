@@ -51,10 +51,8 @@ export default function SalesCompanyEdit() {
   const [address, ...addressDetailParts] = (salesCompanyInfo.address ?? '').split(', ');
   const address_detail = addressDetailParts.join(', ');
 
-  console.log('salesCompanyInfo', salesCompanyInfo);
-
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
+    <div className="flex h-full w-full flex-col items-center gap-4">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <SalesCompanySection
           ref={salesInfoRef}
