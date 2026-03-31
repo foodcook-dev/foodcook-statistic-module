@@ -37,7 +37,7 @@ export function TempPasswordDialog({ open, data, onClose }: TempPasswordDialogPr
             <div className="flex items-center justify-between py-1.5">
               <span className="text-contrast/60">사용자 아이디</span>
               <div className="flex items-center gap-2">
-                <span className="text-contrast max-w-[300px] truncate font-medium tracking-widest">
+                <span className="text-contrast max-w-[300px] text-right font-medium tracking-widest">
                   {data.user_id}
                 </span>
                 <button
