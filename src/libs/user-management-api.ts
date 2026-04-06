@@ -92,6 +92,12 @@ export const patchUserUpdate = async (userId: number, data: FormData) => {
   return response.data;
 };
 
+// 판매사업자 생성
+export const postSalesCompanyCreate = async (userId: number, data: FormData) => {
+  const response = await ERP_API.post(PATH.api.postSalesCompanyCreate(userId), data);
+  return response.data;
+};
+
 // 판매사업자 정보 수정
 export const patchSalesCompanyUpdate = async (companyId: number, data: FormData) => {
   const response = await ERP_API.patch(PATH.api.patchSalesCompanyUpdate(companyId), data);

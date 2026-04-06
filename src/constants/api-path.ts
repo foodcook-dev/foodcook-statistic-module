@@ -33,6 +33,7 @@ const API = {
   postConfirmSalesCompany: (companyId: number) =>
     `/user-dashboard/sales-company/${companyId}/confirm/`,
   patchUserInfo: (userId: number) => `/user-dashboard/users/${userId}/`,
+  postSalesCompanyCreate: (userId: number) => `/user-dashboard/users/${userId}/sales-company/`,
   patchSalesCompanyUpdate: (companyId: number) =>
     `/user-dashboard/sales-company/${companyId}/update/`,
   postSalesBranchCreate: (companyId: number) =>

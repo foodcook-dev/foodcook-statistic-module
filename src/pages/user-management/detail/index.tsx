@@ -75,7 +75,11 @@ export default function UserManagementDetail() {
             {salesCompanyInfo ? (
               <SalesCompanyCard companyId={companyId} data={salesCompanyInfo} />
             ) : (
-              <EmptyTab message="판매사업자 정보가 없습니다." />
+              <EmptyTab message="판매사업자 정보가 없습니다.">
+                <Button onClick={() => navigate(`/user-management/${id}/sales-company/create`)}>
+                  추가하기
+                </Button>
+              </EmptyTab>
             )}
           </TabsContent>
         </Tabs>

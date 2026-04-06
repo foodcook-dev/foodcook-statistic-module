@@ -8,7 +8,8 @@ import VegetablePurchase from '@/pages/vegetable-purchase';
 import UserManagementList from '@/pages/user-management/list';
 import UserManagementDetail from '@/pages/user-management/detail';
 import UserManagementCreate from '@/pages/user-management/create';
-import UserManagementEdit from '@/pages/user-management/user/edit';
+import UserEdit from '@/pages/user-management/user/edit';
+import SalesCompanyCreate from '@/pages/user-management/sales-company/create';
 import SalesCompanyEdit from '@/pages/user-management/sales-company/edit';
 import SalesBranchCreate from '@/pages/user-management/sales-branch/create';
 import SalesBranchEdit from '@/pages/user-management/sales-branch/edit';
@@ -34,7 +35,8 @@ export default function Root() {
         <Route path="/user-management" element={<UserManagementList />} />
         <Route path="/user-management/create" element={<UserManagementCreate />} />
         <Route path="/user-management/:id" element={<UserManagementDetail />} />
-        <Route path="/user-management/:id/edit" element={<UserManagementEdit />} />
+        <Route path="/user-management/:id/edit" element={<UserEdit />} />
+        <Route path="/user-management/:id/sales-company/create" element={<SalesCompanyCreate />} />
         <Route
           path="/user-management/sales-company/:companyId/edit"
           element={<SalesCompanyEdit />}
