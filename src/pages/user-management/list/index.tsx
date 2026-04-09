@@ -157,7 +157,7 @@ export default function UserManagementList() {
   }, [refreshGrid, updateSearchParams]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-8">
+    <div className="flex h-full w-full flex-col gap-4">
       <div className="flex items-center justify-between">
         <SearchBar
           onSearch={handleSearch}
