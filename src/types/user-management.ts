@@ -128,9 +128,6 @@ export type UserInfo = {
   recommender: number | null;
   tier: number;
   memo: string;
-  bank_code: string | null;
-  account_number: string | null;
-  account_holder: string | null;
 };
 
 export interface SalesCompanyInfo {
