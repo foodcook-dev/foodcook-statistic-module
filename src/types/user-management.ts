@@ -1,5 +1,7 @@
 export type UserListResponse = {
   count: number;
+  nice_verified_count: number;
+  business_verified_count: number;
   next: string;
   previous: string | null;
   results: Array<{
@@ -126,6 +128,9 @@ export type UserInfo = {
   recommender: number | null;
   tier: number;
   memo: string;
+  bank_code: string | null;
+  account_number: string | null;
+  account_holder: string | null;
 };
 
 export interface SalesCompanyInfo {

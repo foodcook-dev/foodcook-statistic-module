@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { GridReadyEvent, IDatasource, IGetRowsParams, RowClickedEvent } from 'ag-grid-community';
@@ -24,6 +24,15 @@ export default function UserManagementList() {
   const gridRef = useRef<AgGridReact<UserRow>>(null);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [count, setCount] = useState<{
+    userCount: number;
+    businessVerifiedCount: number;
+    personallyVerifiedCount: number;
+  }>({
+    userCount: 0,
+    businessVerifiedCount: 0,
+    personallyVerifiedCount: 0,
+  });
 
   // URL에서 초기값 읽기
   const searchParamsRef = useRef<SearchParams>({
@@ -81,7 +90,12 @@ export default function UserManagementList() {
             verificationStatus: searchParamsRef.current.business_verification_status,
           });
 
-          const { results, count } = response;
+          const { results, count, business_verified_count, nice_verified_count } = response;
+          setCount({
+            userCount: count,
+            businessVerifiedCount: business_verified_count,
+            personallyVerifiedCount: nice_verified_count,
+          });
           const lastRow = params.startRow + results.length >= count ? count : undefined;
           params.successCallback(results, lastRow);
 
@@ -143,7 +157,7 @@ export default function UserManagementList() {
   }, [refreshGrid, updateSearchParams]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-6">
+    <div className="flex h-full w-full flex-col gap-4 p-8">
       <div className="flex items-center justify-between">
         <SearchBar
           onSearch={handleSearch}
@@ -152,6 +166,30 @@ export default function UserManagementList() {
           placeholder="사용자 ID, 닉네임, 상호명, 프랜차이즈를 검색하세요"
         />
         <Button onClick={() => navigate('/user-management/create')}>사용자 생성</Button>
+      </div>
+      <div className="flex gap-4">
+        <div className="bg-background flex-1 rounded-md border px-4 py-3">
+          <p className="text-contrast/60 text-sm">사용자 수</p>
+          <p className="text-lg font-bold">{count.userCount.toLocaleString()}</p>
+        </div>
+        <div className="bg-background flex-1 rounded-md border px-4 py-3">
+          <p className="text-contrast/60 text-sm">사업자 인증 완료 사용자 수</p>
+          <div className="flex items-center gap-2">
+            <p className="text-lg font-bold">{count.businessVerifiedCount.toLocaleString()}</p>
+            <p className="text-contrast/30 text-sm">
+              ({((count.businessVerifiedCount / count.userCount) * 100).toFixed(1)}%)
+            </p>
+          </div>
+        </div>
+        <div className="bg-background flex-1 rounded-md border px-4 py-3">
+          <p className="text-contrast/60 text-sm">본인 인증 완료 사용자 수</p>
+          <div className="flex items-center gap-2">
+            <p className="text-lg font-bold">{count.personallyVerifiedCount.toLocaleString()}</p>
+            <p className="text-contrast/30 text-sm">
+              ({((count.personallyVerifiedCount / count.userCount) * 100).toFixed(1)}%)
+            </p>
+          </div>
+        </div>
       </div>
       <Filter
         fields={USER_FILTERS}
