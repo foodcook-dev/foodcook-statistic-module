@@ -1,10 +1,13 @@
 import { forwardRef, useImperativeHandle } from 'react';
-import { LabeledInput, Label } from '@/components/modules/LabeledInput';
+import { useQuery } from '@tanstack/react-query';
+import { LabeledInput } from '@/components/modules/LabeledInput';
 import { LabeledSelect } from '@/components/modules/LabeledSelect';
-import { Textarea } from '@/components/ui/textarea';
+import { LabeledTextarea } from '@/components/modules/LabeledTextArea';
 import { UserInfo } from '@/types/user-management';
 import { SectionCard } from './SectionCard';
 import { useUserInfoForm } from '@/hooks/user-management/useUserCreateForm';
+import { getBankList } from '@/libs/user-management-api';
+import { Button } from '@/components/ui/button';
 
 export interface UserInfoSectionRef {
   validate: () => boolean;
@@ -18,7 +21,13 @@ interface UserInfoSectionProps {
 
 export const UserInfoSection = forwardRef<UserInfoSectionRef, UserInfoSectionProps>(
   function UserInfoSection({ initialData, mode = 'create' }, ref) {
-    const { form, errors, onChange, onSelectChange, validate } = useUserInfoForm(initialData, mode);
+    const { form, errors, onChange, onSelectChange, onBankVerify, bankVerified, validate } =
+      useUserInfoForm(initialData, mode);
+
+    const { data: bankOptions = [] } = useQuery({
+      queryKey: ['bankList'],
+      queryFn: getBankList,
+    });
 
     useImperativeHandle(
       ref,
@@ -30,6 +39,7 @@ export const UserInfoSection = forwardRef<UserInfoSectionRef, UserInfoSectionPro
     );
 
     const hasError = Object.values(errors).some((v) => !!v);
+    const canVerify = !!form.bank_code && !!form.account_number && !bankVerified;
 
     return (
       <SectionCard title="사용자 정보" hasError={hasError}>
@@ -100,6 +110,7 @@ export const UserInfoSection = forwardRef<UserInfoSectionRef, UserInfoSectionPro
           />
           <LabeledSelect
             id="tier"
+            name="tier"
             label="등급"
             placeholder="등급을 선택해주세요"
             value={form.tier}
@@ -112,6 +123,7 @@ export const UserInfoSection = forwardRef<UserInfoSectionRef, UserInfoSectionPro
         <div className="grid grid-cols-2 gap-3">
           <LabeledSelect
             id="recommender"
+            name="recommender"
             label="추천인"
             placeholder="추천인을 선택해주세요"
             value={form.recommender ?? ''}
@@ -131,14 +143,62 @@ export const UserInfoSection = forwardRef<UserInfoSectionRef, UserInfoSectionPro
           />
         </div>
 
-        <div>
-          <Label id="memo" label="메모" />
-          <Textarea
-            id="memo"
-            name="memo"
-            value={form.memo}
-            onChange={onChange}
-            placeholder="관리자 메모를 입력하세요."
+        <LabeledTextarea
+          id="memo"
+          name="memo"
+          label="메모"
+          value={form.memo}
+          onChange={onChange}
+          placeholder="관리자 메모를 입력하세요."
+        />
+
+        <hr className="border-border my-1" />
+
+        <p className="flex items-end gap-4 text-sm font-semibold">
+          환불계좌 정보
+          {errors.bank_code && (
+            <span className="text-xs font-medium text-red-500">{errors.bank_code}</span>
+          )}
+        </p>
+
+        <div className="grid grid-cols-3 items-end gap-3">
+          <LabeledSelect
+            id="bank_code"
+            name="bank_code"
+            label="은행"
+            placeholder="은행을 선택해주세요"
+            value={form.bank_code ?? ''}
+            onChange={(value) => onSelectChange('bank_code', value)}
+            options={bankOptions}
+            enableNone
+            searchable
+          />
+
+          <div className="flex items-end gap-2">
+            <div className="flex-1">
+              <LabeledInput
+                id="account_number"
+                name="account_number"
+                label="계좌번호"
+                type="text"
+                value={form.account_number ?? ''}
+                onChange={onChange}
+                placeholder="계좌번호를 입력해주세요"
+              />
+            </div>
+            <Button onClick={onBankVerify} disabled={!canVerify}>
+              {bankVerified ? '예금주 확인됨' : '예금주 조회'}
+            </Button>
+          </div>
+
+          <LabeledInput
+            id="account_holder"
+            name="account_holder"
+            label="예금주명"
+            type="text"
+            value={form.account_holder ?? ''}
+            readOnly
+            placeholder="조회시 자동입력"
           />
         </div>
       </SectionCard>

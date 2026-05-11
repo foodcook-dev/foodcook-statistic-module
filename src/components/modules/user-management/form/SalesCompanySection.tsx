@@ -124,6 +124,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
           />
           <LabeledSelect
             id="tax_type"
+            name="tax_type"
             label="과세유형"
             placeholder="과세유형을 선택해주세요"
             required
@@ -182,6 +183,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
         <div className="grid grid-cols-2 gap-3">
           <LabeledSelect
             id="platform"
+            name="platform"
             label="플랫폼"
             placeholder="플랫폼을 선택해주세요"
             required
@@ -193,6 +195,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
           />
           <LabeledSelect
             id="manager"
+            name="manager"
             label="담당자"
             placeholder="담당자를 선택해주세요"
             value={form.manager ?? ''}
@@ -206,6 +209,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
         <div className="grid grid-cols-2 gap-3">
           <LabeledSelect
             id="franchise"
+            name="franchise"
             label="프랜차이즈"
             placeholder="프랜차이즈를 선택해주세요"
             helperText="프랜차이즈 설정 시, 해당 프랜차이즈의 기본 결제 수단이 자동으로 적용됩니다."
@@ -236,6 +240,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
           />
           <LabeledSelect
             id="driver"
+            name="driver"
             label="배송기사"
             placeholder="배송기사를 선택해주세요"
             value={form.driver ?? ''}

@@ -41,6 +41,24 @@ export const getSalesCompanyDetail = async (
   return response.data;
 };
 
+// 은행 목록 조회
+export const getBankList = async (): Promise<{ id: string; name: string }[]> => {
+  const response = await ERP_API.get(PATH.api.getBankList);
+  return response.data.map((bank: { bank_code: string; bank_name: string }) => ({
+    id: bank.bank_code,
+    name: bank.bank_name,
+  }));
+};
+
+// 계좌 유효성 검증
+export const postVerifyBankAccount = async (params: {
+  bank_code: string;
+  account_number: string;
+}) => {
+  const response = await ERP_API.post(PATH.api.postVerifyBankAccount, params);
+  return response.data;
+};
+
 // 프랜차이즈 기본 결제 수단 조회
 export const getFranchisePayment = async (franchiesId: string) => {
   const response = await ERP_API.get(PATH.api.getFranchisePayment(franchiesId));
@@ -87,7 +105,7 @@ export const postSalesCompanyConfirm = async (companyId: number, confirm: boolea
 };
 
 // 사용자 정보 수정
-export const patchUserUpdate = async (userId: number, data: FormData) => {
+export const patchUserUpdate = async (userId: number, data: object) => {
   const response = await ERP_API.patch(PATH.api.patchUserInfo(userId), data);
   return response.data;
 };

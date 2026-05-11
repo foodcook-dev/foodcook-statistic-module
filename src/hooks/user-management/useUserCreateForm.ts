@@ -3,7 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 import { UserInfo, SalesCompanyInfo } from '@/types/user-management';
 import { useAddressSearch } from '@/hooks/user-management/useAddressSearch';
 import { SalesCompanyErrors } from '@/types/user-management';
-import { postCertFileUpload, getFranchisePayment } from '@/libs/user-management-api';
+import {
+  postCertFileUpload,
+  getFranchisePayment,
+  postVerifyBankAccount,
+} from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { initialUserInfo, initialSalesInfo } from '@/constants/user-management/user-values';
 
@@ -11,12 +15,15 @@ export function useUserInfoForm(
   initialData?: Partial<UserInfo>,
   mode: 'create' | 'edit' = 'create',
 ) {
+  const setAlert = useAlert();
   const [userInfoForm, setUserInfoForm] = useState<UserInfo>({
     ...initialUserInfo,
     ...initialData,
   });
   const [errors, setErrors] = useState<Partial<Record<keyof UserInfo, string>>>({});
+  const [bankVerified, setBankVerified] = useState(false);
 
+  // input 필드 변경 핸들러
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
@@ -25,21 +32,61 @@ export function useUserInfoForm(
       if (field === 'phone_num') nextValue = value.replace(/[^0-9]/g, '').slice(0, 11);
       setUserInfoForm((prev) => ({ ...prev, [field]: nextValue }));
       setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
+
+      // 계좌번호 변경 시 검증 초기화
+      if (field === 'account_number') {
+        setBankVerified(false);
+        setUserInfoForm((prev) => ({ ...prev, account_holder: '' }));
+      }
     },
     [],
   );
 
+  // select 필드 변경 핸들러
   const onSelectChange = useCallback((field: keyof UserInfo, value: string) => {
     setUserInfoForm((prev) => ({
       ...prev,
-      [field]: value === '' ? null : Number(value),
+      [field]: value === '' ? null : field === 'bank_code' ? value : Number(value),
     }));
     setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
+
+    // 은행 변경 시 검증 초기화
+    if (field === 'bank_code') {
+      setBankVerified(false);
+      setUserInfoForm((prev) => ({ ...prev, account_holder: '' }));
+    }
   }, []);
 
+  // 은행 계좌 검증 API 호출
+  const { mutateAsync: verifyBankAccount } = useMutation({
+    mutationFn: () =>
+      postVerifyBankAccount({
+        bank_code: userInfoForm.bank_code ?? '',
+        account_number: userInfoForm.account_number ?? '',
+      }),
+    onSuccess: async (response) => {
+      setUserInfoForm((prev) => ({ ...prev, account_holder: response.holder_name }));
+      setBankVerified(true);
+      setErrors((prev) => ({ ...prev, bank_code: undefined }));
+    },
+    onError: (error: any) => {
+      setUserInfoForm((prev) => ({ ...prev, account_holder: '' }));
+      setBankVerified(false);
+      setAlert({
+        message: error.detail || '환불계좌 검증에 실패했습니다.\n계좌 정보를 다시 확인해주세요.',
+      });
+    },
+  });
+
+  // 은행 계좌 검증 핸들러
+  const onBankVerify = useCallback(async () => {
+    if (!userInfoForm.bank_code || !userInfoForm.account_number) return;
+    await verifyBankAccount();
+  }, [userInfoForm.bank_code, userInfoForm.account_number]);
+
+  // 유효성 검사 함수
   const validate = useCallback(() => {
     const next: Partial<Record<keyof UserInfo, string>> = {};
-    // 수정 모드에서는 아이디/비밀번호 검증 스킵
     if (mode === 'create') {
       if (!userInfoForm.username.trim()) next.username = '아이디를 입력해주세요.';
       if (!userInfoForm.password) next.password = '비밀번호를 입력해주세요.';
@@ -49,11 +96,22 @@ export function useUserInfoForm(
     if (userInfoForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInfoForm.email)) {
       next.email = '올바른 이메일 형식이 아닙니다.';
     }
+    if ((userInfoForm.bank_code || userInfoForm.account_number) && !bankVerified) {
+      next.bank_code = '계좌 검증을 통해\n예금주를 확인해주세요.';
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   }, [userInfoForm, mode]);
 
-  return { form: userInfoForm, errors, onChange, onSelectChange, validate };
+  return {
+    form: userInfoForm,
+    errors,
+    onChange,
+    onSelectChange,
+    onBankVerify,
+    bankVerified,
+    validate,
+  };
 }
 
 export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>) {
@@ -64,6 +122,7 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
   });
   const [errors, setErrors] = useState<SalesCompanyErrors>({});
 
+  // 주소 검색 완료 핸들러
   const onAddressComplete = useCallback(
     ({ address, zip_code }: { address: string; zip_code: string }) => {
       setSalesInfoForm((prev) => ({ ...prev, address, zip_code }));
@@ -74,6 +133,7 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
 
   const { openAddressSearch } = useAddressSearch(onAddressComplete);
 
+  // 사업자등록증 이미지 업로드 및 인식 API 호출
   const { mutateAsync: uploadCertImage, isPending: isUploading } = useMutation({
     mutationFn: (data: FormData) => postCertFileUpload(data),
     onSuccess: async (data) => {
@@ -114,6 +174,7 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     },
   });
 
+  // input 필드 변경 핸들러
   const onChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
@@ -124,6 +185,7 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     [],
   );
 
+  // select 필드 값 파싱 함수
   const parseSelectValue = (
     field: keyof SalesCompanyInfo,
     value: string,
@@ -133,6 +195,7 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     return isNaN(Number(value)) ? value : Number(value);
   };
 
+  // select 필드 변경 핸들러
   const onSelectChange = useCallback(async (field: keyof SalesCompanyInfo, value: string) => {
     const parsed = parseSelectValue(field, value);
 
@@ -162,11 +225,13 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     }
   }, []);
 
+  // 결제수단 토글 핸들러
   const onPaymentToggle = useCallback((field: keyof SalesCompanyInfo, checked: boolean) => {
     setSalesInfoForm((prev) => ({ ...prev, [field]: checked }));
     setErrors((prev) => (prev.payment_methods ? { ...prev, payment_methods: undefined } : prev));
   }, []);
 
+  // 사업자등록증 변경 핸들러
   const onLicenseChange = useCallback(async (file: File | null) => {
     if (file) {
       const formData = new FormData();
@@ -176,10 +241,12 @@ export function useSalesCompanyInfoForm(initialData?: Partial<SalesCompanyInfo>)
     }
   }, []);
 
+  // 배송 가능 요일 변경 핸들러
   const onDeliveryDaysChange = useCallback((val: Record<string, boolean>) => {
     setSalesInfoForm((prev) => ({ ...prev, delivery_available_days: val }));
   }, []);
 
+  // 유효성 검사 함수
   const validate = useCallback(() => {
     const next: SalesCompanyErrors = {};
     if (!salesInfoForm.address) next.address = '주소를 입력해주세요.';

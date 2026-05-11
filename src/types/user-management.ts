@@ -39,6 +39,12 @@ export type UserDetailResponse = {
   is_sales_verified: boolean;
   is_deleted: boolean;
   is_nice_verified: boolean;
+  refund_account_info: {
+    account_number: string;
+    bank_code: string;
+    bank_name: string;
+    holder_name: string;
+  };
   nice_verification_info: {
     id: number;
     authority: string;
@@ -128,6 +134,9 @@ export type UserInfo = {
   recommender: number | null;
   tier: number;
   memo: string;
+  bank_code: string | null;
+  account_number: string | null;
+  account_holder: string | null;
 };
 
 export interface SalesCompanyInfo {

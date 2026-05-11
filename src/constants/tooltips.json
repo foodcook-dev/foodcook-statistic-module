@@ -1,0 +1,134 @@
+{
+  "start_dt": {
+    "label": "개업일자",
+    "tooltip": ""
+  },
+  "payment_methods": {
+    "label": "결제수단",
+    "tooltip": ""
+  },
+  "tax_type": {
+    "label": "과세유형",
+    "tooltip": ""
+  },
+  "manager": {
+    "label": "담당자",
+    "tooltip": ""
+  },
+  "owner_name": {
+    "label": "대표자명",
+    "tooltip": ""
+  },
+  "dongwon_sales_company_code": {
+    "label": "동원 사업장 코드",
+    "tooltip": ""
+  },
+  "tier": {
+    "label": "등급",
+    "tooltip": ""
+  },
+  "memo": {
+    "label": "메모",
+    "tooltip": ""
+  },
+  "delivery_available_days": {
+    "label": "배송 가능 요일",
+    "tooltip": ""
+  },
+  "delivery_memo": {
+    "label": "배송 메모",
+    "tooltip": ""
+  },
+  "driver": {
+    "label": "배송기사",
+    "tooltip": ""
+  },
+  "note": {
+    "label": "비고",
+    "tooltip": ""
+  },
+  "password": {
+    "label": "비밀번호",
+    "tooltip": ""
+  },
+  "business_license": {
+    "label": "사업자등록증",
+    "tooltip": ""
+  },
+  "b_no": {
+    "label": "사업자번호",
+    "tooltip": ""
+  },
+  "b_nm": {
+    "label": "상호명",
+    "tooltip": ""
+  },
+  "nickname": {
+    "label": "실명",
+    "tooltip": ""
+  },
+  "username": {
+    "label": "아이디",
+    "tooltip": ""
+  },
+  "b_type": {
+    "label": "업종",
+    "tooltip": ""
+  },
+  "b_sector": {
+    "label": "업태",
+    "tooltip": ""
+  },
+  "phone_num": {
+    "label": "연락처",
+    "tooltip": ""
+  },
+  "email": {
+    "label": "이메일",
+    "tooltip": ""
+  },
+  "jette_sales_company_code": {
+    "label": "제때 사업장 코드",
+    "tooltip": ""
+  },
+  "address": {
+    "label": "주소",
+    "tooltip": ""
+  },
+  "allias": {
+    "label": "지점 별칭",
+    "tooltip": ""
+  },
+  "branch_type": {
+    "label": "지점 유형",
+    "tooltip": ""
+  },
+  "recommender": {
+    "label": "추천인",
+    "tooltip": ""
+  },
+  "referral_code": {
+    "label": "추천인 코드",
+    "tooltip": ""
+  },
+  "gate_password": {
+    "label": "출입문 비밀번호",
+    "tooltip": ""
+  },
+  "is_test": {
+    "label": "테스트 계정",
+    "tooltip": ""
+  },
+  "foodist_sales_company_code": {
+    "label": "푸디스트 사업장 코드",
+    "tooltip": ""
+  },
+  "franchise": {
+    "label": "프랜차이즈",
+    "tooltip": ""
+  },
+  "platform": {
+    "label": "플랫폼",
+    "tooltip": ""
+  }
+}

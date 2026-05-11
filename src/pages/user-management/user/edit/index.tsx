@@ -13,7 +13,6 @@ import {
 } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
-import { buildFormData } from '@/libs/form-data-builder';
 import { toUserEditFields } from '@/constants/user-management/form-data-field';
 
 export default function UserEdit() {
@@ -45,7 +44,7 @@ export default function UserEdit() {
   });
 
   const { mutate: updateUser, isPending } = useMutation({
-    mutationFn: (data: FormData) => patchUserUpdate(Number(id), data),
+    mutationFn: (data: object) => patchUserUpdate(Number(id), data),
     onSuccess: () => {
       showToastMessage({ content: '사용자 정보가 수정되었습니다.' });
       navigate(-1);
@@ -61,28 +60,30 @@ export default function UserEdit() {
 
     const userForm = userInfoRef.current!.getFormData();
 
-    // 추천인 코드가 입력된 경우에만 검증 수행
     if (userForm.referral_code) await validateReferralCode(userForm.referral_code);
 
-    updateUser(buildFormData(toUserEditFields(userForm)));
+    updateUser(toUserEditFields(userForm).fields);
   };
 
   if (isLoading || !userInfo) return null;
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection
           ref={userInfoRef}
           initialData={{
             username: userInfo.username,
             nickname: userInfo.nickname,
-            phone_num: userInfo.phone_num,
+            phone_num: userInfo.phone_num ?? '',
             email: userInfo.email ?? '',
             tier: userInfo.tier ?? 0,
             recommender: userInfo.recommender,
             referral_code: userInfo.referral_code ?? '',
             memo: userInfo.memo ?? '',
+            bank_code: userInfo.refund_account_info?.bank_code ?? '',
+            account_number: userInfo.refund_account_info?.account_number ?? '',
+            account_holder: userInfo.refund_account_info?.holder_name ?? '',
           }}
           mode="edit"
         />

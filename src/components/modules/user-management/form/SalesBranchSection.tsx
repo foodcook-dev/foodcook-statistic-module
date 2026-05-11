@@ -57,6 +57,7 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
         <div className="grid grid-cols-2 gap-3">
           <LabeledSelect
             id="branch_type"
+            name="branch_type"
             label="지점 유형"
             placeholder="지점 유형을 선택해주세요"
             required
@@ -177,6 +178,7 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
         <div className="grid grid-cols-2 gap-3">
           <LabeledSelect
             id="manager"
+            name="manager"
             label="담당자"
             placeholder="담당자를 선택해주세요"
             value={branchInfoForm.manager != null ? String(branchInfoForm.manager) : ''}

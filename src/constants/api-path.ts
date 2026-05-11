@@ -22,6 +22,8 @@ const API = {
 
   getCompanies: `/dashboard/companies/`,
   getUserList: `/user-dashboard/users/`,
+  getBankList: `/v3/user/bank-code-list/`,
+  postVerifyBankAccount: `/v3/order/toss/verify-holder-name/`,
   getUserDetail: (userId: number) => `/user-dashboard/users/${userId}/`,
   getSalesCompanyDetail: (companyId: number) => `/user-dashboard/sales-company/${companyId}/`,
   getFranchisePayment: (franchiesId: string) =>

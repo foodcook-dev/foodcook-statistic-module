@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Loader2, ChevronsUpDown, Check } from 'lucide-react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { getOptions } from '@/libs/user-management-api';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronsUpDown, Check } from 'lucide-react';
+import { FieldWrapper } from './FormField';
+
 import { cn } from '@/utils/common';
 
 const ITEM_HEIGHT = 36;
@@ -16,6 +18,7 @@ type Option = {
 
 type LabeledSelectProps = {
   id: string;
+  name: string;
   label: string;
   value: string | number;
   onChange: (value: string) => void;
@@ -25,6 +28,7 @@ type LabeledSelectProps = {
   helperText?: string;
   className?: string;
   optionType?: string;
+  options?: Option[]; // 외부에서 옵션을 직접 전달할 때
   enableNone?: boolean;
   searchable?: boolean;
 };
@@ -32,6 +36,7 @@ type LabeledSelectProps = {
 export function LabeledSelect(props: LabeledSelectProps) {
   const {
     label,
+    name,
     required,
     error,
     helperText,
@@ -41,6 +46,7 @@ export function LabeledSelect(props: LabeledSelectProps) {
     onChange,
     placeholder = '선택해주세요',
     optionType,
+    options: externalOptions,
     enableNone = false,
     searchable = false,
   } = props;
@@ -60,13 +66,17 @@ export function LabeledSelect(props: LabeledSelectProps) {
   }, [isOpen]);
 
   useEffect(() => {
+    if (externalOptions) {
+      setAllOptions(externalOptions);
+      return;
+    }
     if (!optionType) return;
     setIsLoading(true);
     getOptions({ type: optionType })
       .then((res) => setAllOptions(res.results ?? res))
       .catch((err) => console.error('옵션 로드 실패:', err))
       .finally(() => setIsLoading(false));
-  }, [optionType]);
+  }, [optionType, externalOptions]);
 
   const filteredOptions = useMemo(() => {
     if (!search) return allOptions;
@@ -91,7 +101,13 @@ export function LabeledSelect(props: LabeledSelectProps) {
   const triggerLabel = isLoading ? '로딩 중' : (selectedOption?.name ?? placeholder);
 
   return (
-    <Field label={label} required={required} error={error} helperText={helperText}>
+    <FieldWrapper
+      name={name}
+      label={label}
+      required={required}
+      error={error}
+      helperText={helperText}
+    >
       <Popover
         open={isOpen}
         onOpenChange={(open) => {
@@ -197,32 +213,6 @@ export function LabeledSelect(props: LabeledSelectProps) {
           </div>
         </PopoverContent>
       </Popover>
-    </Field>
-  );
-}
-
-function Field({
-  label,
-  required,
-  error,
-  helperText,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  error?: string;
-  helperText?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex w-full flex-col gap-1.5">
-      <label className="text-sm leading-none font-medium">
-        {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
-      </label>
-      {children}
-      {error && <p className="text-xs text-red-500">{error}</p>}
-      {!error && helperText && <p className="text-contrast/70 text-xs">{helperText}</p>}
-    </div>
+    </FieldWrapper>
   );
 }

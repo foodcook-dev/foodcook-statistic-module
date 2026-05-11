@@ -10,6 +10,9 @@ export const initialUserInfo: UserInfo = {
   recommender: null,
   tier: 1,
   memo: '',
+  bank_code: null,
+  account_number: null,
+  account_holder: '',
 };
 
 export const initialSalesInfo: SalesCompanyInfo = {

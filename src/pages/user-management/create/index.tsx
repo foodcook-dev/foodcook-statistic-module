@@ -14,7 +14,11 @@ import { showToastMessage } from '@/libs/toast-message';
 import { postReferralCodeValidate, postUserCreate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { buildFormData } from '@/libs/form-data-builder';
-import { toSalesCompanyFields, toUserFields } from '@/constants/user-management/form-data-field';
+import {
+  toRefundFields,
+  toSalesCompanyFields,
+  toUserFields,
+} from '@/constants/user-management/form-data-field';
 
 export default function UserManagementCreate() {
   const navigate = useNavigate();
@@ -65,12 +69,16 @@ export default function UserManagementCreate() {
     if (userInfo.referral_code) await validateReferralCode(userInfo.referral_code);
 
     createUser(
-      buildFormData(toUserFields(userInfo), toSalesCompanyFields(salesInfo, 'sales_company_info')),
+      buildFormData(
+        toUserFields(userInfo),
+        toRefundFields(userInfo, 'refund_account_info'),
+        toSalesCompanyFields(salesInfo, 'sales_company_info'),
+      ),
     );
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4">
+    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection ref={userInfoRef} />
         <SalesCompanySection ref={salesInfoRef} />

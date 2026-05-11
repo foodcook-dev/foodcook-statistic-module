@@ -14,6 +14,15 @@ export const toUserFields = (info: UserInfo) => ({
   },
 });
 
+export const toRefundFields = (info: UserInfo, prefix?: string) => ({
+  fields: {
+    bank_code: info.bank_code || null,
+    account_number: info.account_number || null,
+    account_holder: info.account_holder || null,
+  },
+  prefix,
+});
+
 export const toUserEditFields = (info: UserInfo) => ({
   fields: {
     nickname: info.nickname,
@@ -23,6 +32,11 @@ export const toUserEditFields = (info: UserInfo) => ({
     recommender: info.recommender || '',
     referral_code: info.referral_code || '',
     memo: info.memo || '',
+    refund_account_info: {
+      bank_code: info.bank_code || null,
+      account_number: info.account_number || null,
+      account_holder: info.account_holder || null,
+    },
   },
 });
 
