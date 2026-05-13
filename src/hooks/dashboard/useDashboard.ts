@@ -7,11 +7,7 @@ import { ko } from 'date-fns/locale';
 import { useTheme } from '@/components/modules/theme-provider';
 import { getCompany, getDashboardData } from '@/libs/dashboard-api';
 
-interface UseDashboardOptions {
-  isSelectable: boolean;
-}
-
-export const useDashboard = ({ isSelectable }: UseDashboardOptions) => {
+export const useDashboard = ({ isSelectable }: { isSelectable: boolean }) => {
   const { theme } = useTheme();
   const [selectedPartnerId, setSelectedPartnerId] = useState<number | undefined>(undefined);
   const [periodType, setPeriodType] = useState<string>('realtime');

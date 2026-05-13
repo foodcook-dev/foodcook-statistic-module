@@ -4,10 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 import { PaymentData } from '@/components/modules/custom-dialog/payment-dialog';
-import useFetch from '@/hooks/useFetch';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useAlert } from '@/hooks/useAlert';
 import {
@@ -17,19 +17,17 @@ import {
   patchBuyCompanyPayment,
   deleteBuyCompanyPayment,
 } from '@/libs/purchaser-dashboard-api';
+import useSpinnerStore from '@/stores/spinner';
+import { Vendor } from '@/types/settlement';
 
 const PAGE_SIZE = 50;
-
-type SelectedBuyer = {
-  id: string;
-  name: string;
-};
+const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
 
 export const useDirectSettlement = () => {
   const location = useLocation();
+  const { setLoading } = useSpinnerStore();
   const setConfirm = useConfirm();
   const setAlert = useAlert();
-  const STORAGE_KEY = STORAGE_KEYS.DIRECT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>(
@@ -38,12 +36,11 @@ export const useDirectSettlement = () => {
       to: today,
     },
   );
-  const [selectedBuyer, setSelectedBuyer] = useState<SelectedBuyer>({
+  const [selectedBuyer, setSelectedBuyer] = useState<Vendor>({
     id: location.state?.id || '',
     name: location.state?.name || '',
   });
 
-  // TODO: 추후 useFetch 클로저 문제 개선 필요
   const selectedBuyerIdRef = useRef<string>(selectedBuyer.id);
   useEffect(() => {
     selectedBuyerIdRef.current = selectedBuyer.id;
@@ -101,8 +98,8 @@ export const useDirectSettlement = () => {
     }
   }, [createDataSource, selectedBuyer.id, dateRange.from, dateRange.to]);
 
-  const { request: submitPaymentRequest } = useFetch({
-    requestFn: async (data: PaymentData) => {
+  const { mutate: submitPaymentRequest } = useMutation({
+    mutationFn: async (data: PaymentData) => {
       return await postBuyCompanyPayment({
         companyId: selectedBuyerIdRef.current,
         params: {
@@ -118,8 +115,8 @@ export const useDirectSettlement = () => {
     },
   });
 
-  const { request: editPaymentRequest } = useFetch({
-    requestFn: async (data: PaymentData) => {
+  const { mutate: editPaymentRequest } = useMutation({
+    mutationFn: async (data: PaymentData) => {
       return await patchBuyCompanyPayment({
         companyId: selectedBuyerIdRef.current,
         params: {
@@ -129,25 +126,21 @@ export const useDirectSettlement = () => {
         },
       });
     },
-    onSuccess: () => {
-      refreshGridData();
-    },
-    showSpinner: true,
-    spinnerMessage: '결제 정보 수정 중',
+    onMutate: () => setLoading(true, '결제 정보 수정 중'),
+    onSettled: () => setLoading(false),
+    onSuccess: () => refreshGridData(),
   });
 
-  const { request: deletePaymentRequest } = useFetch({
-    requestFn: async (rowData: any) => {
+  const { mutate: deletePaymentRequest } = useMutation({
+    mutationFn: async (rowData: any) => {
       return await deleteBuyCompanyPayment({
         companyId: selectedBuyerIdRef.current,
         id: rowData.detail_id,
       });
     },
-    onSuccess: () => {
-      refreshGridData();
-    },
-    showSpinner: true,
-    spinnerMessage: '결제 정보 삭제 중',
+    onMutate: () => setLoading(true, '결제 정보 삭제 중'),
+    onSettled: () => setLoading(false),
+    onSuccess: () => refreshGridData(),
   });
 
   const handleDelete = async (rowData: any) => {

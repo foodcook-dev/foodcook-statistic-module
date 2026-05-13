@@ -18,37 +18,34 @@ export default function Root() {
   return (
     <Routes>
       <Route element={<BaseLayout />}>
-        {/* Settlement */}
         <Route path="/" element={<IntegratedSettlement />} />
+
+        {/* Settlement : 매입사 대시보드 - integrated(통합), direct(직매입), consignment(위탁매입) */}
         <Route path="/integrated" element={<IntegratedSettlement />} />
         <Route path="/direct" element={<DirectSettlement />} />
         <Route path="/consignment" element={<ConsignmentSettlement />} />
 
-        {/* Dashboard */}
+        {/* Dashboard : 통합매출 대시보드 */}
         <Route path="/dashboard/main" element={<MainDashboard />} />
         <Route path="/dashboard/sales" element={<SalesDashboard />} />
 
-        {/* Purchase */}
+        {/* Purchase : 야채 매입 */}
         <Route path="/purchase/vegetable" element={<VegetablePurchase />} />
 
-        {/* User Management */}
-        <Route path="/user-management" element={<UserManagementList />} />
-        <Route path="/user-management/create" element={<UserManagementCreate />} />
-        <Route path="/user-management/:id" element={<UserManagementDetail />} />
-        <Route path="/user-management/:id/edit" element={<UserEdit />} />
-        <Route path="/user-management/:id/sales-company/create" element={<SalesCompanyCreate />} />
-        <Route
-          path="/user-management/sales-company/:companyId/edit"
-          element={<SalesCompanyEdit />}
-        />
-        <Route
-          path="/user-management/sales-company/:companyId/branch/create"
-          element={<SalesBranchCreate />}
-        />
-        <Route
-          path="/user-management/sales-company/:companyId/branch/:branchId/edit"
-          element={<SalesBranchEdit />}
-        />
+        {/* User Management : 사용자 통합 관리 */}
+        <Route path="/user-management">
+          <Route index element={<UserManagementList />} />
+          <Route path="create" element={<UserManagementCreate />} />
+          <Route path=":id" element={<UserManagementDetail />} />
+          <Route path=":id/edit" element={<UserEdit />} />
+          <Route path=":id/sales-company/create" element={<SalesCompanyCreate />} />
+          <Route path="sales-company/:companyId/edit" element={<SalesCompanyEdit />} />
+          <Route path="sales-company/:companyId/branch/create" element={<SalesBranchCreate />} />
+          <Route
+            path="sales-company/:companyId/branch/:branchId/edit"
+            element={<SalesBranchEdit />}
+          />
+        </Route>
       </Route>
     </Routes>
   );

@@ -16,9 +16,10 @@ type UseIntegratedSettlementReturn = {
   error: string | null;
 };
 
+const STORAGE_KEY = STORAGE_KEYS.INTEGRATED_SETTLEMENT;
+
 export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
   const navigate = useNavigate();
-  const STORAGE_KEY = STORAGE_KEYS.INTEGRATED_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>({

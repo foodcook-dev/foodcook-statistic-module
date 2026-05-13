@@ -1,32 +1,37 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { type CellBase, type Matrix } from 'react-spreadsheet';
 import { format } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
-import useFetch from '@/hooks/useFetch';
+import { useQuery, useMutation } from '@tanstack/react-query';
+
 import { OrderApiResponse } from '@/types/vegatable-purchase';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useAlert } from '@/hooks/useAlert';
-import { readOnlyColumns, expectedKeys } from '../../pages/vegetable-purchase/config/grid-config';
+import { readOnlyColumns, expectedKeys } from '@/pages/vegetable-purchase/config/grid-config';
 import {
   getAvailableDate,
   getBatchVegetablePurchaseProductManual,
   patchPurchase,
 } from '@/libs/vegetable-purchase-api';
+import useSpinnerStore from '@/stores/spinner';
 
 export function usePurchase() {
+  const { setLoading } = useSpinnerStore();
+  const setConfirm = useConfirm();
+  const setAlert = useAlert();
+
   const isAllReadOnlyRef = useRef(false);
   const [purchaseData, setPurchaseData] = useState<OrderApiResponse>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isAllReadOnly, setIsAllReadOnly] = useState(false);
-  const setConfirm = useConfirm();
-  const setAlert = useAlert();
 
+  // 최초 진입 시 사용 가능한 날짜 조회
   const { data: availableDates, refetch: refetchAvailableDates } = useQuery({
     queryKey: ['availableDates'],
     queryFn: () => getAvailableDate(),
   });
 
+  // 날짜 선택 시 해당 날짜의 매입 데이터 조회
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['purchaseData', selectedDate],
     queryFn: () =>
@@ -54,7 +59,7 @@ export function usePurchase() {
       if (!changed) return inputData;
       return { ...inputData, table_data: newTableData };
     },
-    [], // 외부 상태 의존 없음
+    [],
   );
 
   useEffect(() => {
@@ -95,13 +100,16 @@ export function usePurchase() {
     });
   }, [isAllReadOnly]);
 
-  const { request: purchaseRequest } = useFetch({
-    requestFn: async () => {
+  // 매입 요청
+  const { mutate: purchaseRequest } = useMutation({
+    mutationFn: async () => {
       await patchPurchase({
         estimated_delivery_date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : '',
         table_data: purchaseData?.table_data as any,
       });
     },
+    onMutate: () => setLoading(true, '매입 생성중'),
+    onSettled: () => setLoading(false),
     onSuccess: () => {
       refetch();
       refetchAvailableDates();
@@ -124,7 +132,6 @@ export function usePurchase() {
         const lockedOrigin = tryParse(locked);
         if (lockedOrigin) return lockedOrigin;
 
-        // fallback
         return '*';
       };
 
@@ -139,8 +146,6 @@ export function usePurchase() {
         );
       }
     },
-    showSpinner: true,
-    spinnerMessage: '매입 생성중',
   });
 
   const calculateSummary = useCallback(() => {

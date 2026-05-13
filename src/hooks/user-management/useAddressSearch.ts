@@ -1,5 +1,23 @@
 import { useCallback } from 'react';
 
+declare global {
+  interface Window {
+    kakao: {
+      Postcode: new (options: {
+        oncomplete: (data: {
+          roadAddress: string;
+          jibunAddress: string;
+          userSelectedType: string;
+          bname: string;
+          buildingName: string;
+          apartment: string;
+          zonecode: string;
+        }) => void;
+      }) => { open: () => void };
+    };
+  }
+}
+
 export function useAddressSearch(
   onComplete: (data: { address: string; zip_code: string }) => void,
 ) {

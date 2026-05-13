@@ -62,7 +62,7 @@ const createActionButtonRenderer = (
           {
             key: 'edit',
             title: '결제 수정',
-            buttonClassName: 'w-[32px] h-[30px] bg-blue-500 text-white hover:bg-blue-300',
+            buttonClassName: 'w-[32px] h-[30px] bg-blue-500 text-white hover:bg-blue-400',
             onSubmit: onEdit,
             dateSelectDisabled: true,
             initialData: {
@@ -80,7 +80,7 @@ const createActionButtonRenderer = (
           Button,
           {
             key: 'delete',
-            className: 'w-[32px] h-[30px] bg-red-500 text-white hover:bg-red-300',
+            className: 'w-[32px] h-[30px] bg-red-500 text-white hover:bg-red-400',
             onClick: handleDelete,
           },
           React.createElement(Trash2, { size: 16 }),

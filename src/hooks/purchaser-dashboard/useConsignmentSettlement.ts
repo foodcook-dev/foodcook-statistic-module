@@ -3,13 +3,13 @@ import { AgGridReact } from 'ag-grid-react';
 import { IDatasource, IGetRowsParams, GridReadyEvent } from 'ag-grid-community';
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
+import { useQuery, useMutation } from '@tanstack/react-query';
+
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 import { PaymentData } from '@/components/modules/custom-dialog/payment-dialog';
 import { useConfirm } from '@/hooks/useConfirm';
-import useFetch from '@/hooks/useFetch';
 import { useAlert } from '@/hooks/useAlert';
-import { useLocation } from 'react-router-dom';
 import {
   getPartnerCompany,
   getPartnerCompanyDetails,
@@ -17,33 +17,30 @@ import {
   patchPartnerCompanyPayment,
   deletePartnerCompanyPayment,
 } from '@/libs/purchaser-dashboard-api';
+import useSpinnerStore from '@/stores/spinner';
+import { Vendor } from '@/types/settlement';
 
 const PAGE_SIZE = 50;
-
-interface SelectedPartner {
-  id: string;
-  name: string;
-}
+const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
 
 export const useConsignmentSettlement = () => {
   const location = useLocation();
-  const setConfirm = useConfirm();
-  const setAlert = useAlert();
-  const STORAGE_KEY = STORAGE_KEYS.CONSIGNMENT_SETTLEMENT;
   const gridRef = useRef<AgGridReact>(null);
   const today = new Date();
+  const { setLoading } = useSpinnerStore();
+  const setConfirm = useConfirm();
+  const setAlert = useAlert();
   const [dateRange, setDateRange] = useState<DateRange>(
     location.state?.dateRange || {
       from: startOfMonth(today),
       to: today,
     },
   );
-  const [selectedPartner, setSelectedPartner] = useState<SelectedPartner>({
+  const [selectedPartner, setSelectedPartner] = useState<Vendor>({
     id: location.state?.id || '',
     name: location.state?.name || '',
   });
 
-  // TODO: 추후 useFetch 클로저 문제 개선 필요
   const selectedPartnerIdRef = useRef<string>(selectedPartner.id);
   useEffect(() => {
     selectedPartnerIdRef.current = selectedPartner.id;
@@ -57,7 +54,6 @@ export const useConsignmentSettlement = () => {
   const partnerInfoResponse = useQuery({
     queryKey: ['partner_companies', selectedPartner.id],
     queryFn: () => getPartnerCompany(selectedPartner.id),
-
     enabled: !!selectedPartner.id,
   });
 
@@ -105,9 +101,9 @@ export const useConsignmentSettlement = () => {
     }
   }, [createDataSource, selectedPartner.id, dateRange.from, dateRange.to]);
 
-  const { request: submitPaymentRequest } = useFetch({
-    requestFn: async (data: PaymentData) => {
-      return await postPartnerCompanyPayment({
+  const { mutate: submitPaymentRequest } = useMutation({
+    mutationFn: async (data: PaymentData) => {
+      await postPartnerCompanyPayment({
         companyId: selectedPartnerIdRef.current,
         params: {
           date: format(data.processDate!, 'yyyy-MM-dd'),
@@ -122,9 +118,9 @@ export const useConsignmentSettlement = () => {
     },
   });
 
-  const { request: editPaymentRequest } = useFetch({
-    requestFn: async (data: PaymentData) => {
-      return await patchPartnerCompanyPayment({
+  const { mutate: editPaymentRequest } = useMutation({
+    mutationFn: async (data: PaymentData) => {
+      await patchPartnerCompanyPayment({
         companyId: selectedPartnerIdRef.current,
         params: {
           id: String(data.id),
@@ -133,25 +129,21 @@ export const useConsignmentSettlement = () => {
         },
       });
     },
-    onSuccess: () => {
-      refreshGridData();
-    },
-    showSpinner: true,
-    spinnerMessage: '결제 정보 수정 중',
+    onMutate: () => setLoading(true, '결제 정보 수정 중'),
+    onSettled: () => setLoading(false),
+    onSuccess: () => refreshGridData(),
   });
 
-  const { request: deletePaymentRequest } = useFetch({
-    requestFn: async (rowData: any) => {
-      return await deletePartnerCompanyPayment({
+  const { mutate: deletePaymentRequest } = useMutation({
+    mutationFn: async (rowData: any) => {
+      await deletePartnerCompanyPayment({
         companyId: selectedPartnerIdRef.current,
         id: rowData.detail_id,
       });
     },
-    onSuccess: () => {
-      refreshGridData();
-    },
-    showSpinner: true,
-    spinnerMessage: '결제 정보 삭제 중',
+    onMutate: () => setLoading(true, '결제 정보 삭제 중'),
+    onSettled: () => setLoading(false),
+    onSuccess: () => refreshGridData(),
   });
 
   const handleDelete = async (rowData: any) => {
