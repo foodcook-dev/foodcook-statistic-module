@@ -21,7 +21,7 @@ export default function PartialRefund() {
   } = usePartialRefundForm();
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
+    <div className="flex h-full w-full flex-col items-center gap-4">
       <div className="border-gray300 bg-background flex w-full max-w-[900px] flex-col gap-6 rounded-lg border p-6">
         <h2 className="text-lg font-semibold text-gray-900">
           부분 환불
