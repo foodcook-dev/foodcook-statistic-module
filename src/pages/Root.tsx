@@ -13,6 +13,7 @@ import SalesCompanyCreate from '@/pages/user-management/sales-company/create';
 import SalesCompanyEdit from '@/pages/user-management/sales-company/edit';
 import SalesBranchCreate from '@/pages/user-management/sales-branch/create';
 import SalesBranchEdit from '@/pages/user-management/sales-branch/edit';
+import PartialRefund from '@/pages/partial-refund';
 
 export default function Root() {
   return (
@@ -46,6 +47,9 @@ export default function Root() {
             element={<SalesBranchEdit />}
           />
         </Route>
+
+        {/* 부분 환불 등록 페이지 */}
+        <Route path="/partial-refund" element={<PartialRefund />} />
       </Route>
     </Routes>
   );

@@ -42,6 +42,11 @@ const API = {
     `/user-dashboard/sales-company/${companyId}/sales-branch/`,
   patchSalesBranchUpdate: (branchId: number) => `/user-dashboard/sales-branch/${branchId}/update/`,
   postTempPassword: (userId: number) => `/user-dashboard/users/${userId}/temp-password/`,
+
+  // 부분환불
+  getPartialRefundInfo: (orderId: string) =>
+    `/user-dashboard/order/${orderId}/partial-cancel/init-data/`,
+  postPartialRefund: (orderId: string) => `/user-dashboard/order/${orderId}/partial-cancel/`,
 };
 
 export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };
