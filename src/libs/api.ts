@@ -54,4 +54,6 @@ const API = createInstance();
 // ERP API 인스턴스 (야채매입, 사용자통합관리)
 const ERP_API = createInstance(PATH.erp);
 
+// const TEST_ERP_API = createInstance(PATH.test_erp);
+
 export { API, ERP_API };

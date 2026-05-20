@@ -8,8 +8,10 @@ export type OrderItem = {
   count: number;
   available_refund_amount: number;
   refund_amount: number;
+  refund_count: number;
   restock_quantity: number;
   settlement_exempt: boolean;
+  partner_company_id: number | null;
 };
 
 export type PartialRefundInfo = {
@@ -36,4 +38,25 @@ export type RequestPartialRefundInfo = {
   refund_reason: string | null; // 환불 사유
   memo: string | null; // 관리자 메모
   order_items: RequestOrderItem[];
+};
+
+export type EditableItemFields = {
+  refund_amount: number;
+  refund_count: number;
+  restock_quantity: number;
+  settlement_exempt: boolean;
+  partner_company_id: number | null;
+};
+
+export type FormEdits = {
+  refund_reason: string;
+  memo: string;
+  items: Map<number, EditableItemFields>;
+};
+
+export type PartnerCompany = {
+  id: number;
+  b_nm: string;
+  display_b_nm: string | null;
+  b_no: string;
 };

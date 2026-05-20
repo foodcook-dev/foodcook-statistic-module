@@ -1,5 +1,6 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 const ERP_BASE_URL = import.meta.env.VITE_ERP_BASE_URL;
+// const TEST_ERP_BASE_URL = import.meta.env.VITE_TEST_ERP_BASE_URL;
 
 const API = {
   getVegetableAvailableDate: `/order/available-vegetable-purchase-date`,
@@ -47,6 +48,7 @@ const API = {
   getPartialRefundInfo: (orderId: string) =>
     `/user-dashboard/order/${orderId}/partial-cancel/init-data/`,
   postPartialRefund: (orderId: string) => `/user-dashboard/order/${orderId}/partial-cancel/`,
+  getRefundPartnerCompany: () => `/user-dashboard/partner-companies/`,
 };
 
 export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };

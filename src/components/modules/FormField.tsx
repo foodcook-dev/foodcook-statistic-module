@@ -61,7 +61,7 @@ export function FieldWrapper({
 }) {
   return (
     <div className={`flex w-full flex-col gap-1.5 ${className}`}>
-      <FieldLabel label={label} required={required} name={name} />
+      {label && <FieldLabel label={label} required={required} name={name} />}
       {children}
       {error && <p className="text-xs text-red-500">{error}</p>}
       {!error && helperText && <p className="text-contrast/40 text-xs">{helperText}</p>}
