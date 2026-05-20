@@ -125,7 +125,7 @@ export default function PartialRefund() {
 
                 {/* 환불 금액 / 환불 수량 / 재고 복구 / 정산제외 영역 */}
                 {isDisabled ? (
-                  <div className="text-contrast flex w-76 shrink-0 items-center justify-center text-xs font-semibold">
+                  <div className="text-contrast flex w-145 shrink-0 items-center justify-center text-xs font-semibold">
                     이미 환불 처리된 상품입니다
                   </div>
                 ) : (
