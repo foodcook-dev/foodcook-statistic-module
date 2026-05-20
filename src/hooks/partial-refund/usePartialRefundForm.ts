@@ -62,7 +62,7 @@ export function usePartialRefundForm() {
         message: (error as any)?.detail || '환불 정보를 불러오는 중 오류가 발생했습니다.',
       });
     }
-  }, [error, setAlert]);
+  }, [error]);
 
   const orderItems = useMemo(() => {
     if (!refundData) return [];
