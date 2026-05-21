@@ -1,4 +1,3 @@
-import { LabeledInput } from '@/components/modules/LabeledInput';
 import { LabeledTextarea } from '@/components/modules/LabeledTextArea';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -22,22 +21,22 @@ export default function PartialRefund() {
   } = usePartialRefundForm();
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-4 p-8">
+    <div className="flex w-full flex-col items-center gap-4 p-8">
       <div className="border-gray300 bg-background flex w-full max-w-[1200px] flex-col gap-6 rounded-lg border p-6">
-        <h2 className="text-contrast text-lg font-semibold">
-          부분 환불
-          <span className="text-contrast/70 ml-2 text-sm font-normal">주문 ID : {orderId}</span>
-        </h2>
+        <div className="border-border flex flex-col items-center gap-1 border-b-2 border-dashed pb-5">
+          <p className="text-contrast text-[30px] font-bold tracking-widest">부 분 환 불</p>
+        </div>
 
-        <LabeledInput
-          id="refund_method"
-          name="refund_method"
-          label="환불 수단"
-          placeholder="주문시 사용한 결제수단입니다"
-          value={form.refund_method ?? ''}
-          onChange={() => {}}
-          readOnly
-        />
+        <div className="text-contrast/80 border-border flex flex-col gap-2 border-b border-dashed pb-4 text-sm">
+          <div className="flex justify-between">
+            <span>주문 ID</span>
+            <span>{orderId}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>환불수단</span>
+            <span>{form.refund_method || '주문 시 결제수단'}</span>
+          </div>
+        </div>
 
         <LabeledTextarea
           id="refund_reason"
@@ -60,12 +59,12 @@ export default function PartialRefund() {
         />
 
         {/* 주문 상품 리스트 */}
-        <div className="flex flex-col">
-          <div className="border-border flex items-center gap-6 border-b pb-2">
+        <div className="border-border flex flex-col border-t border-dashed pt-8">
+          <div className="flex items-center gap-6 pb-2">
             <span className="text-sm font-semibold">주문 상품</span>
           </div>
 
-          <div className="text-contrast/70 border-border/80 flex items-center gap-5 border-b px-3 py-2 text-xs">
+          <div className="border-border text-contrast/80 flex items-center gap-5 border-y-2 border-double px-3 py-2 text-[12px] font-bold">
             <div className="w-3 shrink-0" />
             <div className="flex-1 px-1">상품 정보</div>
             <div className="w-10 shrink-0 text-center">수량</div>
@@ -205,14 +204,12 @@ export default function PartialRefund() {
                           </span>
                         </button>
 
-                        <div className="min-w-0 flex-1 overflow-hidden px-1">
+                        <div className="min-w-0 flex-1 overflow-hidden">
                           <PartnerCompanySelect
                             id={`partner-company-${item.id}`}
                             name={`partner_company[${item.id}]`}
                             value={item.partner_company_id}
-                            placeholder={
-                              isExempt ? '파트너사를 선택해주세요' : '포함시 선택 불필요'
-                            }
+                            placeholder={isExempt ? '파트너사 선택' : '포함시 선택 불필요'}
                             onChange={(value) => onItemPartnerCompanyChange(item.id, value)}
                             className="rounded-none border-0"
                           />
@@ -240,22 +237,22 @@ export default function PartialRefund() {
               {form.order_tax_free_amount?.toLocaleString()} 원
             </span>
           </div>
-          <div className="flex items-center justify-end gap-8">
+          <div className="border-border flex items-center justify-end gap-8 border-t border-dashed pt-2">
             <span className="text-contrast text-sm">총 주문 금액</span>
             <span className="text-contrast w-28 text-right text-sm">
               {form.order_amount?.toLocaleString()} 원
             </span>
           </div>
-          <div className="border-border mt-2 flex items-center justify-end gap-8 border-t pt-2">
+          <div className="border-border flex items-center justify-end gap-8 border-y-4 border-double py-2">
             <span className="text-contrast text-sm font-semibold">환불 금액</span>
             <span className="w-28 text-right text-base font-semibold text-red-500">
-              {totalRefundAmount.toLocaleString()} 원
+              - {totalRefundAmount.toLocaleString()} 원
             </span>
           </div>
         </div>
 
         <div className="flex justify-end">
-          <Button onClick={handlePartialRefund}>환불</Button>
+          <Button onClick={handlePartialRefund}>환불 처리</Button>
         </div>
       </div>
     </div>
