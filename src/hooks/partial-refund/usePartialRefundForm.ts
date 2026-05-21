@@ -10,6 +10,7 @@ import {
   EditableItemFields,
 } from '@/types/partial-refund';
 import { showToastMessage } from '@/libs/toast-message';
+import useSpinnerStore from '@/stores/spinner';
 
 const emptyItemEdit: EditableItemFields = {
   refund_amount: 0,
@@ -21,6 +22,7 @@ const emptyItemEdit: EditableItemFields = {
 
 export function usePartialRefundForm() {
   const setAlert = useAlert();
+  const { setLoading } = useSpinnerStore();
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get('orderId') ?? '';
   const initialItemIds = useMemo(
@@ -186,6 +188,7 @@ export function usePartialRefundForm() {
 
   const { mutate: submitPartialRefund } = useMutation({
     mutationFn: (data: RequestPartialRefundInfo) => postPartialRefund(orderId, data),
+    onMutate: () => setLoading(true, '부분환불 생성 중'),
     onSuccess: () => {
       setEdits({ refund_reason: '', memo: '', items: new Map() });
       showToastMessage({ content: '부분 환불이 성공적으로 요청되었습니다.' });
@@ -210,11 +213,13 @@ export function usePartialRefundForm() {
       const parentOrigin = resolveParentOrigin();
       window.parent?.postMessage({ type: 'PARTIAL_REFUND_SUCCESS' }, parentOrigin);
     },
-    onError: (err) =>
+    onError: (err) => {
+      setLoading(false);
       setAlert({
         title: '오류',
         message: (err as any)?.detail || '부분 환불 처리 중 오류가 발생했습니다.',
-      }),
+      });
+    },
   });
 
   const validate = useCallback(() => {

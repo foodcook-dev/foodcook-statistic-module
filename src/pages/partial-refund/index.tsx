@@ -24,9 +24,9 @@ export default function PartialRefund() {
   return (
     <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="border-gray300 bg-background flex w-full max-w-[1200px] flex-col gap-6 rounded-lg border p-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-contrast text-lg font-semibold">
           부분 환불
-          <span className="ml-2 text-sm font-normal text-gray-500">주문 ID : {orderId}</span>
+          <span className="text-contrast/70 ml-2 text-sm font-normal">주문 ID : {orderId}</span>
         </h2>
 
         <LabeledInput
@@ -69,7 +69,7 @@ export default function PartialRefund() {
             <div className="w-3 shrink-0" />
             <div className="flex-1 px-1">상품 정보</div>
             <div className="w-10 shrink-0 text-center">수량</div>
-            <div className="w-22 shrink-0 text-right">주문 금액</div>
+            <div className="w-24 shrink-0 text-right">주문 금액</div>
             <div className="w-26 shrink-0 text-center">환불 금액</div>
             <div className="w-20 shrink-0 text-center">환불 수량</div>
             <div className="w-20 shrink-0 text-center">재고 복구</div>
@@ -111,14 +111,14 @@ export default function PartialRefund() {
                 <p className={`w-10 shrink-0 text-center text-sm`}>{item.count}</p>
 
                 {/* 상품 금액 + 과세/비과세 */}
-                <div className={`flex w-22 shrink-0 flex-col items-end gap-0.5`}>
+                <div className={`flex w-24 shrink-0 flex-col items-end gap-0.5`}>
                   <p className="text-sm font-medium">
                     {(item.price * item.count).toLocaleString()}원
                   </p>
                   <p className="text-contrast/70 text-[11px]">
                     (가격 {item.price.toLocaleString()}원)
                   </p>
-                  <span className="text-contrast/50 text-[10px]">{`${item.tax_state}상품`}</span>
+                  <span className="text-contrast/50 text-[10px] font-semibold">{`${item.tax_state}상품`}</span>
                 </div>
 
                 {/* 환불 금액 / 환불 수량 / 재고 복구 / 정산제외 영역 */}
@@ -241,13 +241,13 @@ export default function PartialRefund() {
             </span>
           </div>
           <div className="flex items-center justify-end gap-8">
-            <span className="text-sm text-gray-600">총 주문 금액</span>
-            <span className="w-28 text-right text-sm text-gray-900">
+            <span className="text-contrast text-sm">총 주문 금액</span>
+            <span className="text-contrast w-28 text-right text-sm">
               {form.order_amount?.toLocaleString()} 원
             </span>
           </div>
-          <div className="mt-2 flex items-center justify-end gap-8 border-t border-gray-100 pt-2">
-            <span className="text-sm font-semibold text-gray-900">환불 금액</span>
+          <div className="border-border mt-2 flex items-center justify-end gap-8 border-t pt-2">
+            <span className="text-contrast text-sm font-semibold">환불 금액</span>
             <span className="w-28 text-right text-base font-semibold text-red-500">
               {totalRefundAmount.toLocaleString()} 원
             </span>
