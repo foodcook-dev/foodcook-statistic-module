@@ -43,7 +43,12 @@ export function usePartialRefundForm() {
   useEffect(() => {
     if (!refundData || initialized) return;
 
-    const validIds = new Set(refundData.order_items.map((i) => i.id));
+    // 환불 가능한 상품 중에서 initialItemIds에 해당하는 상품을 edits에 초기화
+    const validIds = new Set(
+      refundData.order_items.map((i) => {
+        if (i.available_refund_amount > 0) return i.id;
+      }),
+    );
     const initialMap = new Map<number, EditableItemFields>();
     initialItemIds.forEach((id) => {
       if (validIds.has(id)) {

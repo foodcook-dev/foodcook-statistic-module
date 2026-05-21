@@ -116,17 +116,15 @@ export default function PartialRefund() {
                     {(item.price * item.count).toLocaleString()}원
                   </p>
                   <p className="text-contrast/70 text-[11px]">
-                    (단가 {item.price.toLocaleString()}원)
+                    (가격 {item.price.toLocaleString()}원)
                   </p>
-                  <span className="text-contrast/50 text-[10px]">
-                    {item.tax_state ? '과세상품' : '비과세상품'}
-                  </span>
+                  <span className="text-contrast/50 text-[10px]">{`${item.tax_state}상품`}</span>
                 </div>
 
                 {/* 환불 금액 / 환불 수량 / 재고 복구 / 정산제외 영역 */}
                 {isDisabled ? (
                   <div className="text-contrast flex w-145 shrink-0 items-center justify-center text-xs font-semibold">
-                    이미 환불 처리된 상품입니다
+                    이미 모든 금액이 환불 처리된 상품입니다.
                   </div>
                 ) : (
                   <>
