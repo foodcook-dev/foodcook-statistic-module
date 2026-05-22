@@ -27,14 +27,56 @@ export default function PartialRefund() {
           <p className="text-contrast text-[30px] font-bold tracking-widest">부 분 환 불</p>
         </div>
 
-        <div className="text-contrast/80 border-border flex flex-col gap-2 border-b border-dashed pb-4 text-sm">
-          <div className="flex justify-between">
-            <span>주문 ID</span>
-            <span>{orderId}</span>
+        <div className="text-contrast/80 border-border flex flex-col gap-4 border-b border-dashed pb-4 text-sm">
+          {/* 주문 기본 */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+            <div className="flex justify-between">
+              <span className="text-contrast/55">주문 ID</span>
+              <span className="font-medium tabular-nums">{orderId}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-contrast/55">주문 상태</span>
+              <span className="font-medium">{form.order_state ?? '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-contrast/55">주문 플랫폼</span>
+              <span className="font-medium">{form.platform ?? '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-contrast/55">환불 수단</span>
+              <span className="font-medium">{form.refund_method || '주문 시 결제수단'}</span>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span>환불수단</span>
-            <span>{form.refund_method || '주문 시 결제수단'}</span>
+
+          <div className="border-contrast/10 border-t border-dotted" />
+
+          {/* 사업자 / 가맹점 */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+            <div className="flex justify-between">
+              <span className="text-contrast/55">판매 사업자</span>
+              <span className="text-right font-medium">
+                {form.sales_company_name ?? '-'}
+                {form.sales_company_b_no && (
+                  <span className="text-contrast/50 ml-1 block text-[11px] tabular-nums">
+                    {form.sales_company_b_no}
+                  </span>
+                )}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-contrast/55">가맹점</span>
+              <span className="font-medium">{form.franchise_name ?? '-'}</span>
+            </div>
+          </div>
+
+          <div className="border-contrast/10 border-t border-dotted" />
+
+          {/* 배송 */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+            <div className="flex justify-between">
+              <span className="text-contrast/55">배송 기사</span>
+              <span className="font-medium">{form.driver || '-'}</span>
+            </div>
           </div>
         </div>
 

@@ -2,6 +2,12 @@ import { PartialRefundInfo } from '@/types/partial-refund';
 
 export const initialRefundInfo: PartialRefundInfo = {
   order_id: 0,
+  order_state: '',
+  platform: '',
+  sales_company_name: null,
+  sales_company_b_no: null,
+  franchise_name: null,
+  driver: '',
   order_tax_amount: 0,
   order_tax_free_amount: 0,
   order_amount: 0,

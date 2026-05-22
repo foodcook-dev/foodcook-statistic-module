@@ -16,6 +16,12 @@ export type OrderItem = {
 
 export type PartialRefundInfo = {
   order_id: number; // 환불 대상 주문 ID
+  order_state: string; // 주문 상태
+  platform: string; // 주문 플랫폼
+  sales_company_name: string | null; // 판매 사업자
+  sales_company_b_no: string | null; // 판매 사업자 등록번호
+  franchise_name: string | null; // 가맹점명
+  driver: string; // 배송기사
   order_tax_amount: number; // 주문 총 과세 금액
   order_tax_free_amount: number; // 주문 총 비과세 금액
   order_amount: number; // 주문 총 금액
