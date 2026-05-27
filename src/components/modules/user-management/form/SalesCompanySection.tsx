@@ -1,7 +1,8 @@
 import { forwardRef, useImperativeHandle } from 'react';
-import { LabeledInput, Label } from '@/components/modules/LabeledInput';
+import { LabeledInput } from '@/components/modules/LabeledInput';
 import { LabeledSelect } from '@/components/modules/LabeledSelect';
-import { Textarea } from '@/components/ui/textarea';
+import { LabeledTextarea } from '@/components/modules/LabeledTextArea';
+import { FieldWrapper } from '@/components/modules/FormField';
 import { Button } from '@/components/ui/button';
 import { SalesCompanyInfo } from '@/types/user-management';
 import { SectionCard } from './SectionCard';
@@ -285,25 +286,23 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
 
         <hr className="border-border my-1" />
 
-        <div>
-          <Label id="note" label="비고" />
-          <Textarea
-            id="note"
-            name="note"
-            value={form.note}
-            onChange={onChange}
-            placeholder="비고를 입력하세요."
-          />
-        </div>
+        <LabeledTextarea
+          id="note"
+          name="note"
+          label="특이사항"
+          value={form.note}
+          onChange={onChange}
+          placeholder="판매사업자 특이사항을 입력하세요."
+          helperText="주문서에 출력되는 판매사업자 특이사항으로 배송지의 상세한 위치나 배송 시 주의사항 등을 입력해주세요."
+        />
 
-        <div className="flex items-center justify-end gap-3">
-          <Label id="is_test" label="테스트 계정" />
+        <FieldWrapper name="is_test" label="테스트 계정" className="flex-row justify-end">
           <Switch
             id="is_test"
             checked={form.is_test}
             onCheckedChange={(checked) => onPaymentToggle('is_test', checked)}
           />
-        </div>
+        </FieldWrapper>
       </SectionCard>
     );
   },

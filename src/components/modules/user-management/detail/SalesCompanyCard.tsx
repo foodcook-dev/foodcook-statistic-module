@@ -55,7 +55,7 @@ export default function SalesCompanyCard({
   ];
 
   return (
-    <div className="bg-background border-border flex w-full max-w-[900px] flex-col overflow-hidden rounded-md border">
+    <div className="bg-background border-border flex w-full max-w-[900px] flex-col rounded-md border">
       <div className="border-border bg-foreground flex h-[80px] items-center gap-3 border-b px-5">
         <div className="bg-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
           <Building2 className="text-primary h-6 w-6" />
@@ -118,7 +118,15 @@ export default function SalesCompanyCard({
           {data.franchise_display && <InfoRow label="프랜차이즈" value={data.franchise_display} />}
           {data.driver_display && <InfoRow label="배송기사" value={data.driver_display} />}
           {data.manager_display && <InfoRow label="담당자" value={data.manager_display} />}
-          {data.note && <InfoRow label="비고" value={data.note} />}
+          {data.note && (
+            <InfoRow
+              label="특이사항"
+              value={data.note}
+              description={
+                '주문서에 출력되는 판매사업자 특이사항입니다.\n배송지의 상세한 위치나 배송 시 주의사항 등을 입력해주세요.'
+              }
+            />
+          )}
         </div>
       </div>
 

@@ -64,14 +64,14 @@ export default function UserManagementDetail() {
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <Tabs defaultValue="sales-company" className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Tabs defaultValue="sales-company" className="flex flex-1 flex-col">
           <div className="bg-background z-10">
             <TabsList>
               <TabsTrigger value="sales-company">판매사업자</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="sales-company" className="flex-1 overflow-y-auto pt-4">
+          <TabsContent value="sales-company" className="flex-1 pt-4">
             {salesCompanyInfo ? (
               <SalesCompanyCard companyId={companyId} data={salesCompanyInfo} />
             ) : (
