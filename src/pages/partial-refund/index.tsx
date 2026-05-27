@@ -21,7 +21,7 @@ export default function PartialRefund() {
   } = usePartialRefundForm();
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 p-8">
+    <div className="flex w-full flex-col items-center gap-4">
       <div className="border-gray300 bg-background flex w-full max-w-[1200px] flex-col gap-6 rounded-lg border p-6">
         <div className="border-border flex flex-col items-center gap-1 border-b-2 border-dashed pb-5">
           <p className="text-contrast text-[30px] font-bold tracking-widest">부 분 환 불</p>
@@ -36,11 +36,11 @@ export default function PartialRefund() {
             </div>
             <div className="flex justify-between">
               <span className="text-contrast/55">주문 상태</span>
-              <span className="font-medium">{form.order_state ?? '-'}</span>
+              <span className="font-medium">{form.order_state}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-contrast/55">주문 플랫폼</span>
-              <span className="font-medium">{form.platform ?? '-'}</span>
+              <span className="font-medium">{form.platform}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-contrast/55">환불 수단</span>
@@ -53,19 +53,19 @@ export default function PartialRefund() {
           {/* 사업자 / 가맹점 */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-2">
             <div className="flex justify-between">
-              <span className="text-contrast/55">판매 사업자</span>
+              <span className="text-contrast/55">판매사업자 (사업자등록번호)</span>
               <span className="text-right font-medium">
-                {form.sales_company_name ?? '-'}
+                {form.sales_company_name}
                 {form.sales_company_b_no && (
-                  <span className="text-contrast/50 ml-1 block text-[11px] tabular-nums">
+                  <span className="text-contrast/50 block text-[12px] tabular-nums">
                     {form.sales_company_b_no}
                   </span>
                 )}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-contrast/55">가맹점</span>
-              <span className="font-medium">{form.franchise_name ?? '-'}</span>
+              <span className="text-contrast/55">프랜차이즈</span>
+              <span className="font-medium">{form.franchise_name}</span>
             </div>
           </div>
 
@@ -75,7 +75,7 @@ export default function PartialRefund() {
           <div className="grid grid-cols-2 gap-x-8 gap-y-2">
             <div className="flex justify-between">
               <span className="text-contrast/55">배송 기사</span>
-              <span className="font-medium">{form.driver || '-'}</span>
+              <span className="font-medium">{form.driver}</span>
             </div>
           </div>
         </div>
