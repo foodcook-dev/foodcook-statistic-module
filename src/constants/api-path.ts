@@ -1,6 +1,6 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 const ERP_BASE_URL = import.meta.env.VITE_ERP_BASE_URL;
-// const TEST_ERP_BASE_URL = import.meta.env.VITE_TEST_ERP_BASE_URL;
+const TEST_ERP_BASE_URL = import.meta.env.VITE_TEST_ERP_BASE_URL;
 
 const API = {
   getVegetableAvailableDate: `/order/available-vegetable-purchase-date`,
@@ -51,4 +51,4 @@ const API = {
   getRefundPartnerCompany: () => `/user-dashboard/partner-companies/`,
 };
 
-export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, api: API };
+export const PATH = { base: BASE_URL, erp: ERP_BASE_URL, test_erp: TEST_ERP_BASE_URL, api: API };
