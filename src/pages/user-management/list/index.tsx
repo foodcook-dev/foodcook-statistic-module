@@ -45,13 +45,18 @@ export default function UserManagementList() {
   const updateSearchParams = useCallback(
     (params: SearchParams) => {
       const next = new URLSearchParams();
+
+      const currentToken = searchParams.get('token');
+      if (currentToken) next.set('token', currentToken);
+
       if (params.keyword) next.set('keyword', params.keyword);
       if (params.platform) next.set('platform', params.platform);
       if (params.business_verification_status)
         next.set('business_verification_status', params.business_verification_status);
+
       setSearchParams(next, { replace: true });
     },
-    [setSearchParams],
+    [setSearchParams, searchParams],
   );
 
   const handleRowClicked = useCallback(
