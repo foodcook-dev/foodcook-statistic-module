@@ -6,11 +6,18 @@ import {
   SalesCompanySection,
   SalesCompanySectionRef,
 } from '@/components/modules/user-management/form/SalesCompanySection';
+import {
+  SubBusinessSection,
+  SubBusinessSectionRef,
+} from '@/components/modules/user-management/form/SubBusinessSection';
 import { showToastMessage } from '@/libs/toast-message';
 import { postSalesCompanyCreate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { buildFormData } from '@/libs/form-data-builder';
-import { toSalesCompanyFields } from '@/constants/user-management/form-data-field';
+import {
+  toSalesCompanyFields,
+  toSubBusinessFields,
+} from '@/constants/user-management/form-data-field';
 
 export default function SalesCompanyCreate() {
   const queryClient = useQueryClient();
@@ -18,6 +25,7 @@ export default function SalesCompanyCreate() {
   const setAlert = useAlert();
   const { id } = useParams<{ id: string }>();
   const salesInfoRef = useRef<SalesCompanySectionRef>(null);
+  const subBusinessRef = useRef<SubBusinessSectionRef>(null);
 
   const { mutate: createSalesCompany, isPending } = useMutation({
     mutationFn: (data: FormData) => postSalesCompanyCreate(Number(id), data),
@@ -36,18 +44,32 @@ export default function SalesCompanyCreate() {
 
   const handleSubmit = async () => {
     const isSalesValid = salesInfoRef.current?.validate() ?? false;
+    const isSubBusinessValid = subBusinessRef.current?.validate() ?? true;
 
-    if (!isSalesValid) return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
+    if (!isSalesValid || !isSubBusinessValid)
+      return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const salesInfo = salesInfoRef.current!.getFormData();
+    const isSubBusiness = subBusinessRef.current!.isEnabled();
 
-    createSalesCompany(buildFormData(toSalesCompanyFields(salesInfo)));
+    const sources: Parameters<typeof buildFormData> = [
+      toSalesCompanyFields(salesInfo),
+      { fields: { is_sub_business: isSubBusiness } },
+    ];
+
+    // 종사업장 여부가 꺼져 있으면 sub_business_info는 아예 보내지 않는다.
+    if (isSubBusiness) {
+      sources.push(toSubBusinessFields(subBusinessRef.current!.getFormData(), 'sub_business_info'));
+    }
+
+    createSalesCompany(buildFormData(...sources));
   };
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-4 p-8">
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <SalesCompanySection ref={salesInfoRef} />
+        <SubBusinessSection ref={subBusinessRef} />
 
         <div className="flex justify-end pb-8">
           <Button onClick={handleSubmit} disabled={isPending}>

@@ -1,4 +1,9 @@
-import { SalesBranchInfo, SalesCompanyInfo, UserInfo } from '@/types/user-management';
+import {
+  SalesBranchInfo,
+  SalesCompanyInfo,
+  SubBusinessInfo,
+  UserInfo,
+} from '@/types/user-management';
 
 export const toUserFields = (info: UserInfo) => ({
   fields: {
@@ -93,4 +98,14 @@ export const toSalesBranchFields = (info: SalesBranchInfo) => ({
     is_default: info.is_default,
   },
   files: { cert_image: info.cert_image as File | undefined },
+});
+
+export const toSubBusinessFields = (info: SubBusinessInfo, prefix?: string) => ({
+  fields: {
+    serial_number: info.serial_number,
+    b_nm: info.b_nm,
+    address: info.address + (info.address_detail ? ', ' + info.address_detail : ''),
+  },
+  files: { image: info.image as File | undefined },
+  prefix,
 });

@@ -5,12 +5,6 @@ import { cn } from '@/utils/common';
 const ACCEPTED = ['image/jpeg', 'image/png', 'application/pdf'];
 const MAX_SIZE_MB = 10;
 
-interface BusinessLicenseUploadProps {
-  onChange: (file: File | null) => void;
-  error?: string;
-  isLoading?: boolean;
-}
-
 type UploadedFile =
   | { type: 'image'; file: File; previewUrl: string }
   | { type: 'image-url'; previewUrl: string }
@@ -21,6 +15,10 @@ interface BusinessLicenseUploadProps {
   error?: string;
   isLoading?: boolean;
   initialUrl?: string;
+
+  label?: string;
+  description?: string;
+  loadingText?: string;
 }
 
 export function BusinessLicenseUpload({
@@ -28,6 +26,9 @@ export function BusinessLicenseUpload({
   error,
   isLoading,
   initialUrl,
+  label = '사업자등록증',
+  description = '사업자등록증을 업로드하면 인식된 정보가 자동으로 입력됩니다.',
+  loadingText = '사업자등록증 인식 중...',
 }: BusinessLicenseUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -85,14 +86,14 @@ export function BusinessLicenseUpload({
       <div className="bg-background border-border relative overflow-hidden rounded-lg border">
         <img
           src={uploaded.previewUrl}
-          alt="사업자등록증 미리보기"
+          alt={`${label} 미리보기`}
           className="bg-secondary h-32 w-full object-contain"
         />
 
         {isLoading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
             <Loader2 className="h-6 w-6 animate-spin text-white" />
-            <span className="text-sm text-white">사업자등록증 인식 중...</span>
+            <span className="text-sm text-white">{loadingText}</span>
           </div>
         )}
 
@@ -108,7 +109,7 @@ export function BusinessLicenseUpload({
               </>
             ) : (
               <>
-                <span className="text-contrast truncate text-sm">등록된 사업자등록증</span>
+                <span className="text-contrast truncate text-sm">등록된 {label}</span>
                 <a
                   href={uploaded.previewUrl}
                   target="_blank"
@@ -134,7 +135,7 @@ export function BusinessLicenseUpload({
 
   return (
     <div className="flex w-full flex-col gap-1.5">
-      <label className="text-sm leading-none font-medium">사업자등록증</label>
+      <label className="text-sm leading-none font-medium">{label}</label>
 
       {!uploaded ? (
         <div
@@ -158,9 +159,7 @@ export function BusinessLicenseUpload({
             <p className="text-contrast/60 flex items-center text-sm">
               클릭하거나 파일을 여기로 드래그하세요. (JPG, PNG, PDF · 최대 {MAX_SIZE_MB}MB)
             </p>
-            <p className="text-contrast text-sm">
-              사업자등록증을 업로드하면 인식된 정보가 자동으로 입력됩니다.
-            </p>
+            {description && <p className="text-contrast text-sm">{description}</p>}
           </div>
           <input
             ref={inputRef}

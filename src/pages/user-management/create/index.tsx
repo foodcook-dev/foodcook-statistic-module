@@ -10,6 +10,10 @@ import {
   SalesCompanySection,
   SalesCompanySectionRef,
 } from '@/components/modules/user-management/form/SalesCompanySection';
+import {
+  SubBusinessSection,
+  SubBusinessSectionRef,
+} from '@/components/modules/user-management/form/SubBusinessSection';
 import { showToastMessage } from '@/libs/toast-message';
 import { postReferralCodeValidate, postUserCreate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
@@ -17,6 +21,7 @@ import { buildFormData } from '@/libs/form-data-builder';
 import {
   toRefundFields,
   toSalesCompanyFields,
+  toSubBusinessFields,
   toUserFields,
 } from '@/constants/user-management/form-data-field';
 
@@ -25,6 +30,7 @@ export default function UserManagementCreate() {
   const setAlert = useAlert();
   const userInfoRef = useRef<UserInfoSectionRef>(null);
   const salesInfoRef = useRef<SalesCompanySectionRef>(null);
+  const subBusinessRef = useRef<SubBusinessSectionRef>(null);
 
   const { mutateAsync: validateReferralCode } = useMutation({
     mutationFn: (code: string) => postReferralCodeValidate(code),
@@ -58,23 +64,31 @@ export default function UserManagementCreate() {
   const handleSubmit = async () => {
     const isUserValid = userInfoRef.current?.validate() ?? false;
     const isSalesValid = salesInfoRef.current?.validate() ?? false;
+    const isSubBusinessValid = subBusinessRef.current?.validate() ?? true;
 
-    if (!isUserValid || !isSalesValid)
+    if (!isUserValid || !isSalesValid || !isSubBusinessValid)
       return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const userInfo = userInfoRef.current!.getFormData();
     const salesInfo = salesInfoRef.current!.getFormData();
+    const isSubBusiness = subBusinessRef.current!.isEnabled();
 
     // 추천인 코드가 입력된 경우에만 검증 수행
     if (userInfo.referral_code) await validateReferralCode(userInfo.referral_code);
 
-    createUser(
-      buildFormData(
-        toUserFields(userInfo),
-        toRefundFields(userInfo, 'refund_account_info'),
-        toSalesCompanyFields(salesInfo, 'sales_company_info'),
-      ),
-    );
+    const sources: Parameters<typeof buildFormData> = [
+      toUserFields(userInfo),
+      toRefundFields(userInfo, 'refund_account_info'),
+      toSalesCompanyFields(salesInfo, 'sales_company_info'),
+      { fields: { is_sub_business: isSubBusiness } },
+    ];
+
+    // 종사업장 여부가 꺼져 있으면 sub_business_info는 아예 보내지 않는다.
+    if (isSubBusiness) {
+      sources.push(toSubBusinessFields(subBusinessRef.current!.getFormData(), 'sub_business_info'));
+    }
+
+    createUser(buildFormData(...sources));
   };
 
   return (
@@ -82,6 +96,7 @@ export default function UserManagementCreate() {
       <div className="flex w-full max-w-[1200px] flex-col gap-4">
         <UserInfoSection ref={userInfoRef} />
         <SalesCompanySection ref={salesInfoRef} />
+        <SubBusinessSection ref={subBusinessRef} />
 
         <div className="flex justify-end pb-8">
           <Button onClick={handleSubmit} disabled={isPending}>

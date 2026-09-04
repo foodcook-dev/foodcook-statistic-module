@@ -1,4 +1,9 @@
-import { UserInfo, SalesCompanyInfo, SalesBranchInfo } from '@/types/user-management';
+import {
+  UserInfo,
+  SalesCompanyInfo,
+  SalesBranchInfo,
+  SubBusinessInfo,
+} from '@/types/user-management';
 
 export const initialUserInfo: UserInfo = {
   username: '',
@@ -64,4 +69,12 @@ export const initialBranchInfo: SalesBranchInfo = {
   is_active: true,
   is_confirmed: true,
   is_default: false,
+};
+
+export const initialSubBusinessInfo: SubBusinessInfo = {
+  image: null,
+  serial_number: '',
+  b_nm: '',
+  address: '',
+  address_detail: '',
 };

@@ -19,7 +19,8 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
       >
         <div className="flex min-w-0 flex-1 items-end gap-2">
           <span className="text-contrast text-[14px] font-medium">
-            {branch.type === 'main' ? '본사' : '종사업장'}
+            {/* {branch.type === 'main' ? '본사' : '종사업장'} */}
+            {`지점명 : ${branch.allias}`}
           </span>
           <button
             onClick={(e) => {
@@ -30,7 +31,6 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
           >
             <Pencil className="h-3 w-3" />
           </button>
-          <span className="text-contrast/70 text-[11px]">#{branch.allias}</span>
         </div>
         {branch.is_default && (
           <span className="bg-primary/10 text-primary rounded px-1.5 py-0.5 text-[12px] font-medium">
@@ -47,8 +47,10 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
       {open && (
         <div className="border-border border-t px-4 pt-2.5 pb-3 text-[12px]">
           <InfoRow label="사업자번호" value={branch.b_no} />
-          <InfoRow label="주소" value={branch.address} />
-          <InfoRow label="상세주소" value={branch.address_detail ?? ''} />
+          <InfoRow
+            label="주소"
+            value={`${branch.address} ${branch.address_detail ? `, ${branch.address_detail}` : ''} `}
+          />
           <InfoRow label="배송 메모" value={branch.delivery_memo ?? ''} />
           <InfoRow label="출입문 비밀번호" value={branch.gate_password ?? ''} />
           {branch.delivery_available_days !== null && (

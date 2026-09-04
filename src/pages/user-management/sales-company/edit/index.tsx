@@ -6,11 +6,18 @@ import {
   SalesCompanySection,
   SalesCompanySectionRef,
 } from '@/components/modules/user-management/form/SalesCompanySection';
+import {
+  SubBusinessSection,
+  SubBusinessSectionRef,
+} from '@/components/modules/user-management/form/SubBusinessSection';
 import { getSalesCompanyDetail, patchSalesCompanyUpdate } from '@/libs/user-management-api';
 import { useAlert } from '@/hooks/useAlert';
 import { showToastMessage } from '@/libs/toast-message';
 import { buildFormData } from '@/libs/form-data-builder';
-import { toSalesCompanyFields } from '@/constants/user-management/form-data-field';
+import {
+  toSalesCompanyFields,
+  toSubBusinessFields,
+} from '@/constants/user-management/form-data-field';
 
 export default function SalesCompanyEdit() {
   const queryClient = useQueryClient();
@@ -18,6 +25,7 @@ export default function SalesCompanyEdit() {
   const { companyId } = useParams<{ companyId: string }>();
   const setAlert = useAlert();
   const salesInfoRef = useRef<SalesCompanySectionRef>(null);
+  const subBusinessRef = useRef<SubBusinessSectionRef>(null);
 
   const { data: salesCompanyInfo, isLoading } = useQuery({
     queryKey: ['salesCompanyDetail', companyId],
@@ -38,11 +46,26 @@ export default function SalesCompanyEdit() {
   });
 
   const handleSubmit = () => {
-    if (!salesInfoRef.current?.validate())
+    const isSalesValid = salesInfoRef.current?.validate() ?? false;
+    const isSubBusinessValid = subBusinessRef.current?.validate() ?? true;
+
+    if (!isSalesValid || !isSubBusinessValid)
       return setAlert({ message: '미입력 또는 잘못입력된 정보가 있습니다.' });
 
     const salesInfo = salesInfoRef.current!.getFormData();
-    updateSalesCompany(buildFormData(toSalesCompanyFields(salesInfo)));
+    const isSubBusiness = subBusinessRef.current!.isEnabled();
+
+    const sources: Parameters<typeof buildFormData> = [
+      toSalesCompanyFields(salesInfo),
+      { fields: { is_sub_business: isSubBusiness } },
+    ];
+
+    // 종사업장 여부가 꺼져 있으면 sub_business_info는 아예 보내지 않는다.
+    if (isSubBusiness) {
+      sources.push(toSubBusinessFields(subBusinessRef.current!.getFormData(), 'sub_business_info'));
+    }
+
+    updateSalesCompany(buildFormData(...sources));
   };
 
   if (isLoading || !salesCompanyInfo) return null;
@@ -50,6 +73,11 @@ export default function SalesCompanyEdit() {
   // address를 주소/상세주소로 분리 (', ' 기준)
   const [address, ...addressDetailParts] = (salesCompanyInfo.address ?? '').split(', ');
   const address_detail = addressDetailParts.join(', ');
+
+  // 종사업장이 등록되어 있으면 스위치를 켠 상태로 열고 값을 바인딩한다.
+  const subBusiness = salesCompanyInfo.sub_business_info;
+  const [subAddress, ...subAddressDetailParts] = (subBusiness?.address ?? '').split(', ');
+  const subAddressDetail = subAddressDetailParts.join(', ');
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-4">
@@ -87,6 +115,18 @@ export default function SalesCompanyEdit() {
             jette_sales_company_code: salesCompanyInfo.jette_sales_company_code ?? '',
             foodist_sales_company_code: salesCompanyInfo.foodist_sales_company_code ?? '',
           }}
+        />
+        <SubBusinessSection
+          ref={subBusinessRef}
+          specImageUrl={subBusiness?.image ?? undefined}
+          initialData={
+            subBusiness && {
+              serial_number: subBusiness.serial_number,
+              b_nm: subBusiness.b_nm,
+              address: subAddress,
+              address_detail: subAddressDetail,
+            }
+          }
         />
 
         <div className="flex justify-end pb-8">

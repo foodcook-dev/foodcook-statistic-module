@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { Building2, FileText, Pencil } from 'lucide-react';
@@ -9,7 +10,7 @@ import { useAlert } from '@/hooks/useAlert';
 import { useConfirm } from '@/hooks/useConfirm';
 import { InfoRow } from './InfoRow';
 import { BranchItem } from './BranchItem';
-import { Button } from '@/components/ui/button';
+import { SalesCompanyConfirmDialog } from './SalesCompanyConfirmDialog';
 
 export default function SalesCompanyCard({
   companyId,
@@ -22,6 +23,7 @@ export default function SalesCompanyCard({
   const navigate = useNavigate();
   const setAlert = useAlert();
   const setConfirm = useConfirm();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const formatDate = (iso: string) => dayjs(iso).format('YYYY년 MM월 DD일');
 
   const { mutate: confirmCompany } = useMutation({
@@ -33,19 +35,20 @@ export default function SalesCompanyCard({
     },
   });
 
-  const handleConfirm = (confirm: boolean) => {
+  // 승인 취소는 변경 항목이 없어 공용 confirm을 사용한다.
+  const handleCancelConfirm = () => {
     setConfirm({
-      title: confirm ? '사업자 승인' : '사업자 승인 취소',
-      message: confirm
-        ? '사업자 승인을 진행하시겠습니까?'
-        : '사업자 승인을 취소하시겠습니까? 승인 취소 시 해당 사업자는 활동이 제한됩니다.',
-      confirmText: confirm ? '승인하기' : '승인 취소',
-      onConfirm: () => confirmCompany(confirm),
+      title: '사업자 승인 취소',
+      message: '사업자 승인을 취소하시겠습니까? 승인 취소 시 해당 사업자는 활동이 제한됩니다.',
+      confirmText: '승인 취소',
+      onConfirm: () => confirmCompany(false),
     });
   };
 
   const isAllDays =
     !data.delivery_available_days || Object.keys(data.delivery_available_days).length === 0;
+
+  const subBusiness = data.sub_business_info;
 
   const paymentMethods = [
     { label: '만나서 결제', value: data.is_meet_pay_available },
@@ -74,14 +77,14 @@ export default function SalesCompanyCard({
         </div>
         {data.is_confirmed ? (
           <button
-            onClick={() => handleConfirm(false)}
+            onClick={handleCancelConfirm}
             className="flex shrink-0 items-center gap-1 rounded-md bg-red-500/10 px-2.5 py-1.5 text-[12px] font-bold text-red-500"
           >
             승인 취소
           </button>
         ) : (
           <button
-            onClick={() => handleConfirm(true)}
+            onClick={() => setIsConfirmOpen(true)}
             className="flex shrink-0 items-center gap-1 rounded-md bg-emerald-500 px-2.5 py-1.5 text-[12px] font-bold text-white"
           >
             사업자 승인
@@ -91,23 +94,22 @@ export default function SalesCompanyCard({
 
       {/* 사업장 정보 */}
       <div className="border-border border-b px-5 py-4">
-        <p className="text-contrast/90 mb-2.5 text-sm font-medium tracking-widest">사업장 정보</p>
+        <div className="mb-2.5 flex items-center justify-between">
+          <p className="text-contrast/90 text-sm font-medium tracking-widest">사업장 정보</p>
+          {data.cert_image ? (
+            <a
+              href={data.cert_image}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/70 flex items-center gap-1 text-[12px] font-medium transition-colors"
+            >
+              <FileText className="h-3.5 w-3.5" /> 사업자등록증 보기
+            </a>
+          ) : (
+            <span className="text-contrast/40 text-[12px]">사업자등록증 미등록</span>
+          )}
+        </div>
         <div className="text-[12px]">
-          <div className="flex items-center">
-            <span className="text-contrast/70 w-[40%] py-[5px]">사업자등록증</span>
-            {data.cert_image ? (
-              <a
-                href={data.cert_image}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-primary/70 flex items-center gap-1 py-[5px] text-[12px] font-medium transition-colors"
-              >
-                <FileText className="h-3.5 w-3.5" /> 파일 보기
-              </a>
-            ) : (
-              <span className="text-contrast/40 py-[5px]">미등록</span>
-            )}
-          </div>
           <InfoRow label="사업자번호" value={data.b_no} />
           <InfoRow label="대표자명" value={data.owner_name} />
           <InfoRow label="업태" value={data.b_sector} />
@@ -129,6 +131,30 @@ export default function SalesCompanyCard({
           )}
         </div>
       </div>
+
+      {/* 종사업장 정보 */}
+      {subBusiness && (
+        <div className="border-border border-b px-5 py-4">
+          <div className="mb-2.5 flex items-center justify-between">
+            <p className="text-contrast/90 text-sm font-medium tracking-widest">종사업장 정보</p>
+            {subBusiness.image && (
+              <a
+                href={subBusiness.image}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/70 flex items-center gap-1 text-[12px] font-medium transition-colors"
+              >
+                <FileText className="h-3.5 w-3.5" /> 종사업장 명세자료 보기
+              </a>
+            )}
+          </div>
+          <div className="text-[12px]">
+            <InfoRow label="일련번호" value={subBusiness.serial_number} />
+            <InfoRow label="상호명" value={subBusiness.b_nm} />
+            <InfoRow label="주소" value={subBusiness.address} />
+          </div>
+        </div>
+      )}
 
       {/* 외부 연동 코드 */}
       {(data.dongwon_sales_company_code ||
@@ -201,20 +227,17 @@ export default function SalesCompanyCard({
         </div>
       </div>
 
-      {/* 지점 목록 */}
       {!!data.sales_branch_info?.length && (
         <div className="border-border border-t px-5 py-4">
           <div className="mb-2.5 flex items-center justify-between">
-            <p className="text-contrast/90 text-sm font-medium tracking-widest">
-              지점 정보 ({data.sales_branch_info.length})
-            </p>
-            <Button
+            <p className="text-contrast/90 text-sm font-medium tracking-widest">지점 정보</p>
+            {/* <Button
               variant="outline"
               className="h-6 px-3 py-4 text-[12px]"
               onClick={() => navigate(`/user-management/sales-company/${companyId}/branch/create`)}
             >
               + 추가
-            </Button>
+            </Button> */}
           </div>
           <div className="flex flex-col gap-2">
             {data.sales_branch_info.map((branch) => (
@@ -223,6 +246,13 @@ export default function SalesCompanyCard({
           </div>
         </div>
       )}
+
+      <SalesCompanyConfirmDialog
+        open={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        data={data}
+        onConfirm={() => confirmCompany(true)}
+      />
     </div>
   );
 }
