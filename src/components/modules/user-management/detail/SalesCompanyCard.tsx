@@ -133,7 +133,7 @@ export default function SalesCompanyCard({
       </div>
 
       {/* 종사업장 정보 */}
-      {subBusiness && (
+      {subBusiness && Object.keys(subBusiness).length > 0 && (
         <div className="border-border border-b px-5 py-4">
           <div className="mb-2.5 flex items-center justify-between">
             <p className="text-contrast/90 text-sm font-medium tracking-widest">종사업장 정보</p>
