@@ -5,7 +5,7 @@ export function InfoRow({
   description,
 }: {
   label: string;
-  value?: string;
+  value?: React.ReactNode;
   fallback?: string;
   description?: string;
 }) {

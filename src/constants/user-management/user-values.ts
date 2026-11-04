@@ -65,6 +65,7 @@ export const initialBranchInfo: SalesBranchInfo = {
   delivery_memo: '',
   phone_num: '',
   gate_password: '',
+  note: '',
   delivery_available_days: {},
   is_active: true,
   is_confirmed: true,

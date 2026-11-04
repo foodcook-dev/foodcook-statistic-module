@@ -78,6 +78,7 @@ export default function SalesBranchEdit() {
             address_detail: branchInfo.address_detail || '',
             delivery_memo: branchInfo.delivery_memo || '',
             gate_password: branchInfo.gate_password || '',
+            note: branchInfo.note || '',
             phone_num: branchInfo.phone_num || '',
             delivery_available_days: branchInfo.delivery_available_days as Record<string, boolean>,
             is_active: branchInfo.is_active,

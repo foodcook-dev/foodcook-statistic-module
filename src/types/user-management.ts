@@ -60,6 +60,33 @@ export type UserDetailResponse = {
   };
 };
 
+export type SalesCompanyBranchInfo = {
+  id: number;
+  type: string;
+  allias: string;
+  manager: number | null;
+  manager_display: string | null;
+  note: string | null;
+  b_no: string;
+  owner_name: string;
+  start_dt: string;
+  b_sector: string;
+  b_type: string;
+  cert_image: string | null;
+  zip_code: string | null;
+  address: string;
+  address_detail: string;
+  delivery_memo: string | null;
+  gate_password: string | null;
+  phone_num: string | null;
+  delivery_available_days: Record<string, unknown> | null;
+  is_active: boolean;
+  is_confirmed: boolean;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export type SalesCompanyDetailResponse = {
   id: number;
   branch: number;
@@ -103,33 +130,7 @@ export type SalesCompanyDetailResponse = {
     image: string;
     serial_number: string;
   };
-  sales_branch_info: [
-    {
-      id: number;
-      type: string;
-      allias: string;
-      manager: number | null;
-      manager_display: string | null;
-      b_no: string;
-      owner_name: string;
-      start_dt: string;
-      b_sector: string;
-      b_type: string;
-      cert_image: string | null;
-      zip_code: string | null;
-      address: string;
-      address_detail: string;
-      delivery_memo: string | null;
-      gate_password: string | null;
-      phone_num: string | null;
-      delivery_available_days: Record<string, unknown> | null;
-      is_active: boolean;
-      is_confirmed: boolean;
-      is_default: boolean;
-      created_at: string;
-      updated_at: string;
-    },
-  ];
+  sales_branch_info: Array<SalesCompanyBranchInfo>;
 };
 
 // 종사업장 정보 (중복 사업자등록증으로 등록된 사업자의 종사업장)
@@ -209,6 +210,7 @@ export interface SalesBranchInfo {
   delivery_memo: string;
   phone_num: string;
   gate_password: string;
+  note: string;
   delivery_available_days: Record<string, boolean>;
   is_active: boolean;
   is_confirmed: boolean;

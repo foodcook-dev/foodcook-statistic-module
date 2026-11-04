@@ -293,7 +293,7 @@ export const SalesCompanySection = forwardRef<SalesCompanySectionRef, SalesCompa
           value={form.note}
           onChange={onChange}
           placeholder="판매사업자 특이사항을 입력하세요."
-          helperText="주문서에 출력되는 판매사업자 특이사항으로 배송지의 상세한 위치나 배송 시 주의사항 등을 입력해주세요."
+          helperText="주문서에 출력되는 특이사항으로 배송지의 상세한 위치나 배송 시 주의사항 등을 입력해주세요. (모든 지점의 특이사항과 연동되어 함께 반영됩니다.)"
         />
 
         <FieldWrapper name="is_test" label="테스트 계정" className="flex-row justify-end">

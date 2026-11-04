@@ -92,6 +92,7 @@ export const toSalesBranchFields = (info: SalesBranchInfo) => ({
     delivery_memo: info.delivery_memo || '',
     phone_num: info.phone_num || '',
     gate_password: info.gate_password || '',
+    note: info.note || '',
     delivery_available_days: info.delivery_available_days || {},
     is_active: info.is_active,
     is_confirmed: info.is_confirmed,

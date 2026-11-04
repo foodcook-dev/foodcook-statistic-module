@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Pencil } from 'lucide-react';
+import dayjs from 'dayjs';
 import { DAYS } from '@/constants/user-management/day';
 import { InfoRow } from './InfoRow';
-import dayjs from 'dayjs';
+import { SalesCompanyBranchInfo } from '@/types/user-management';
 
-export function BranchItem({ companyId, branch }: { companyId: number; branch: any }) {
+export function BranchItem({
+  companyId,
+  branch,
+}: {
+  companyId: number;
+  branch: SalesCompanyBranchInfo;
+}) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const formatDate = (iso: string) => dayjs(iso).format('YYYY년 MM월 DD일');
@@ -53,6 +60,7 @@ export function BranchItem({ companyId, branch }: { companyId: number; branch: a
           />
           <InfoRow label="배송 메모" value={branch.delivery_memo ?? ''} />
           <InfoRow label="출입문 비밀번호" value={branch.gate_password ?? ''} />
+          <InfoRow label="특이사항" value={branch.note ?? ''} />
           {branch.delivery_available_days !== null && (
             <div className="flex items-center py-[5px]">
               <p className="text-contrast/70 w-[40%]">배송 가능 요일</p>

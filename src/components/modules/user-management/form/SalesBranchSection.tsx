@@ -3,6 +3,7 @@ import { LabeledInput, Label } from '@/components/modules/LabeledInput';
 import { LabeledSelect } from '@/components/modules/LabeledSelect';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { LabeledTextarea } from '@/components/modules/LabeledTextArea';
 import { SectionCard } from './SectionCard';
 import { DeliveryDaysPicker } from './DeliveryDaysPicker';
 import { BusinessLicenseUpload } from './BusinessLicenseUpload';
@@ -255,6 +256,16 @@ export const SalesBranchSection = forwardRef<SalesBranchSectionRef, SalesBranchS
           value={branchInfoForm.gate_password}
           onChange={onChange}
           placeholder="출입문 비밀번호를 입력해주세요"
+        />
+
+        <LabeledTextarea
+          id="note"
+          name="note"
+          label="특이사항"
+          value={branchInfoForm.note}
+          onChange={onChange}
+          placeholder="지점 특이사항을 입력하세요."
+          helperText="주문서에 출력되는 특이사항으로 배송지의 상세한 위치나 배송 시 주의사항 등을 입력해주세요. (판매사업자 및 모든 지점의 특이사항과 연동되어 함께 반영됩니다.)"
         />
       </SectionCard>
     );
