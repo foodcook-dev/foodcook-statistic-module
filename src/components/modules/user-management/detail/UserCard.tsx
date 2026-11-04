@@ -3,8 +3,9 @@ import { Pencil } from 'lucide-react';
 import dayjs from 'dayjs';
 import { VerificationBadge } from '@/components/modules/user-management/detail/VerificationBadge';
 import { InfoRow } from './InfoRow';
+import { UserDetailResponse } from '@/types/user-management';
 
-export default function UserCard({ userId, data }: { userId: string; data: any }) {
+export default function UserCard({ userId, data }: { userId: string; data: UserDetailResponse }) {
   const navigate = useNavigate();
   const formatDate = (iso: string) => dayjs(iso).format('YYYY년 MM월 DD일 HH:mm');
   const formatPhone = (num: string) => num?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
@@ -46,6 +47,22 @@ export default function UserCard({ userId, data }: { userId: string; data: any }
           <InfoRow label="연락처" value={formatPhone(data.phone_num)} />
           <InfoRow label="이메일" value={data.email ?? undefined} />
           <InfoRow label="등급" value={data.tier_display ?? undefined} />
+          <InfoRow
+            label="환불 계좌"
+            value={
+              data.refund_account_info?.bank_name || data.refund_account_info?.account_number ? (
+                <>
+                  {data.refund_account_info.bank_name && (
+                    <span className="text-contrast/60 mr-1 font-normal">
+                      {data.refund_account_info.bank_name}
+                    </span>
+                  )}
+                  {data.refund_account_info.account_number}
+                </>
+              ) : undefined
+            }
+          />
+          <InfoRow label="환불 예금주" value={data.refund_account_info?.holder_name} />
           <InfoRow label="추천인" value={data.recommender_display ?? undefined} />
           <InfoRow label="추천인 코드" value={data.referral_code ?? undefined} />
           <InfoRow label="지난달 매출" value={`${data.last_month_sales.toLocaleString()}원`} />
