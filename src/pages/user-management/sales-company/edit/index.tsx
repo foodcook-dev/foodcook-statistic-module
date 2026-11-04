@@ -75,7 +75,10 @@ export default function SalesCompanyEdit() {
   const address_detail = addressDetailParts.join(', ');
 
   // 종사업장이 등록되어 있으면 스위치를 켠 상태로 열고 값을 바인딩한다.
-  const subBusiness = salesCompanyInfo.sub_business_info;
+  const subBusiness =
+    salesCompanyInfo.sub_business_info && Object.keys(salesCompanyInfo.sub_business_info).length > 0
+      ? salesCompanyInfo.sub_business_info
+      : undefined;
   const [subAddress, ...subAddressDetailParts] = (subBusiness?.address ?? '').split(', ');
   const subAddressDetail = subAddressDetailParts.join(', ');
 
