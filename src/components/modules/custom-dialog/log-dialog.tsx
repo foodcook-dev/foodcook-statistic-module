@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Logs } from 'lucide-react';
 import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
 import { useQuery } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { getLog } from '@/libs/purchaser-dashboard-api';
-import { SettlementType } from '@/types/settlement';
+import { SettlementLogItem, SettlementType } from '@/types/settlement';
 import { formatDate } from '@/utils/date';
 
 interface LogDialogProps {
@@ -34,16 +35,16 @@ export default function LogDialog({ type, companyId, detailId }: LogDialogProps)
 
   const renderAgGrid = () => {
     if (!data) return null;
-    const rows = Array.isArray(data) ? data : data.items || [];
+    const rows = data;
     if (!rows.length)
       return <div className="text-contrast h-full content-center py-8 text-center">No logs.</div>;
 
-    const columnDefs = [
+    const columnDefs: ColDef<SettlementLogItem>[] = [
       {
         headerName: '변경일자',
         field: 'status_changed_at',
         flex: 0.3,
-        valueFormatter: (params: { value?: string }) => formatDate(params.value),
+        valueFormatter: (params) => formatDate(params.value),
       },
       {
         headerName: '내용',
