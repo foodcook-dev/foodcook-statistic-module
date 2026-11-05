@@ -42,6 +42,7 @@ export function createNumericColumn(
     type: 'numericColumn',
     valueFormatter: (params: any) => {
       if (params.value == null) return '';
+      if (typeof params.value !== 'number') return String(params.value);
       return params.value.toLocaleString();
     },
     ...options,

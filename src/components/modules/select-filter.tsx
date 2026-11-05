@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useGridFilter } from 'ag-grid-react';
 import { IDoesFilterPassParams, IRowNode } from 'ag-grid-community';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ interface SelectFilterProps {
   api: GridApi;
   type: 'radio' | 'checkbox';
   structure: Array<{ key: string; label: string }>;
+  model: SelectFilterState | null;
   onModelChange: (model: SelectFilterState | null) => void;
   getValue: (node: IRowNode) => unknown;
 }
@@ -69,9 +70,25 @@ const useFilterState = (type: 'radio' | 'checkbox') => {
   };
 };
 
-const SelectFilter = ({ api, type, structure, onModelChange, getValue }: SelectFilterProps) => {
+const SelectFilter = ({
+  api,
+  type,
+  structure,
+  model,
+  onModelChange,
+  getValue,
+}: SelectFilterProps) => {
   const filterList = useFilterList(api, getValue, structure);
   const { selectedData, selectedRadioValue, setSelectedData, resetState } = useFilterState(type);
+
+  // '필터 초기화'(setFilterModel(null))처럼 그리드 밖에서 필터가 바뀌면 체크 상태를 맞춘다.
+  useEffect(() => {
+    if (!model) {
+      resetState();
+    } else if (type === 'checkbox') {
+      setSelectedData(model.values);
+    }
+  }, [model, type, resetState, setSelectedData]);
 
   const doesFilterPass = useCallback(
     (params: IDoesFilterPassParams) => {

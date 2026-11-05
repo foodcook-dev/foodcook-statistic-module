@@ -1,11 +1,13 @@
-import { type ColDef, type ColGroupDef, GridOptions } from 'ag-grid-community';
+import { type ColDef, type ColGroupDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { createBadgeRenderer, createTypeRenderer, createNumericColumn } from '@/libs/table-format';
 import { TYPE } from '@/constants/badge';
 import { TYPE_LIST, PAYMENT_LIST } from '@/constants/filter';
 import SelectFilter from '@/components/modules/select-filter';
 
 const typeRenderer = createBadgeRenderer(TYPE);
-const paymentRenderer = createTypeRenderer();
+const typeBadgeRenderer = createTypeRenderer();
+const paymentRenderer = (params: ICellRendererParams) =>
+  params.value ? typeBadgeRenderer(params) : '-';
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
   {

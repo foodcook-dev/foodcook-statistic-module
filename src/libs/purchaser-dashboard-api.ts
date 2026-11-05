@@ -1,5 +1,10 @@
 import { API } from '@/libs/api';
 import { PATH } from '@/constants/api-path';
+import {
+  BuyCompanyDetailResponse,
+  IntegratedCompanyResponse,
+  PartnerCompanyDetailResponse,
+} from '@/types/settlement';
 
 export const getIntegratedCompany = async (params: {
   startDate: string;
@@ -8,8 +13,8 @@ export const getIntegratedCompany = async (params: {
   sort: string;
   page: number;
   pageSize: number;
-}): Promise<any> => {
-  const response = await API.get(PATH.api.getIntegratedCompany, {
+}): Promise<IntegratedCompanyResponse> => {
+  const response = await API.get<IntegratedCompanyResponse>(PATH.api.getIntegratedCompany, {
     params: {
       start_date: params.startDate,
       end_date: params.endDate,
@@ -46,16 +51,19 @@ export const getBuyCompanyDetails = async ({
     page: number;
     pageSize: number;
   };
-}): Promise<any> => {
-  const response = await API.get(PATH.api.getBuyCompany(companyId) + 'details/', {
-    params: {
-      start_date: params.startDate,
-      end_date: params.endDate,
-      filter: params.filter,
-      page: params.page,
-      size: params.pageSize,
+}): Promise<BuyCompanyDetailResponse> => {
+  const response = await API.get<BuyCompanyDetailResponse>(
+    PATH.api.getBuyCompany(companyId) + 'details/',
+    {
+      params: {
+        start_date: params.startDate,
+        end_date: params.endDate,
+        filter: params.filter,
+        page: params.page,
+        size: params.pageSize,
+      },
     },
-  });
+  );
 
   return response.data;
 };
@@ -130,16 +138,19 @@ export const getPartnerCompanyDetails = async ({
     page: number;
     pageSize: number;
   };
-}): Promise<any> => {
-  const response = await API.get(PATH.api.getPartnerCompany(companyId) + 'details/', {
-    params: {
-      start_date: params.startDate,
-      end_date: params.endDate,
-      filter: params.filter,
-      page: params.page,
-      size: params.pageSize,
+}): Promise<PartnerCompanyDetailResponse> => {
+  const response = await API.get<PartnerCompanyDetailResponse>(
+    PATH.api.getPartnerCompany(companyId) + 'details/',
+    {
+      params: {
+        start_date: params.startDate,
+        end_date: params.endDate,
+        filter: params.filter,
+        page: params.page,
+        size: params.pageSize,
+      },
     },
-  });
+  );
 
   return response.data;
 };

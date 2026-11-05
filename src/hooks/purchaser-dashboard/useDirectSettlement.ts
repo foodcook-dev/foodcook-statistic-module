@@ -29,6 +29,9 @@ export const useDirectSettlement = () => {
   const setConfirm = useConfirm();
   const setAlert = useAlert();
   const gridRef = useRef<AgGridReact>(null);
+  // 그리드 하단 요약 줄: 조회 조건(기간·필터)을 반영한 행 수와 매입액 총합 (조회 전·실패 시 null)
+  const [totalCount, setTotalCount] = useState<number | null>(null);
+  const [totalPurchaseAmount, setTotalPurchaseAmount] = useState<number | null>(null);
   const today = new Date();
   const [dateRange, setDateRange] = useState<DateRange>(
     location.state?.dateRange || {
@@ -81,10 +84,14 @@ export const useDirectSettlement = () => {
           });
           const rowsThisBlock = response?.items || [];
           const totalRows = response?.total || 0;
+          setTotalCount(totalRows);
+          setTotalPurchaseAmount(response?.total_purchase_amount ?? null);
 
           params.successCallback(rowsThisBlock, totalRows);
         } catch (error) {
           console.error('Failed to fetch data:', error);
+          setTotalCount(null);
+          setTotalPurchaseAmount(null);
           params.failCallback();
         }
       },
@@ -93,6 +100,9 @@ export const useDirectSettlement = () => {
 
   const refreshGridData = useCallback(() => {
     if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
+      // 매입사·기간이 바뀌면 이전 조회의 요약이 잠깐이라도 남지 않도록 비운다.
+      setTotalCount(null);
+      setTotalPurchaseAmount(null);
       const newDataSource = createDataSource();
       gridRef.current.api.setGridOption('datasource', newDataSource);
     }
@@ -179,5 +189,7 @@ export const useDirectSettlement = () => {
     handleEdit: editPaymentRequest,
     handleDelete,
     onGridReady,
+    totalCount,
+    totalPurchaseAmount,
   };
 };

@@ -7,6 +7,9 @@ import InfoTable from '@/components/modules/info-table';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import { PARTNER_INFO } from './config/structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
+import FilterResetButton from '@/components/modules/filter-reset-button';
+import GridSummaryBar from '@/components/modules/grid-summary-bar';
+import { useGridFilterReset } from '@/hooks/useGridFilterReset';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { companyColumnDefs, createColumnDefs, gridOptions } from './config/grid-config';
 import { Tabs } from '@/components/modules/tab';
@@ -22,8 +25,11 @@ export default function ConsignmentSettlement() {
     handleEdit,
     handleDelete,
     onGridReady,
+    totalCount,
+    totalPurchaseAmount,
     handlePaymentSubmit,
   } = useConsignmentSettlement();
+  const { isFiltered, onFilterChanged, resetFilters } = useGridFilterReset(gridRef);
 
   const columnDefs = useMemo(
     () => createColumnDefs(handleEdit, handleDelete, selectedPartner.id),
@@ -75,6 +81,7 @@ export default function ConsignmentSettlement() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
           <ColumnStateResetButton
             storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
             gridApi={gridRef.current?.api}
@@ -83,18 +90,34 @@ export default function ConsignmentSettlement() {
         </div>
       </div>
       <InfoTable data={PARTNER_INFO} info={partnerInfo} />
-      <div className="h-[500px] w-full">
-        {!selectedPartner?.id ? (
+      {!selectedPartner?.id ? (
+        <div className="h-[500px] w-full">
           <div className="bg-foreground border-border flex h-full items-center justify-center rounded-lg border">
             <div className="text-center">
               <p className="text-contrast text-lg font-medium">매입사를 선택해주세요</p>
               <p className="mt-2 text-sm text-gray-400">조회할 매입사를 선택해주시기 바랍니다.</p>
             </div>
           </div>
-        ) : (
-          <AgGridReact ref={gridRef} gridOptions={updatedGridOptions} onGridReady={onGridReady} />
-        )}
-      </div>
+        </div>
+      ) : (
+        // 그리드와 하단 요약 줄을 하나의 표처럼 붙인다. (그리드 444px + 요약 줄 56px = 안내 화면 500px)
+        <div className="flex flex-col">
+          <div className="h-[444px] w-full [&_.ag-root-wrapper]:rounded-b-none">
+            <AgGridReact
+              ref={gridRef}
+              gridOptions={updatedGridOptions}
+              onGridReady={onGridReady}
+              onFilterChanged={onFilterChanged}
+            />
+          </div>
+          <GridSummaryBar
+            count={totalCount}
+            countUnit="건"
+            amount={totalPurchaseAmount}
+            isFiltered={isFiltered}
+          />
+        </div>
+      )}
     </div>
   );
 }

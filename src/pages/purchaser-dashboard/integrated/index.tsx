@@ -5,12 +5,24 @@ import { useIntegratedSettlement } from '@/hooks/purchaser-dashboard/useIntegrat
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { Tabs } from '@/components/modules/tab';
+import GridSummaryBar from '@/components/modules/grid-summary-bar';
+import FilterResetButton from '@/components/modules/filter-reset-button';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
 export default function IntegratedSettlement() {
-  const { gridRef, dateRange, handleCellClick, setDateRange, onGridReady, error } =
-    useIntegratedSettlement();
+  const {
+    gridRef,
+    dateRange,
+    handleCellClick,
+    setDateRange,
+    onGridReady,
+    error,
+    totalPurchaseAmount,
+    isFiltered,
+    totalCount,
+    resetFilters,
+  } = useIntegratedSettlement();
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -26,30 +38,41 @@ export default function IntegratedSettlement() {
               maxDateType="today"
             />
           </div>
-          <ColumnStateResetButton
-            storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
-            gridApi={gridRef.current?.api}
-          />
+          <div className="flex items-center gap-2">
+            <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
+            <ColumnStateResetButton
+              storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
+              gridApi={gridRef.current?.api}
+            />
+          </div>
         </div>
         {/* <ThemeToggle /> */}
         <div className="text-xs text-gray-400">
           데이터는 매일 오전 1시에 전일 기준으로 업데이트됩니다.
         </div>
       </div>
-      <div className="relative h-[600px] w-full">
-        <AgGridReact
-          ref={gridRef}
-          gridOptions={gridOptions}
-          onGridReady={onGridReady}
-          onCellClicked={handleCellClick}
-        />
-        {error && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center">
-            <div className="bg-foreground border-foreground rounded-lg border p-6 text-center shadow-lg">
-              <p className="text-contrast text-sm font-medium">{error}</p>
+      <div className="flex flex-col">
+        <div className="relative h-[544px] w-full [&_.ag-root-wrapper]:rounded-b-none">
+          <AgGridReact
+            ref={gridRef}
+            gridOptions={gridOptions}
+            onGridReady={onGridReady}
+            onCellClicked={handleCellClick}
+          />
+          {error && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center">
+              <div className="bg-foreground border-foreground rounded-lg border p-6 text-center shadow-lg">
+                <p className="text-contrast text-sm font-medium">{error}</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+        <GridSummaryBar
+          count={totalCount}
+          countUnit="개 매입사"
+          amount={totalPurchaseAmount}
+          isFiltered={isFiltered}
+        />
       </div>
     </div>
   );
