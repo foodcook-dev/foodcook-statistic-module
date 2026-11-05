@@ -64,13 +64,13 @@ export const getIntegratedCompanyExcel = async (params: {
 
 // 직매입사 선택 목록 조회
 export const getDirectCompanyList = async (): Promise<DirectCompanyListItem[]> => {
-  const response = await API.get<DirectCompanyListItem[]>(PATH.api.getBuyCompanyList);
+  const response = await API.get<DirectCompanyListItem[]>(PATH.api.getDirectCompanyList);
   return response.data;
 };
 
 // 직매입사 기본 정보 조회
 export const getDirectCompany = async (companyId: string): Promise<DirectCompanyInfo> => {
-  const response = await API.get<DirectCompanyInfo>(PATH.api.getBuyCompanyInfo(companyId));
+  const response = await API.get<DirectCompanyInfo>(PATH.api.getDirectCompanyInfo(companyId));
   return response.data;
 };
 
@@ -89,7 +89,7 @@ export const getDirectCompanyDetails = async ({
   };
 }): Promise<DirectCompanyDetailResponse> => {
   const response = await API.get<DirectCompanyDetailResponse>(
-    PATH.api.getBuyCompanyDetail(companyId),
+    PATH.api.getDirectCompanyDetail(companyId),
     {
       params: {
         start_date: params.startDate,
@@ -112,7 +112,7 @@ export const getDirectCompanyExcel = async ({
   companyId: string;
   params: { startDate: string; endDate: string; filter: string };
 }) =>
-  getExcelFile(PATH.api.getBuyCompanyExcel(companyId), {
+  getExcelFile(PATH.api.getDirectCompanyExcel(companyId), {
     start_date: params.startDate,
     end_date: params.endDate,
     filter: params.filter,
@@ -130,7 +130,7 @@ export const postDirectCompanyPayment = async ({
     note: string;
   };
 }): Promise<any> => {
-  const response = await API.post(PATH.api.buyCompanyPayment(companyId), {
+  const response = await API.post(PATH.api.directCompanyPayment(companyId), {
     payment_date: params.date,
     payment_amount: params.amount,
     payment_note: params.note,
@@ -150,7 +150,7 @@ export const patchDirectCompanyPayment = async ({
     note: string;
   };
 }): Promise<any> => {
-  const response = await API.patch(PATH.api.buyCompanyPayment(companyId), {
+  const response = await API.patch(PATH.api.directCompanyPayment(companyId), {
     detail_id: params.id,
     payment_amount: params.amount,
     payment_note: params.note,
@@ -166,7 +166,7 @@ export const deleteDirectCompanyPayment = async ({
   companyId: string;
   id: string;
 }): Promise<any> => {
-  const response = await API.delete(PATH.api.buyCompanyPayment(companyId), {
+  const response = await API.delete(PATH.api.directCompanyPayment(companyId), {
     params: {
       detail_id: id,
     },
@@ -176,13 +176,15 @@ export const deleteDirectCompanyPayment = async ({
 
 // 위탁매입사 선택 목록 조회
 export const getConsignmentCompanyList = async (): Promise<ConsignmentCompanyListItem[]> => {
-  const response = await API.get<ConsignmentCompanyListItem[]>(PATH.api.getPartnerCompanyList);
+  const response = await API.get<ConsignmentCompanyListItem[]>(PATH.api.getConsignmentCompanyList);
   return response.data;
 };
 
 // 위탁매입사 기본 정보 조회
 export const getConsignmentCompany = async (companyId: string): Promise<ConsignmentCompanyInfo> => {
-  const response = await API.get<ConsignmentCompanyInfo>(PATH.api.getPartnerCompanyInfo(companyId));
+  const response = await API.get<ConsignmentCompanyInfo>(
+    PATH.api.getConsignmentCompanyInfo(companyId),
+  );
   return response.data;
 };
 
@@ -201,7 +203,7 @@ export const getConsignmentCompanyDetails = async ({
   };
 }): Promise<ConsignmentCompanyDetailResponse> => {
   const response = await API.get<ConsignmentCompanyDetailResponse>(
-    PATH.api.getPartnerCompanyDetail(companyId),
+    PATH.api.getConsignmentCompanyDetail(companyId),
     {
       params: {
         start_date: params.startDate,
@@ -224,7 +226,7 @@ export const getConsignmentCompanyExcel = async ({
   companyId: string;
   params: { startDate: string; endDate: string; filter: string };
 }) =>
-  getExcelFile(PATH.api.getPartnerCompanyExcel(companyId), {
+  getExcelFile(PATH.api.getConsignmentCompanyExcel(companyId), {
     start_date: params.startDate,
     end_date: params.endDate,
     filter: params.filter,
@@ -242,7 +244,7 @@ export const postConsignmentCompanyPayment = async ({
     note: string;
   };
 }): Promise<any> => {
-  const response = await API.post(PATH.api.partnerCompanyPayment(companyId), {
+  const response = await API.post(PATH.api.consignmentCompanyPayment(companyId), {
     payment_date: params.date,
     payment_amount: params.amount,
     payment_note: params.note,
@@ -262,7 +264,7 @@ export const patchConsignmentCompanyPayment = async ({
     note: string;
   };
 }): Promise<any> => {
-  const response = await API.patch(PATH.api.partnerCompanyPayment(companyId), {
+  const response = await API.patch(PATH.api.consignmentCompanyPayment(companyId), {
     detail_id: params.id,
     payment_amount: params.amount,
     payment_note: params.note,
@@ -278,7 +280,7 @@ export const deleteConsignmentCompanyPayment = async ({
   companyId: string;
   id: string;
 }): Promise<any> => {
-  const response = await API.delete(PATH.api.partnerCompanyPayment(companyId), {
+  const response = await API.delete(PATH.api.consignmentCompanyPayment(companyId), {
     params: {
       detail_id: id,
     },
@@ -296,7 +298,7 @@ export const getLog = async ({
   companyId: string;
   detailId: string;
 }): Promise<SettlementLogItem[]> => {
-  const endpoint = type === 'direct' ? PATH.api.getBuyLog : PATH.api.getPartnerLog;
+  const endpoint = type === 'direct' ? PATH.api.getDirectLog : PATH.api.getConsignmentLog;
 
   const response = await API.get<SettlementLogItem[]>(endpoint, {
     params: {

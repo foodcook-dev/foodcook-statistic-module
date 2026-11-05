@@ -14,22 +14,24 @@ const API = {
   getIntegratedCompanyExcel: `/integrate/integrate_companies/export/`,
 
   // 직매입사
-  getBuyCompanyList: `/purchase/buy_companies/`,
-  getBuyCompanyInfo: (companyId: string) => `/purchase/buy_companies/${companyId}/`,
-  getBuyCompanyDetail: (companyId: string) => `/purchase/buy_companies/${companyId}/details/`,
-  getBuyCompanyExcel: (companyId: string) => `/purchase/buy_companies/${companyId}/details/export/`,
-  buyCompanyPayment: (companyId: string) => `/purchase/buy_companies/${companyId}/payment/`,
-  getBuyLog: `/log/buy_company_logs/`,
+  getDirectCompanyList: `/purchase/buy_companies/`,
+  getDirectCompanyInfo: (companyId: string) => `/purchase/buy_companies/${companyId}/`,
+  getDirectCompanyDetail: (companyId: string) => `/purchase/buy_companies/${companyId}/details/`,
+  getDirectCompanyExcel: (companyId: string) =>
+    `/purchase/buy_companies/${companyId}/details/export/`,
+  directCompanyPayment: (companyId: string) => `/purchase/buy_companies/${companyId}/payment/`,
+  getDirectLog: `/log/buy_company_logs/`,
 
   // 위탁매입사
-  getPartnerCompanyList: `/partner/partner_companies/`,
-  getPartnerCompanyInfo: (companyId: string) => `/partner/partner_companies/${companyId}/`,
-  getPartnerCompanyDetail: (companyId: string) =>
+  getConsignmentCompanyList: `/partner/partner_companies/`,
+  getConsignmentCompanyInfo: (companyId: string) => `/partner/partner_companies/${companyId}/`,
+  getConsignmentCompanyDetail: (companyId: string) =>
     `/partner/partner_companies/${companyId}/details/`,
-  getPartnerCompanyExcel: (companyId: string) =>
+  getConsignmentCompanyExcel: (companyId: string) =>
     `/partner/partner_companies/${companyId}/details/export/`,
-  partnerCompanyPayment: (companyId: string) => `/partner/partner_companies/${companyId}/payment/`,
-  getPartnerLog: `/log/partner_company_logs/`,
+  consignmentCompanyPayment: (companyId: string) =>
+    `/partner/partner_companies/${companyId}/payment/`,
+  getConsignmentLog: `/log/partner_company_logs/`,
 
   getCompanies: `/dashboard/companies/`,
   getUserList: `/user-dashboard/users/`,
