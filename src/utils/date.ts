@@ -6,5 +6,5 @@ export const formatDate = (value?: string | null) => {
   const date = dayjs(value);
   if (!date.isValid()) return value;
   const meridiem = date.hour() < 12 ? '오전' : '오후';
-  return date.format(`YYYY-MM-DD [${meridiem}] h:m:s`);
+  return date.format(`YYYY-MM-DD [${meridiem}] h:mm:ss`);
 };
