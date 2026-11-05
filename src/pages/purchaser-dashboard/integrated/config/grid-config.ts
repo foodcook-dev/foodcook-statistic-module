@@ -125,7 +125,9 @@ export const gridOptions: GridOptions = {
   maxBlocksInCache: 10,
 
   onColumnGroupOpened: (event) => {
-    event.api.autoSizeAllColumns();
+    requestAnimationFrame(() => {
+      if (!event.api.isDestroyed()) event.api.autoSizeAllColumns();
+    });
   },
 
   onModelUpdated: (event) => {
