@@ -5,7 +5,9 @@ import { IDatasource, IGetRowsParams, GridReadyEvent, CellClickedEvent } from 'a
 import { DateRange } from 'react-day-picker';
 import { startOfMonth, format } from 'date-fns';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
-import { getIntegratedCompany } from '@/libs/purchaser-dashboard-api';
+import { getIntegratedCompany, getIntegratedCompanyExcel } from '@/libs/purchaser-dashboard-api';
+import { downloadBlob } from '@/utils/download';
+import { useAlert } from '@/hooks/useAlert';
 import { IntegratedCompanyItem } from '@/types/settlement';
 
 type UseIntegratedSettlementReturn = {
@@ -19,6 +21,8 @@ type UseIntegratedSettlementReturn = {
   isFiltered: boolean;
   totalCount: number | null;
   resetFilters: () => void;
+  downloadExcel: () => Promise<void>;
+  isDownloading: boolean;
 };
 
 const STORAGE_KEY = STORAGE_KEYS.INTEGRATED_SETTLEMENT;
@@ -32,6 +36,8 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     to: today,
   });
   const [error, setError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const setAlert = useAlert();
   const [totalPurchaseAmount, setTotalPurchaseAmount] = useState<number | null>(null);
   const [isFiltered, setIsFiltered] = useState(false);
   const [totalCount, setTotalCount] = useState<number | null>(null);
@@ -80,6 +86,36 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     gridRef.current?.api?.setFilterModel(null);
   }, []);
 
+  const downloadExcel = useCallback(async () => {
+    const api = gridRef.current?.api;
+    if (!api || !dateRange.from || !dateRange.to) return;
+
+    const startDate = format(dateRange.from, 'yyyy-MM-dd');
+    const endDate = format(dateRange.to, 'yyyy-MM-dd');
+    // 그리드 datasource가 보내는 sortModel과 같은 형태로 현재 정렬 상태를 만든다.
+    const sortModel = api
+      .getColumnState()
+      .filter((col) => col.sort)
+      .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
+      .map((col) => ({ colId: col.colId, sort: col.sort }));
+
+    setIsDownloading(true);
+    try {
+      const { blob, filename } = await getIntegratedCompanyExcel({
+        startDate,
+        endDate,
+        filter: JSON.stringify(api.getFilterModel()),
+        sort: JSON.stringify(sortModel),
+      });
+      downloadBlob(blob, filename ?? `통합정산_${startDate}_${endDate}.xlsx`);
+    } catch (e) {
+      console.error('Failed to download excel:', e);
+      setAlert({ message: '엑셀 다운로드에 실패했습니다.\n잠시 후 다시 시도해주세요.' });
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [dateRange.from, dateRange.to, setAlert]);
+
   const handleCellClick = (event: CellClickedEvent<IntegratedCompanyItem>) => {
     if (event.colDef?.field === 'b_nm' && event.data) {
       const row = event.data;
@@ -125,5 +161,7 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     isFiltered,
     totalCount,
     resetFilters,
+    downloadExcel,
+    isDownloading,
   };
 };

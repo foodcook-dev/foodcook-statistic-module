@@ -9,15 +9,25 @@ const API = {
 
   getCompany: `/dashboard/companies/`,
 
+  // 통합매입사
   getIntegratedCompany: `/integrate/integrate_companies/`,
+  getIntegratedCompanyExcel: `/integrate/integrate_companies/export/`,
 
+  // 직매입사
   getBuyCompanyList: `/purchase/buy_companies/`,
-  getBuyCompany: (companyId: string) => `/purchase/buy_companies/${companyId}/`,
+  getBuyCompanyInfo: (companyId: string) => `/purchase/buy_companies/${companyId}/`,
+  getBuyCompanyDetail: (companyId: string) => `/purchase/buy_companies/${companyId}/details/`,
+  getBuyCompanyExcel: (companyId: string) => `/purchase/buy_companies/${companyId}/details/export/`,
   buyCompanyPayment: (companyId: string) => `/purchase/buy_companies/${companyId}/payment/`,
   getBuyLog: `/log/buy_company_logs/`,
 
+  // 위탁매입사
   getPartnerCompanyList: `/partner/partner_companies/`,
-  getPartnerCompany: (companyId: string) => `/partner/partner_companies/${companyId}/`,
+  getPartnerCompanyInfo: (companyId: string) => `/partner/partner_companies/${companyId}/`,
+  getPartnerCompanyDetail: (companyId: string) =>
+    `/partner/partner_companies/${companyId}/details/`,
+  getPartnerCompanyExcel: (companyId: string) =>
+    `/partner/partner_companies/${companyId}/details/export/`,
   partnerCompanyPayment: (companyId: string) => `/partner/partner_companies/${companyId}/payment/`,
   getPartnerLog: `/log/partner_company_logs/`,
 

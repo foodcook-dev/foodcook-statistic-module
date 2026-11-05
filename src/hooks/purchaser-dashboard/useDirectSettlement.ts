@@ -10,9 +10,11 @@ import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-sta
 import { PaymentData } from '@/components/modules/custom-dialog/payment-dialog';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useAlert } from '@/hooks/useAlert';
+import { downloadBlob } from '@/utils/download';
 import {
   getBuyCompany,
   getBuyCompanyDetails,
+  getBuyCompanyExcel,
   postBuyCompanyPayment,
   patchBuyCompanyPayment,
   deleteBuyCompanyPayment,
@@ -30,6 +32,7 @@ export const useDirectSettlement = () => {
   const setAlert = useAlert();
   const gridRef = useRef<AgGridReact>(null);
   // 그리드 하단 요약 줄: 조회 조건(기간·필터)을 반영한 행 수와 매입액 총합 (조회 전·실패 시 null)
+  const [isDownloading, setIsDownloading] = useState(false);
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [totalPurchaseAmount, setTotalPurchaseAmount] = useState<number | null>(null);
   const today = new Date();
@@ -161,6 +164,33 @@ export const useDirectSettlement = () => {
     if (result) await deletePaymentRequest(rowData);
   };
 
+  // 현재 선택된 매입사의 조회기간·필터 그대로 상세 내역 엑셀 다운로드
+  const downloadExcel = useCallback(async () => {
+    const { from, to } = dateRangeRef.current;
+    if (!selectedBuyer.id || !from || !to) return;
+
+    const startDate = format(from, 'yyyy-MM-dd');
+    const endDate = format(to, 'yyyy-MM-dd');
+
+    setIsDownloading(true);
+    try {
+      const { blob, filename } = await getBuyCompanyExcel({
+        companyId: selectedBuyer.id,
+        params: {
+          startDate,
+          endDate,
+          filter: JSON.stringify(gridRef.current?.api?.getFilterModel() ?? {}),
+        },
+      });
+      downloadBlob(blob, filename ?? `직매입_${selectedBuyer.name}_${startDate}_${endDate}.xlsx`);
+    } catch (e) {
+      console.error('Failed to download excel:', e);
+      setAlert({ message: '엑셀 다운로드에 실패했습니다.\n잠시 후 다시 시도해주세요.' });
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [selectedBuyer.id, selectedBuyer.name, setAlert]);
+
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
@@ -191,5 +221,7 @@ export const useDirectSettlement = () => {
     onGridReady,
     totalCount,
     totalPurchaseAmount,
+    downloadExcel,
+    isDownloading,
   };
 };

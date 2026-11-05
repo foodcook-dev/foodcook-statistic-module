@@ -7,6 +7,7 @@ import { STORAGE_KEYS } from '@/libs/column-state';
 import { Tabs } from '@/components/modules/tab';
 import GridSummaryBar from '@/components/modules/grid-summary-bar';
 import FilterResetButton from '@/components/modules/filter-reset-button';
+import ExcelDownloadButton from '@/components/modules/excel-download-button';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
 
@@ -22,6 +23,8 @@ export default function IntegratedSettlement() {
     isFiltered,
     totalCount,
     resetFilters,
+    downloadExcel,
+    isDownloading,
   } = useIntegratedSettlement();
 
   return (
@@ -39,6 +42,7 @@ export default function IntegratedSettlement() {
             />
           </div>
           <div className="flex items-center gap-2">
+            <ExcelDownloadButton onDownload={downloadExcel} isDownloading={isDownloading} />
             <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
             <ColumnStateResetButton
               storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}

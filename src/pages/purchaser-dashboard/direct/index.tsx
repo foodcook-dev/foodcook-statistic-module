@@ -6,6 +6,7 @@ import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import FilterResetButton from '@/components/modules/filter-reset-button';
+import ExcelDownloadButton from '@/components/modules/excel-download-button';
 import GridSummaryBar from '@/components/modules/grid-summary-bar';
 import { useGridFilterReset } from '@/hooks/useGridFilterReset';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
@@ -30,6 +31,8 @@ export default function DirectSettlement() {
     onGridReady,
     totalCount,
     totalPurchaseAmount,
+    downloadExcel,
+    isDownloading,
   } = useDirectSettlement();
   const { isFiltered, onFilterChanged, resetFilters } = useGridFilterReset(gridRef);
 
@@ -84,6 +87,11 @@ export default function DirectSettlement() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ExcelDownloadButton
+            onDownload={downloadExcel}
+            isDownloading={isDownloading}
+            disabled={!selectedBuyer?.id}
+          />
           <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
           <ColumnStateResetButton
             storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}

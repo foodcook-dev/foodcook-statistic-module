@@ -8,6 +8,7 @@ import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import { PARTNER_INFO } from './config/structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import FilterResetButton from '@/components/modules/filter-reset-button';
+import ExcelDownloadButton from '@/components/modules/excel-download-button';
 import GridSummaryBar from '@/components/modules/grid-summary-bar';
 import { useGridFilterReset } from '@/hooks/useGridFilterReset';
 import { STORAGE_KEYS } from '@/libs/column-state';
@@ -28,6 +29,8 @@ export default function ConsignmentSettlement() {
     totalCount,
     totalPurchaseAmount,
     handlePaymentSubmit,
+    downloadExcel,
+    isDownloading,
   } = useConsignmentSettlement();
   const { isFiltered, onFilterChanged, resetFilters } = useGridFilterReset(gridRef);
 
@@ -81,6 +84,11 @@ export default function ConsignmentSettlement() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ExcelDownloadButton
+            onDownload={downloadExcel}
+            isDownloading={isDownloading}
+            disabled={!selectedPartner?.id}
+          />
           <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
           <ColumnStateResetButton
             storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}

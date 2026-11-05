@@ -1,11 +1,25 @@
 import { API } from '@/libs/api';
 import { PATH } from '@/constants/api-path';
+import { getFilenameFromDisposition } from '@/utils/download';
 import {
   BuyCompanyDetailResponse,
   IntegratedCompanyResponse,
   PartnerCompanyDetailResponse,
 } from '@/types/settlement';
 
+// 엑셀 파일 공통 요청
+const getExcelFile = async (
+  url: string,
+  params: Record<string, string>,
+): Promise<{ blob: Blob; filename: string | null }> => {
+  const response = await API.get<Blob>(url, { params, responseType: 'blob' });
+  return {
+    blob: response.data,
+    filename: getFilenameFromDisposition(response.headers['content-disposition']),
+  };
+};
+
+// 통합 매입사: 기간 내 전체 매입사(직매입·위탁) 정산 목록 조회 (페이지네이션 + 총 매입액)
 export const getIntegratedCompany = async (params: {
   startDate: string;
   endDate: string;
@@ -28,17 +42,34 @@ export const getIntegratedCompany = async (params: {
   return response.data;
 };
 
+// 통합 매입사: 엑셀 다운로드 (필터, 정렬 적용)
+export const getIntegratedCompanyExcel = async (params: {
+  startDate: string;
+  endDate: string;
+  filter: string;
+  sort: string;
+}) =>
+  getExcelFile(PATH.api.getIntegratedCompanyExcel, {
+    start_date: params.startDate,
+    end_date: params.endDate,
+    filter: params.filter,
+    sort: params.sort,
+  });
+
+// 매입사 선택 목록 조회 (direct: 직매입사, consignment: 위탁매입사)
 export const getCompany = async (type: 'direct' | 'consignment'): Promise<any> => {
   const endpoint = type === 'direct' ? PATH.api.getBuyCompanyList : PATH.api.getPartnerCompanyList;
   const response = await API.get(endpoint);
   return response.data;
 };
 
+// 직매입사 기본 정보 조회
 export const getBuyCompany = async (companyId: string): Promise<any> => {
-  const response = await API.get(PATH.api.getBuyCompany(companyId));
+  const response = await API.get(PATH.api.getBuyCompanyInfo(companyId));
   return response.data;
 };
 
+// 직매입사 기간 내 상세 내역(전기이월·매입·반품·결제) 조회 (페이지네이션 + 총 매입액)
 export const getBuyCompanyDetails = async ({
   companyId,
   params,
@@ -53,7 +84,7 @@ export const getBuyCompanyDetails = async ({
   };
 }): Promise<BuyCompanyDetailResponse> => {
   const response = await API.get<BuyCompanyDetailResponse>(
-    PATH.api.getBuyCompany(companyId) + 'details/',
+    PATH.api.getBuyCompanyDetail(companyId),
     {
       params: {
         start_date: params.startDate,
@@ -68,6 +99,21 @@ export const getBuyCompanyDetails = async ({
   return response.data;
 };
 
+// 직매입사: 기간 내 상세 내역 엑셀 다운로드 (필터 적용)
+export const getBuyCompanyExcel = async ({
+  companyId,
+  params,
+}: {
+  companyId: string;
+  params: { startDate: string; endDate: string; filter: string };
+}) =>
+  getExcelFile(PATH.api.getBuyCompanyExcel(companyId), {
+    start_date: params.startDate,
+    end_date: params.endDate,
+    filter: params.filter,
+  });
+
+// 직매입사 결제 내역 등록
 export const postBuyCompanyPayment = async ({
   companyId,
   params,
@@ -87,6 +133,7 @@ export const postBuyCompanyPayment = async ({
   return response.data;
 };
 
+// 직매입사 결제 내역 수정 (금액·비고)
 export const patchBuyCompanyPayment = async ({
   companyId,
   params,
@@ -106,6 +153,7 @@ export const patchBuyCompanyPayment = async ({
   return response.data;
 };
 
+// 직매입사 결제 내역 삭제
 export const deleteBuyCompanyPayment = async ({
   companyId,
   id,
@@ -121,11 +169,13 @@ export const deleteBuyCompanyPayment = async ({
   return response.data;
 };
 
+// 위탁매입사 기본 정보 조회
 export const getPartnerCompany = async (companyId: string): Promise<any> => {
-  const response = await API.get(PATH.api.getPartnerCompany(companyId));
+  const response = await API.get(PATH.api.getPartnerCompanyInfo(companyId));
   return response.data;
 };
 
+// 위탁매입사 기간 내 상세 내역(전기이월·매입·반품·결제) 조회 (페이지네이션 + 총 매입액)
 export const getPartnerCompanyDetails = async ({
   companyId,
   params,
@@ -140,7 +190,7 @@ export const getPartnerCompanyDetails = async ({
   };
 }): Promise<PartnerCompanyDetailResponse> => {
   const response = await API.get<PartnerCompanyDetailResponse>(
-    PATH.api.getPartnerCompany(companyId) + 'details/',
+    PATH.api.getPartnerCompanyDetail(companyId),
     {
       params: {
         start_date: params.startDate,
@@ -155,6 +205,21 @@ export const getPartnerCompanyDetails = async ({
   return response.data;
 };
 
+// 위탁매입사: 기간 내 상세 내역 엑셀 다운로드 (필터 적용)
+export const getPartnerCompanyExcel = async ({
+  companyId,
+  params,
+}: {
+  companyId: string;
+  params: { startDate: string; endDate: string; filter: string };
+}) =>
+  getExcelFile(PATH.api.getPartnerCompanyExcel(companyId), {
+    start_date: params.startDate,
+    end_date: params.endDate,
+    filter: params.filter,
+  });
+
+// 위탁매입사 결제 내역 등록
 export const postPartnerCompanyPayment = async ({
   companyId,
   params,
@@ -174,6 +239,7 @@ export const postPartnerCompanyPayment = async ({
   return response.data;
 };
 
+// 위탁매입사 결제 내역 수정 (금액·비고)
 export const patchPartnerCompanyPayment = async ({
   companyId,
   params,
@@ -193,6 +259,7 @@ export const patchPartnerCompanyPayment = async ({
   return response.data;
 };
 
+// 위탁매입사 결제 내역 삭제
 export const deletePartnerCompanyPayment = async ({
   companyId,
   id,
@@ -208,6 +275,7 @@ export const deletePartnerCompanyPayment = async ({
   return response.data;
 };
 
+// 상세 내역 한 건의 변경 이력 조회 (direct: 직매입사, consignment: 위탁매입사)
 export const getLog = async ({
   type,
   companyId,
