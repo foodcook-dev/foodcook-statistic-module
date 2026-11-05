@@ -5,7 +5,6 @@ import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
-import FilterResetButton from '@/components/modules/filter-reset-button';
 import ExcelDownloadButton from '@/components/modules/excel-download-button';
 import GridSummaryBar from '@/components/modules/grid-summary-bar';
 import { useGridFilterReset } from '@/hooks/useGridFilterReset';
@@ -87,15 +86,14 @@ export default function DirectSettlement() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ColumnStateResetButton
+            storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}
+            gridApi={gridRef.current?.api}
+          />
           <ExcelDownloadButton
             onDownload={downloadExcel}
             isDownloading={isDownloading}
             disabled={!selectedDirectCompany?.id}
-          />
-          <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
-          <ColumnStateResetButton
-            storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}
-            gridApi={gridRef.current?.api}
           />
           <Payment onSubmit={handlePaymentSubmit} paymentDisabled={!selectedDirectCompany?.id} />
         </div>
@@ -126,6 +124,7 @@ export default function DirectSettlement() {
             countUnit="건"
             amount={totalPurchaseAmount}
             isFiltered={isFiltered}
+            onResetFilters={resetFilters}
           />
         </div>
       )}

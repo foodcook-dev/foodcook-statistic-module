@@ -6,7 +6,6 @@ import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { Tabs } from '@/components/modules/tab';
 import GridSummaryBar from '@/components/modules/grid-summary-bar';
-import FilterResetButton from '@/components/modules/filter-reset-button';
 import ExcelDownloadButton from '@/components/modules/excel-download-button';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
@@ -42,12 +41,11 @@ export default function IntegratedSettlement() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <ExcelDownloadButton onDownload={downloadExcel} isDownloading={isDownloading} />
-            <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
             <ColumnStateResetButton
               storageKey={STORAGE_KEYS.INTEGRATED_SETTLEMENT}
               gridApi={gridRef.current?.api}
             />
+            <ExcelDownloadButton onDownload={downloadExcel} isDownloading={isDownloading} />
           </div>
         </div>
         {/* <ThemeToggle /> */}
@@ -76,6 +74,7 @@ export default function IntegratedSettlement() {
           countUnit="개 매입사"
           amount={totalPurchaseAmount}
           isFiltered={isFiltered}
+          onResetFilters={resetFilters}
         />
       </div>
     </div>

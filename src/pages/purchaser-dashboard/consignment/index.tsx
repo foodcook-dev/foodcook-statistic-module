@@ -7,7 +7,6 @@ import InfoTable from '@/components/modules/info-table';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import { CONSIGNMENT_COMPANY_INFO } from './config/structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
-import FilterResetButton from '@/components/modules/filter-reset-button';
 import ExcelDownloadButton from '@/components/modules/excel-download-button';
 import GridSummaryBar from '@/components/modules/grid-summary-bar';
 import { useGridFilterReset } from '@/hooks/useGridFilterReset';
@@ -84,15 +83,14 @@ export default function ConsignmentSettlement() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ColumnStateResetButton
+            storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
+            gridApi={gridRef.current?.api}
+          />
           <ExcelDownloadButton
             onDownload={downloadExcel}
             isDownloading={isDownloading}
             disabled={!selectedConsignmentCompany?.id}
-          />
-          <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
-          <ColumnStateResetButton
-            storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
-            gridApi={gridRef.current?.api}
           />
           <Payment
             onSubmit={handlePaymentSubmit}
@@ -126,6 +124,7 @@ export default function ConsignmentSettlement() {
             countUnit="건"
             amount={totalPurchaseAmount}
             isFiltered={isFiltered}
+            onResetFilters={resetFilters}
           />
         </div>
       )}

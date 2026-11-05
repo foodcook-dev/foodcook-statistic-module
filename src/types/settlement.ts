@@ -14,13 +14,9 @@ export type ServerCompanyType = 'buy' | 'partner';
 /** 페이지네이션 목록 응답 공통 형태 */
 export type PaginatedResponse<T> = {
   items: T[];
-  /** 현재 페이지 (1부터 시작) */
   page: number;
-  /** 전체 페이지 수 */
   pages: number;
-  /** 페이지당 행 수 */
   size: number;
-  /** 전체 행 수 */
   total: number;
 };
 

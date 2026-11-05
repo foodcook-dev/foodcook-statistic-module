@@ -1,13 +1,20 @@
-import { Filter } from 'lucide-react';
+import ActiveFilterChip from '@/components/modules/active-filter-chip';
 
 interface GridSummaryBarProps {
   count: number | null;
   countUnit: string;
   amount: number | null;
   isFiltered: boolean;
+  onResetFilters: () => void;
 }
 
-export function GridSummaryBar({ count, countUnit, amount, isFiltered }: GridSummaryBarProps) {
+export function GridSummaryBar({
+  count,
+  countUnit,
+  amount,
+  isFiltered,
+  onResetFilters,
+}: GridSummaryBarProps) {
   const skeleton = (width: string) => (
     <span className={`inline-block h-5 ${width} bg-contrast/10 animate-pulse rounded-sm`} />
   );
@@ -26,10 +33,7 @@ export function GridSummaryBar({ count, countUnit, amount, isFiltered }: GridSum
         {isFiltered && (
           <>
             <span className="bg-border h-4 w-px" />
-            <span className="text-primary flex items-center gap-1 text-xs font-medium">
-              <Filter className="h-3.5 w-3.5" />
-              필터 결과
-            </span>
+            <ActiveFilterChip isFiltered={isFiltered} onReset={onResetFilters} />
           </>
         )}
       </div>
