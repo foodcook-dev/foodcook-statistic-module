@@ -43,7 +43,7 @@ const statusRenderer = createBadgeRenderer(STATUS);
 const createActionButtonRenderer = (
   onEdit: (data: any) => void,
   onDelete: (data: any) => void,
-  selectedBuyerId: string,
+  selectedDirectCompanyId: string,
 ) => {
   return (params: any) => {
     const isEditableRow = params.data?.type === '결제';
@@ -88,7 +88,7 @@ const createActionButtonRenderer = (
         React.createElement(Log, {
           key: 'log',
           type: 'direct',
-          companyId: selectedBuyerId,
+          companyId: selectedDirectCompanyId,
           detailId: params.data.detail_id,
         }),
       ],
@@ -99,7 +99,7 @@ const createActionButtonRenderer = (
 export const createColumnDefs = (
   onEdit: (data: any) => void,
   onDelete: (data: any) => void,
-  selectedBuyerId: string,
+  selectedDirectCompanyId: string,
 ): (ColDef | ColGroupDef)[] => [
   {
     headerName: 'ID',
@@ -156,7 +156,7 @@ export const createColumnDefs = (
     headerName: '관리',
     field: 'event',
     minWidth: 100,
-    cellRenderer: createActionButtonRenderer(onEdit, onDelete, selectedBuyerId),
+    cellRenderer: createActionButtonRenderer(onEdit, onDelete, selectedDirectCompanyId),
     sortable: false,
     filter: false,
     pinned: 'right',

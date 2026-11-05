@@ -2,9 +2,10 @@ import { API } from '@/libs/api';
 import { PATH } from '@/constants/api-path';
 import { getFilenameFromDisposition } from '@/utils/download';
 import {
-  BuyCompanyDetailResponse,
+  DirectCompanyDetailResponse,
   IntegratedCompanyResponse,
-  PartnerCompanyDetailResponse,
+  ConsignmentCompanyDetailResponse,
+  SettlementType,
 } from '@/types/settlement';
 
 // 엑셀 파일 공통 요청
@@ -57,20 +58,20 @@ export const getIntegratedCompanyExcel = async (params: {
   });
 
 // 매입사 선택 목록 조회 (direct: 직매입사, consignment: 위탁매입사)
-export const getCompany = async (type: 'direct' | 'consignment'): Promise<any> => {
+export const getCompany = async (type: SettlementType): Promise<any> => {
   const endpoint = type === 'direct' ? PATH.api.getBuyCompanyList : PATH.api.getPartnerCompanyList;
   const response = await API.get(endpoint);
   return response.data;
 };
 
 // 직매입사 기본 정보 조회
-export const getBuyCompany = async (companyId: string): Promise<any> => {
+export const getDirectCompany = async (companyId: string): Promise<any> => {
   const response = await API.get(PATH.api.getBuyCompanyInfo(companyId));
   return response.data;
 };
 
 // 직매입사 기간 내 상세 내역(전기이월·매입·반품·결제) 조회 (페이지네이션 + 총 매입액)
-export const getBuyCompanyDetails = async ({
+export const getDirectCompanyDetails = async ({
   companyId,
   params,
 }: {
@@ -82,8 +83,8 @@ export const getBuyCompanyDetails = async ({
     page: number;
     pageSize: number;
   };
-}): Promise<BuyCompanyDetailResponse> => {
-  const response = await API.get<BuyCompanyDetailResponse>(
+}): Promise<DirectCompanyDetailResponse> => {
+  const response = await API.get<DirectCompanyDetailResponse>(
     PATH.api.getBuyCompanyDetail(companyId),
     {
       params: {
@@ -100,7 +101,7 @@ export const getBuyCompanyDetails = async ({
 };
 
 // 직매입사: 기간 내 상세 내역 엑셀 다운로드 (필터 적용)
-export const getBuyCompanyExcel = async ({
+export const getDirectCompanyExcel = async ({
   companyId,
   params,
 }: {
@@ -114,7 +115,7 @@ export const getBuyCompanyExcel = async ({
   });
 
 // 직매입사 결제 내역 등록
-export const postBuyCompanyPayment = async ({
+export const postDirectCompanyPayment = async ({
   companyId,
   params,
 }: {
@@ -134,7 +135,7 @@ export const postBuyCompanyPayment = async ({
 };
 
 // 직매입사 결제 내역 수정 (금액·비고)
-export const patchBuyCompanyPayment = async ({
+export const patchDirectCompanyPayment = async ({
   companyId,
   params,
 }: {
@@ -154,7 +155,7 @@ export const patchBuyCompanyPayment = async ({
 };
 
 // 직매입사 결제 내역 삭제
-export const deleteBuyCompanyPayment = async ({
+export const deleteDirectCompanyPayment = async ({
   companyId,
   id,
 }: {
@@ -170,13 +171,13 @@ export const deleteBuyCompanyPayment = async ({
 };
 
 // 위탁매입사 기본 정보 조회
-export const getPartnerCompany = async (companyId: string): Promise<any> => {
+export const getConsignmentCompany = async (companyId: string): Promise<any> => {
   const response = await API.get(PATH.api.getPartnerCompanyInfo(companyId));
   return response.data;
 };
 
 // 위탁매입사 기간 내 상세 내역(전기이월·매입·반품·결제) 조회 (페이지네이션 + 총 매입액)
-export const getPartnerCompanyDetails = async ({
+export const getConsignmentCompanyDetails = async ({
   companyId,
   params,
 }: {
@@ -188,8 +189,8 @@ export const getPartnerCompanyDetails = async ({
     page: number;
     pageSize: number;
   };
-}): Promise<PartnerCompanyDetailResponse> => {
-  const response = await API.get<PartnerCompanyDetailResponse>(
+}): Promise<ConsignmentCompanyDetailResponse> => {
+  const response = await API.get<ConsignmentCompanyDetailResponse>(
     PATH.api.getPartnerCompanyDetail(companyId),
     {
       params: {
@@ -206,7 +207,7 @@ export const getPartnerCompanyDetails = async ({
 };
 
 // 위탁매입사: 기간 내 상세 내역 엑셀 다운로드 (필터 적용)
-export const getPartnerCompanyExcel = async ({
+export const getConsignmentCompanyExcel = async ({
   companyId,
   params,
 }: {
@@ -220,7 +221,7 @@ export const getPartnerCompanyExcel = async ({
   });
 
 // 위탁매입사 결제 내역 등록
-export const postPartnerCompanyPayment = async ({
+export const postConsignmentCompanyPayment = async ({
   companyId,
   params,
 }: {
@@ -240,7 +241,7 @@ export const postPartnerCompanyPayment = async ({
 };
 
 // 위탁매입사 결제 내역 수정 (금액·비고)
-export const patchPartnerCompanyPayment = async ({
+export const patchConsignmentCompanyPayment = async ({
   companyId,
   params,
 }: {
@@ -260,7 +261,7 @@ export const patchPartnerCompanyPayment = async ({
 };
 
 // 위탁매입사 결제 내역 삭제
-export const deletePartnerCompanyPayment = async ({
+export const deleteConsignmentCompanyPayment = async ({
   companyId,
   id,
 }: {
@@ -281,7 +282,7 @@ export const getLog = async ({
   companyId,
   detailId,
 }: {
-  type: 'direct' | 'consignment';
+  type: SettlementType;
   companyId: string;
   detailId: string;
 }): Promise<any> => {

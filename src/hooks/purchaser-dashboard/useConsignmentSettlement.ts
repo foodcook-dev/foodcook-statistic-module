@@ -12,12 +12,12 @@ import { useConfirm } from '@/hooks/useConfirm';
 import { useAlert } from '@/hooks/useAlert';
 import { downloadBlob } from '@/utils/download';
 import {
-  getPartnerCompany,
-  getPartnerCompanyDetails,
-  getPartnerCompanyExcel,
-  postPartnerCompanyPayment,
-  patchPartnerCompanyPayment,
-  deletePartnerCompanyPayment,
+  getConsignmentCompany,
+  getConsignmentCompanyDetails,
+  getConsignmentCompanyExcel,
+  postConsignmentCompanyPayment,
+  patchConsignmentCompanyPayment,
+  deleteConsignmentCompanyPayment,
 } from '@/libs/purchaser-dashboard-api';
 import useSpinnerStore from '@/stores/spinner';
 import { Vendor } from '@/types/settlement';
@@ -42,32 +42,32 @@ export const useConsignmentSettlement = () => {
       to: today,
     },
   );
-  const [selectedPartner, setSelectedPartner] = useState<Vendor>({
+  const [selectedConsignmentCompany, setSelectedConsignmentCompany] = useState<Vendor>({
     id: location.state?.id || '',
     name: location.state?.name || '',
   });
 
-  const selectedPartnerIdRef = useRef<string>(selectedPartner.id);
+  const selectedConsignmentCompanyIdRef = useRef<string>(selectedConsignmentCompany.id);
   useEffect(() => {
-    selectedPartnerIdRef.current = selectedPartner.id;
-  }, [selectedPartner.id]);
+    selectedConsignmentCompanyIdRef.current = selectedConsignmentCompany.id;
+  }, [selectedConsignmentCompany.id]);
 
   const dateRangeRef = useRef(dateRange);
   useEffect(() => {
     dateRangeRef.current = dateRange;
   }, [dateRange]);
 
-  const partnerInfoResponse = useQuery({
-    queryKey: ['partner_companies', selectedPartner.id],
-    queryFn: () => getPartnerCompany(selectedPartner.id),
-    enabled: !!selectedPartner.id,
+  const consignmentCompanyInfoResponse = useQuery({
+    queryKey: ['partner_companies', selectedConsignmentCompany.id],
+    queryFn: () => getConsignmentCompany(selectedConsignmentCompany.id),
+    enabled: !!selectedConsignmentCompany.id,
   });
 
   const createDataSource = useCallback((): IDatasource => {
     return {
       getRows: async (params: IGetRowsParams) => {
         const { from, to } = dateRangeRef.current;
-        if (!selectedPartnerIdRef.current || !from || !to) {
+        if (!selectedConsignmentCompanyIdRef.current || !from || !to) {
           params.failCallback();
           return;
         }
@@ -77,8 +77,8 @@ export const useConsignmentSettlement = () => {
           const startDate = format(from, 'yyyy-MM-dd');
           const endDate = format(to, 'yyyy-MM-dd');
 
-          const response = await getPartnerCompanyDetails({
-            companyId: selectedPartnerIdRef.current,
+          const response = await getConsignmentCompanyDetails({
+            companyId: selectedConsignmentCompanyIdRef.current,
             params: {
               startDate,
               endDate,
@@ -102,22 +102,22 @@ export const useConsignmentSettlement = () => {
         }
       },
     };
-  }, [selectedPartner.id]);
+  }, [selectedConsignmentCompany.id]);
 
   const refreshGridData = useCallback(() => {
-    if (gridRef.current?.api && selectedPartner.id && dateRange.from && dateRange.to) {
+    if (gridRef.current?.api && selectedConsignmentCompany.id && dateRange.from && dateRange.to) {
       // 매입사·기간이 바뀌면 이전 조회의 요약이 잠깐이라도 남지 않도록 비운다.
       setTotalCount(null);
       setTotalPurchaseAmount(null);
       const newDataSource = createDataSource();
       gridRef.current.api.setGridOption('datasource', newDataSource);
     }
-  }, [createDataSource, selectedPartner.id, dateRange.from, dateRange.to]);
+  }, [createDataSource, selectedConsignmentCompany.id, dateRange.from, dateRange.to]);
 
   const { mutate: submitPaymentRequest } = useMutation({
     mutationFn: async (data: PaymentData) => {
-      await postPartnerCompanyPayment({
-        companyId: selectedPartnerIdRef.current,
+      await postConsignmentCompanyPayment({
+        companyId: selectedConsignmentCompanyIdRef.current,
         params: {
           date: format(data.processDate!, 'yyyy-MM-dd'),
           amount: Number(data.amount),
@@ -133,8 +133,8 @@ export const useConsignmentSettlement = () => {
 
   const { mutate: editPaymentRequest } = useMutation({
     mutationFn: async (data: PaymentData) => {
-      await patchPartnerCompanyPayment({
-        companyId: selectedPartnerIdRef.current,
+      await patchConsignmentCompanyPayment({
+        companyId: selectedConsignmentCompanyIdRef.current,
         params: {
           id: String(data.id),
           amount: Number(data.amount),
@@ -149,8 +149,8 @@ export const useConsignmentSettlement = () => {
 
   const { mutate: deletePaymentRequest } = useMutation({
     mutationFn: async (rowData: any) => {
-      await deletePartnerCompanyPayment({
-        companyId: selectedPartnerIdRef.current,
+      await deleteConsignmentCompanyPayment({
+        companyId: selectedConsignmentCompanyIdRef.current,
         id: rowData.detail_id,
       });
     },
@@ -170,15 +170,15 @@ export const useConsignmentSettlement = () => {
   // 현재 선택된 매입사의 조회기간·필터 그대로 상세 내역 엑셀 다운로드
   const downloadExcel = useCallback(async () => {
     const { from, to } = dateRangeRef.current;
-    if (!selectedPartner.id || !from || !to) return;
+    if (!selectedConsignmentCompany.id || !from || !to) return;
 
     const startDate = format(from, 'yyyy-MM-dd');
     const endDate = format(to, 'yyyy-MM-dd');
 
     setIsDownloading(true);
     try {
-      const { blob, filename } = await getPartnerCompanyExcel({
-        companyId: selectedPartner.id,
+      const { blob, filename } = await getConsignmentCompanyExcel({
+        companyId: selectedConsignmentCompany.id,
         params: {
           startDate,
           endDate,
@@ -187,7 +187,7 @@ export const useConsignmentSettlement = () => {
       });
       downloadBlob(
         blob,
-        filename ?? `위탁매입_${selectedPartner.name}_${startDate}_${endDate}.xlsx`,
+        filename ?? `위탁매입_${selectedConsignmentCompany.name}_${startDate}_${endDate}.xlsx`,
       );
     } catch (e) {
       console.error('Failed to download excel:', e);
@@ -195,18 +195,18 @@ export const useConsignmentSettlement = () => {
     } finally {
       setIsDownloading(false);
     }
-  }, [selectedPartner.id, selectedPartner.name, setAlert]);
+  }, [selectedConsignmentCompany.id, selectedConsignmentCompany.name, setAlert]);
 
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
 
-      if (selectedPartner.id && dateRange.from && dateRange.to) {
+      if (selectedConsignmentCompany.id && dateRange.from && dateRange.to) {
         const dataSource = createDataSource();
         event.api.setGridOption('datasource', dataSource);
       }
     },
-    [selectedPartner.id, dateRange.from, dateRange.to, STORAGE_KEY, createDataSource],
+    [selectedConsignmentCompany.id, dateRange.from, dateRange.to, STORAGE_KEY, createDataSource],
   );
 
   useEffect(() => {
@@ -216,11 +216,11 @@ export const useConsignmentSettlement = () => {
   return {
     gridRef,
     dateRange,
-    selectedPartner,
-    partnerInfo: partnerInfoResponse.data,
-    isPartnerInfoLoading: partnerInfoResponse.isLoading,
+    selectedConsignmentCompany,
+    consignmentCompanyInfo: consignmentCompanyInfoResponse.data,
+    isConsignmentCompanyInfoLoading: consignmentCompanyInfoResponse.isLoading,
     setDateRange,
-    setSelectedPartner,
+    setSelectedConsignmentCompany,
     handlePaymentSubmit: submitPaymentRequest,
     handleEdit: editPaymentRequest,
     handleDelete,

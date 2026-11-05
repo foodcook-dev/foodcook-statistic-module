@@ -5,6 +5,12 @@ export type Vendor = {
 
 type Dash = '-';
 
+// 직매입: direct, 위탁매입: consignment
+export type SettlementType = 'direct' | 'consignment';
+
+// 서버 매입 유형 값 (응답의 type 필드)
+export type ServerCompanyType = 'buy' | 'partner';
+
 /** 페이지네이션 목록 응답 공통 형태 */
 export type PaginatedResponse<T> = {
   items: T[];
@@ -27,7 +33,7 @@ export type SettlementPageResponse<T> = PaginatedResponse<T> & {
 export type IntegratedCompanyItem = {
   company_id: number;
   b_nm: string;
-  type: 'buy' | 'partner';
+  type: ServerCompanyType;
   payment_period?: string;
   payment_date: string | Dash;
   b_no: string;
@@ -53,8 +59,8 @@ export type IntegratedCompanyItem = {
 
 export type IntegratedCompanyResponse = SettlementPageResponse<IntegratedCompanyItem>;
 
-/** 직매입사 상세 내역 한 행 (getBuyCompanyDetails 응답 items) */
-export type BuyCompanyDetailItem = {
+/** 직매입사 상세 내역 한 행 (getDirectCompanyDetails 응답 items) */
+export type DirectCompanyDetailItem = {
   detail_id: number | null;
   type: '전기이월' | '반품' | '매입' | '결제';
   process_date: string | Dash;
@@ -68,10 +74,10 @@ export type BuyCompanyDetailItem = {
   memo: string;
 };
 
-export type BuyCompanyDetailResponse = SettlementPageResponse<BuyCompanyDetailItem>;
+export type DirectCompanyDetailResponse = SettlementPageResponse<DirectCompanyDetailItem>;
 
-/** 위탁매입사 상세 내역 한 행 (getPartnerCompanyDetails 응답 items) */
-export type PartnerCompanyDetailItem = {
+/** 위탁매입사 상세 내역 한 행 (getConsignmentCompanyDetails 응답 items) */
+export type ConsignmentCompanyDetailItem = {
   detail_id: string | null;
   type: '전기이월' | '반품' | '매입' | '결제';
   process_date: string | Dash;
@@ -90,4 +96,4 @@ export type PartnerCompanyDetailItem = {
   note: string;
 };
 
-export type PartnerCompanyDetailResponse = SettlementPageResponse<PartnerCompanyDetailItem>;
+export type ConsignmentCompanyDetailResponse = SettlementPageResponse<ConsignmentCompanyDetailItem>;

@@ -12,12 +12,12 @@ import { useConfirm } from '@/hooks/useConfirm';
 import { useAlert } from '@/hooks/useAlert';
 import { downloadBlob } from '@/utils/download';
 import {
-  getBuyCompany,
-  getBuyCompanyDetails,
-  getBuyCompanyExcel,
-  postBuyCompanyPayment,
-  patchBuyCompanyPayment,
-  deleteBuyCompanyPayment,
+  getDirectCompany,
+  getDirectCompanyDetails,
+  getDirectCompanyExcel,
+  postDirectCompanyPayment,
+  patchDirectCompanyPayment,
+  deleteDirectCompanyPayment,
 } from '@/libs/purchaser-dashboard-api';
 import useSpinnerStore from '@/stores/spinner';
 import { Vendor } from '@/types/settlement';
@@ -42,32 +42,32 @@ export const useDirectSettlement = () => {
       to: today,
     },
   );
-  const [selectedBuyer, setSelectedBuyer] = useState<Vendor>({
+  const [selectedDirectCompany, setSelectedDirectCompany] = useState<Vendor>({
     id: location.state?.id || '',
     name: location.state?.name || '',
   });
 
-  const selectedBuyerIdRef = useRef<string>(selectedBuyer.id);
+  const selectedDirectCompanyIdRef = useRef<string>(selectedDirectCompany.id);
   useEffect(() => {
-    selectedBuyerIdRef.current = selectedBuyer.id;
-  }, [selectedBuyer.id]);
+    selectedDirectCompanyIdRef.current = selectedDirectCompany.id;
+  }, [selectedDirectCompany.id]);
 
   const dateRangeRef = useRef(dateRange);
   useEffect(() => {
     dateRangeRef.current = dateRange;
   }, [dateRange]);
 
-  const buyerInfoResponse = useQuery({
-    queryKey: ['buy_companies', selectedBuyer.id],
-    queryFn: () => getBuyCompany(selectedBuyer.id),
-    enabled: !!selectedBuyer.id,
+  const directCompanyInfoResponse = useQuery({
+    queryKey: ['buy_companies', selectedDirectCompany.id],
+    queryFn: () => getDirectCompany(selectedDirectCompany.id),
+    enabled: !!selectedDirectCompany.id,
   });
 
   const createDataSource = useCallback((): IDatasource => {
     return {
       getRows: async (params: IGetRowsParams) => {
         const { from, to } = dateRangeRef.current;
-        if (!selectedBuyerIdRef.current || !from || !to) {
+        if (!selectedDirectCompanyIdRef.current || !from || !to) {
           params.failCallback();
           return;
         }
@@ -75,8 +75,8 @@ export const useDirectSettlement = () => {
         try {
           const page = Math.floor(params.startRow / PAGE_SIZE) + 1;
 
-          const response = await getBuyCompanyDetails({
-            companyId: selectedBuyerIdRef.current,
+          const response = await getDirectCompanyDetails({
+            companyId: selectedDirectCompanyIdRef.current,
             params: {
               startDate: format(from, 'yyyy-MM-dd'),
               endDate: format(to, 'yyyy-MM-dd'),
@@ -99,22 +99,22 @@ export const useDirectSettlement = () => {
         }
       },
     };
-  }, [selectedBuyer.id]);
+  }, [selectedDirectCompany.id]);
 
   const refreshGridData = useCallback(() => {
-    if (gridRef.current?.api && selectedBuyer.id && dateRange.from && dateRange.to) {
+    if (gridRef.current?.api && selectedDirectCompany.id && dateRange.from && dateRange.to) {
       // 매입사·기간이 바뀌면 이전 조회의 요약이 잠깐이라도 남지 않도록 비운다.
       setTotalCount(null);
       setTotalPurchaseAmount(null);
       const newDataSource = createDataSource();
       gridRef.current.api.setGridOption('datasource', newDataSource);
     }
-  }, [createDataSource, selectedBuyer.id, dateRange.from, dateRange.to]);
+  }, [createDataSource, selectedDirectCompany.id, dateRange.from, dateRange.to]);
 
   const { mutate: submitPaymentRequest } = useMutation({
     mutationFn: async (data: PaymentData) => {
-      return await postBuyCompanyPayment({
-        companyId: selectedBuyerIdRef.current,
+      return await postDirectCompanyPayment({
+        companyId: selectedDirectCompanyIdRef.current,
         params: {
           date: format(data.processDate!, 'yyyy-MM-dd'),
           amount: Number(data.amount),
@@ -130,8 +130,8 @@ export const useDirectSettlement = () => {
 
   const { mutate: editPaymentRequest } = useMutation({
     mutationFn: async (data: PaymentData) => {
-      return await patchBuyCompanyPayment({
-        companyId: selectedBuyerIdRef.current,
+      return await patchDirectCompanyPayment({
+        companyId: selectedDirectCompanyIdRef.current,
         params: {
           id: String(data.id),
           amount: Number(data.amount),
@@ -146,8 +146,8 @@ export const useDirectSettlement = () => {
 
   const { mutate: deletePaymentRequest } = useMutation({
     mutationFn: async (rowData: any) => {
-      return await deleteBuyCompanyPayment({
-        companyId: selectedBuyerIdRef.current,
+      return await deleteDirectCompanyPayment({
+        companyId: selectedDirectCompanyIdRef.current,
         id: rowData.detail_id,
       });
     },
@@ -167,40 +167,43 @@ export const useDirectSettlement = () => {
   // 현재 선택된 매입사의 조회기간·필터 그대로 상세 내역 엑셀 다운로드
   const downloadExcel = useCallback(async () => {
     const { from, to } = dateRangeRef.current;
-    if (!selectedBuyer.id || !from || !to) return;
+    if (!selectedDirectCompany.id || !from || !to) return;
 
     const startDate = format(from, 'yyyy-MM-dd');
     const endDate = format(to, 'yyyy-MM-dd');
 
     setIsDownloading(true);
     try {
-      const { blob, filename } = await getBuyCompanyExcel({
-        companyId: selectedBuyer.id,
+      const { blob, filename } = await getDirectCompanyExcel({
+        companyId: selectedDirectCompany.id,
         params: {
           startDate,
           endDate,
           filter: JSON.stringify(gridRef.current?.api?.getFilterModel() ?? {}),
         },
       });
-      downloadBlob(blob, filename ?? `직매입_${selectedBuyer.name}_${startDate}_${endDate}.xlsx`);
+      downloadBlob(
+        blob,
+        filename ?? `직매입_${selectedDirectCompany.name}_${startDate}_${endDate}.xlsx`,
+      );
     } catch (e) {
       console.error('Failed to download excel:', e);
       setAlert({ message: '엑셀 다운로드에 실패했습니다.\n잠시 후 다시 시도해주세요.' });
     } finally {
       setIsDownloading(false);
     }
-  }, [selectedBuyer.id, selectedBuyer.name, setAlert]);
+  }, [selectedDirectCompany.id, selectedDirectCompany.name, setAlert]);
 
   const onGridReady = useCallback(
     (event: GridReadyEvent) => {
       initializeColumnStateManagement(STORAGE_KEY, event.api);
 
-      if (selectedBuyer.id && dateRange.from && dateRange.to) {
+      if (selectedDirectCompany.id && dateRange.from && dateRange.to) {
         const dataSource = createDataSource();
         event.api.setGridOption('datasource', dataSource);
       }
     },
-    [selectedBuyer.id, dateRange.from, dateRange.to, STORAGE_KEY],
+    [selectedDirectCompany.id, dateRange.from, dateRange.to, STORAGE_KEY],
   );
 
   useEffect(() => {
@@ -210,11 +213,11 @@ export const useDirectSettlement = () => {
   return {
     gridRef,
     dateRange,
-    selectedBuyer,
-    buyerInfo: buyerInfoResponse.data,
-    isBuyerInfoLoading: buyerInfoResponse.isLoading,
+    selectedDirectCompany,
+    directCompanyInfo: directCompanyInfoResponse.data,
+    isDirectCompanyInfoLoading: directCompanyInfoResponse.isLoading,
     setDateRange,
-    setSelectedBuyer,
+    setSelectedDirectCompany,
     handlePaymentSubmit: submitPaymentRequest,
     handleEdit: editPaymentRequest,
     handleDelete,

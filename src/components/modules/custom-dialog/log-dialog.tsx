@@ -5,9 +5,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { getLog } from '@/libs/purchaser-dashboard-api';
+import { SettlementType } from '@/types/settlement';
 
 interface LogDialogProps {
-  type: 'direct' | 'consignment';
+  type: SettlementType;
   companyId: string;
   detailId: string;
 }

@@ -14,11 +14,12 @@ import {
 } from '@/components/ui/dialog';
 import SelectFilter from '@/components/modules/select-filter';
 import { getCompany } from '@/libs/purchaser-dashboard-api';
+import { SettlementType } from '@/types/settlement';
 
 type DataSelectorProps = {
   placeholder?: string;
   label: string;
-  type: 'direct' | 'consignment'; // API 엔드포인트 구분을 위한 타입
+  type: SettlementType; // API 엔드포인트 구분을 위한 타입
   value?: string;
   onSelect: (value: any, displayValue: string) => void;
   valueKey?: string; // 실제 값으로 사용할 키 (기본값: 'id')

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { useDirectSettlement } from '../../../hooks/purchaser-dashboard/useDirectSettlement';
+import { useDirectSettlement } from '@/hooks/purchaser-dashboard/useDirectSettlement';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
@@ -12,7 +12,7 @@ import { useGridFilterReset } from '@/hooks/useGridFilterReset';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
 import { STORAGE_KEYS } from '@/libs/column-state';
 import { companyColumnDefs, createColumnDefs, gridOptions } from './config/grid-config';
-import { BUYER_INFO } from './config/structure';
+import { DIRECT_COMPANY_INFO } from './config/structure';
 import { Tabs } from '@/components/modules/tab';
 
 // import { ThemeToggle } from '@/components/modules/theme-toggle';
@@ -21,10 +21,10 @@ export default function DirectSettlement() {
   const {
     gridRef,
     dateRange,
-    selectedBuyer,
-    buyerInfo,
+    selectedDirectCompany,
+    directCompanyInfo,
     setDateRange,
-    setSelectedBuyer,
+    setSelectedDirectCompany,
     handlePaymentSubmit,
     handleEdit,
     handleDelete,
@@ -37,8 +37,8 @@ export default function DirectSettlement() {
   const { isFiltered, onFilterChanged, resetFilters } = useGridFilterReset(gridRef);
 
   const columnDefs = useMemo(
-    () => createColumnDefs(handleEdit, handleDelete, selectedBuyer.id),
-    [handleEdit, handleDelete, selectedBuyer.id],
+    () => createColumnDefs(handleEdit, handleDelete, selectedDirectCompany.id),
+    [handleEdit, handleDelete, selectedDirectCompany.id],
   );
 
   const updatedGridOptions = useMemo(
@@ -65,9 +65,9 @@ export default function DirectSettlement() {
                 valueKey="buy_company_id"
                 displayKey="b_nm"
                 columnDefs={companyColumnDefs}
-                value={selectedBuyer.name}
+                value={selectedDirectCompany.name}
                 onSelect={(value, displayValue) =>
-                  setSelectedBuyer({ id: value, name: displayValue })
+                  setSelectedDirectCompany({ id: value, name: displayValue })
                 }
               />
             </div>
@@ -90,18 +90,18 @@ export default function DirectSettlement() {
           <ExcelDownloadButton
             onDownload={downloadExcel}
             isDownloading={isDownloading}
-            disabled={!selectedBuyer?.id}
+            disabled={!selectedDirectCompany?.id}
           />
           <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
           <ColumnStateResetButton
             storageKey={STORAGE_KEYS.DIRECT_SETTLEMENT}
             gridApi={gridRef.current?.api}
           />
-          <Payment onSubmit={handlePaymentSubmit} paymentDisabled={!selectedBuyer?.id} />
+          <Payment onSubmit={handlePaymentSubmit} paymentDisabled={!selectedDirectCompany?.id} />
         </div>
       </div>
-      <InfoTable data={BUYER_INFO} info={buyerInfo} />
-      {!selectedBuyer?.id ? (
+      <InfoTable data={DIRECT_COMPANY_INFO} info={directCompanyInfo} />
+      {!selectedDirectCompany?.id ? (
         <div className="h-[500px] w-full">
           <div className="bg-foreground border-border flex h-full items-center justify-center rounded-lg border">
             <div className="text-center">

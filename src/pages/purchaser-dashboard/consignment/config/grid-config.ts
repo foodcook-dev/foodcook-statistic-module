@@ -38,7 +38,7 @@ const statusRenderer = createBadgeRenderer(STATUS);
 const createActionButtonRenderer = (
   onEdit: (data: any) => void,
   onDelete: (data: any) => void,
-  selectedPartnerId: string,
+  selectedConsignmentCompanyId: string,
 ) => {
   return (params: any) => {
     const isEditableRow = params.data?.type === '결제';
@@ -83,7 +83,7 @@ const createActionButtonRenderer = (
         React.createElement(Log, {
           key: 'log',
           type: 'consignment',
-          companyId: selectedPartnerId,
+          companyId: selectedConsignmentCompanyId,
           detailId: params.data.detail_id,
         }),
       ],
@@ -94,7 +94,7 @@ const createActionButtonRenderer = (
 export const createColumnDefs = (
   onEdit: (data: any) => void,
   onDelete: (data: any) => void,
-  selectedPartnerId: string,
+  selectedConsignmentCompanyId: string,
 ): (ColDef | ColGroupDef)[] => [
   { headerName: 'ID', field: 'detail_id', pinned: 'left', cellClass: 'ag-cell-center' },
   {
@@ -173,7 +173,7 @@ export const createColumnDefs = (
     headerName: '관리',
     field: 'event',
     minWidth: 100,
-    cellRenderer: createActionButtonRenderer(onEdit, onDelete, selectedPartnerId),
+    cellRenderer: createActionButtonRenderer(onEdit, onDelete, selectedConsignmentCompanyId),
     sortable: false,
     filter: false,
     pinned: 'right',

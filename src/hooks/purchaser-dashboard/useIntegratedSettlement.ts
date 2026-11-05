@@ -7,6 +7,7 @@ import { startOfMonth, format } from 'date-fns';
 import { initializeColumnStateManagement, STORAGE_KEYS } from '@/libs/column-state';
 import { getIntegratedCompany, getIntegratedCompanyExcel } from '@/libs/purchaser-dashboard-api';
 import { downloadBlob } from '@/utils/download';
+import { SETTLEMENT_PATH, SETTLEMENT_TYPE_BY_SERVER_TYPE } from '@/constants/settlement';
 import { useAlert } from '@/hooks/useAlert';
 import { IntegratedCompanyItem } from '@/types/settlement';
 
@@ -120,11 +121,8 @@ export const useIntegratedSettlement = (): UseIntegratedSettlementReturn => {
     if (event.colDef?.field === 'b_nm' && event.data) {
       const row = event.data;
       const state = { id: row.company_id, name: row.b_nm, dateRange };
-      if (row.type === 'buy') {
-        navigate('/direct', { state });
-      } else if (row.type === 'partner') {
-        navigate('/consignment', { state });
-      }
+      const settlementType = SETTLEMENT_TYPE_BY_SERVER_TYPE[row.type];
+      if (settlementType) navigate(SETTLEMENT_PATH[settlementType], { state });
     }
   };
 

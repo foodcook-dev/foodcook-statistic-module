@@ -1,4 +1,4 @@
-export const BUYER_INFO = [
+export const DIRECT_COMPANY_INFO = [
   { label: '사업자번호', value: 'b_no' },
   { label: '담당자 연락처', value: 'phone' },
   { label: '주소', value: 'address' },

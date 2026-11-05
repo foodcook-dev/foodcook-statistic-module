@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { useConsignmentSettlement } from '../../../hooks/purchaser-dashboard/useConsignmentSettlement';
+import { useConsignmentSettlement } from '@/hooks/purchaser-dashboard/useConsignmentSettlement';
 import DataSelector from '@/components/modules/data-selector';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
-import { PARTNER_INFO } from './config/structure';
+import { CONSIGNMENT_COMPANY_INFO } from './config/structure';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
 import FilterResetButton from '@/components/modules/filter-reset-button';
 import ExcelDownloadButton from '@/components/modules/excel-download-button';
@@ -19,10 +19,10 @@ export default function ConsignmentSettlement() {
   const {
     gridRef,
     dateRange,
-    selectedPartner,
-    partnerInfo,
+    selectedConsignmentCompany,
+    consignmentCompanyInfo,
     setDateRange,
-    setSelectedPartner,
+    setSelectedConsignmentCompany,
     handleEdit,
     handleDelete,
     onGridReady,
@@ -35,8 +35,8 @@ export default function ConsignmentSettlement() {
   const { isFiltered, onFilterChanged, resetFilters } = useGridFilterReset(gridRef);
 
   const columnDefs = useMemo(
-    () => createColumnDefs(handleEdit, handleDelete, selectedPartner.id),
-    [handleEdit, handleDelete, selectedPartner.id],
+    () => createColumnDefs(handleEdit, handleDelete, selectedConsignmentCompany.id),
+    [handleEdit, handleDelete, selectedConsignmentCompany.id],
   );
 
   const updatedGridOptions = useMemo(
@@ -63,9 +63,9 @@ export default function ConsignmentSettlement() {
                 valueKey="partner_company_id"
                 displayKey="b_nm"
                 columnDefs={companyColumnDefs}
-                value={selectedPartner?.name}
+                value={selectedConsignmentCompany?.name}
                 onSelect={(value, displayValue) =>
-                  setSelectedPartner({ id: value, name: displayValue })
+                  setSelectedConsignmentCompany({ id: value, name: displayValue })
                 }
               />
             </div>
@@ -87,18 +87,21 @@ export default function ConsignmentSettlement() {
           <ExcelDownloadButton
             onDownload={downloadExcel}
             isDownloading={isDownloading}
-            disabled={!selectedPartner?.id}
+            disabled={!selectedConsignmentCompany?.id}
           />
           <FilterResetButton onReset={resetFilters} disabled={!isFiltered} />
           <ColumnStateResetButton
             storageKey={STORAGE_KEYS.CONSIGNMENT_SETTLEMENT}
             gridApi={gridRef.current?.api}
           />
-          <Payment onSubmit={handlePaymentSubmit} paymentDisabled={!selectedPartner?.id} />
+          <Payment
+            onSubmit={handlePaymentSubmit}
+            paymentDisabled={!selectedConsignmentCompany?.id}
+          />
         </div>
       </div>
-      <InfoTable data={PARTNER_INFO} info={partnerInfo} />
-      {!selectedPartner?.id ? (
+      <InfoTable data={CONSIGNMENT_COMPANY_INFO} info={consignmentCompanyInfo} />
+      {!selectedConsignmentCompany?.id ? (
         <div className="h-[500px] w-full">
           <div className="bg-foreground border-border flex h-full items-center justify-center rounded-lg border">
             <div className="text-center">
