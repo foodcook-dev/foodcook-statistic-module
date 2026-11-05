@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { getLog } from '@/libs/purchaser-dashboard-api';
 import { SettlementType } from '@/types/settlement';
+import { formatDate } from '@/utils/date';
 
 interface LogDialogProps {
   type: SettlementType;
@@ -42,6 +43,7 @@ export default function LogDialog({ type, companyId, detailId }: LogDialogProps)
         headerName: '변경일자',
         field: 'status_changed_at',
         flex: 0.3,
+        valueFormatter: (params: { value?: string }) => formatDate(params.value),
       },
       {
         headerName: '내용',
