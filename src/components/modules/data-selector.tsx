@@ -13,13 +13,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import SelectFilter from '@/components/modules/select-filter';
-import { getCompany } from '@/libs/purchaser-dashboard-api';
-import { SettlementType } from '@/types/settlement';
 
 type DataSelectorProps = {
   placeholder?: string;
   label: string;
-  type: SettlementType; // API 엔드포인트 구분을 위한 타입
+  queryKey: string; // 목록 캐시 키 (선택 목록마다 고유하게)
+  fetchItems: () => Promise<unknown[]>; // 선택 목록을 불러오는 함수
   value?: string;
   onSelect: (value: any, displayValue: string) => void;
   valueKey?: string; // 실제 값으로 사용할 키 (기본값: 'id')
@@ -33,7 +32,8 @@ type DataSelectorProps = {
 export default function DataSelector({
   placeholder = '',
   label,
-  type,
+  queryKey,
+  fetchItems,
   value = '',
   onSelect,
   valueKey = 'id',
@@ -45,8 +45,8 @@ export default function DataSelector({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const bodyResponse = useQuery({
-    queryKey: ['dataSelector', type],
-    queryFn: () => getCompany(type),
+    queryKey: ['dataSelector', queryKey],
+    queryFn: fetchItems,
     enabled: isDialogOpen,
   });
 

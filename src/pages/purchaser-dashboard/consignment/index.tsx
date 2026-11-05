@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useConsignmentSettlement } from '@/hooks/purchaser-dashboard/useConsignmentSettlement';
 import DataSelector from '@/components/modules/data-selector';
+import { getConsignmentCompanyList } from '@/libs/purchaser-dashboard-api';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
 import Payment from '@/components/modules/custom-dialog/payment-dialog';
@@ -58,7 +59,8 @@ export default function ConsignmentSettlement() {
                 className="w-[300px]"
                 placeholder="매입사를 선택해주세요"
                 label="위탁매입사"
-                type="consignment"
+                queryKey="consignment-company-list"
+                fetchItems={getConsignmentCompanyList}
                 valueKey="partner_company_id"
                 displayKey="b_nm"
                 columnDefs={companyColumnDefs}

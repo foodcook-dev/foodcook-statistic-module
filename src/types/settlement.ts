@@ -55,6 +55,49 @@ export type IntegratedCompanyItem = {
 
 export type IntegratedCompanyResponse = SettlementPageResponse<IntegratedCompanyItem>;
 
+/** 직매입사 선택 목록 한 행 (getDirectCompanyList 응답) */
+export type DirectCompanyListItem = {
+  buy_company_id: number;
+  b_nm: string;
+  payment_period: string;
+};
+
+/** 위탁매입사 선택 목록 한 행 (getConsignmentCompanyList 응답) */
+export type ConsignmentCompanyListItem = {
+  partner_company_id: number;
+  b_nm: string;
+};
+
+/** 직매입사 기본 정보 (getDirectCompany 응답) — 값이 없으면 빈 문자열로 온다. */
+export type DirectCompanyInfo = {
+  buy_company_id: number;
+  b_nm: string;
+  b_no: string;
+  payment_period: string;
+  phone: string;
+  address: string;
+  bank_name: string;
+  bank_holder: string;
+  bank_num: string;
+  total_product_inventory_value: number;
+  memo: string;
+};
+
+/** 위탁매입사 기본 정보 (getConsignmentCompany 응답) — 값이 없으면 빈 문자열로 온다. */
+export type ConsignmentCompanyInfo = {
+  partner_company_id: number;
+  b_nm: string;
+  b_no: string;
+  phone: string;
+  address: string;
+  bank_name: string;
+  bank_holder: string;
+  bank_num: string;
+  payment_date: string;
+  tax_invoice_email: string;
+  memo: string;
+};
+
 /** 직매입사 상세 내역 한 행 (getDirectCompanyDetails 응답 items) */
 export type DirectCompanyDetailItem = {
   detail_id: number | null;
@@ -93,3 +136,11 @@ export type ConsignmentCompanyDetailItem = {
 };
 
 export type ConsignmentCompanyDetailResponse = SettlementPageResponse<ConsignmentCompanyDetailItem>;
+
+/** 상세 내역 변경 이력 한 행 (getLog 응답, 직매입·위탁매입 공통) */
+export type SettlementLogItem = {
+  status_changed_at: string;
+  username: string;
+  action: string;
+  description: string;
+};

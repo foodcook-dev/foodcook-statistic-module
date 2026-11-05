@@ -6,6 +6,11 @@ import {
   IntegratedCompanyResponse,
   ConsignmentCompanyDetailResponse,
   SettlementType,
+  DirectCompanyListItem,
+  ConsignmentCompanyListItem,
+  DirectCompanyInfo,
+  ConsignmentCompanyInfo,
+  SettlementLogItem,
 } from '@/types/settlement';
 
 // 엑셀 파일 공통 요청
@@ -57,16 +62,15 @@ export const getIntegratedCompanyExcel = async (params: {
     sort: params.sort,
   });
 
-// 매입사 선택 목록 조회 (direct: 직매입사, consignment: 위탁매입사)
-export const getCompany = async (type: SettlementType): Promise<any> => {
-  const endpoint = type === 'direct' ? PATH.api.getBuyCompanyList : PATH.api.getPartnerCompanyList;
-  const response = await API.get(endpoint);
+// 직매입사 선택 목록 조회
+export const getDirectCompanyList = async (): Promise<DirectCompanyListItem[]> => {
+  const response = await API.get<DirectCompanyListItem[]>(PATH.api.getBuyCompanyList);
   return response.data;
 };
 
 // 직매입사 기본 정보 조회
-export const getDirectCompany = async (companyId: string): Promise<any> => {
-  const response = await API.get(PATH.api.getBuyCompanyInfo(companyId));
+export const getDirectCompany = async (companyId: string): Promise<DirectCompanyInfo> => {
+  const response = await API.get<DirectCompanyInfo>(PATH.api.getBuyCompanyInfo(companyId));
   return response.data;
 };
 
@@ -170,9 +174,15 @@ export const deleteDirectCompanyPayment = async ({
   return response.data;
 };
 
+// 위탁매입사 선택 목록 조회
+export const getConsignmentCompanyList = async (): Promise<ConsignmentCompanyListItem[]> => {
+  const response = await API.get<ConsignmentCompanyListItem[]>(PATH.api.getPartnerCompanyList);
+  return response.data;
+};
+
 // 위탁매입사 기본 정보 조회
-export const getConsignmentCompany = async (companyId: string): Promise<any> => {
-  const response = await API.get(PATH.api.getPartnerCompanyInfo(companyId));
+export const getConsignmentCompany = async (companyId: string): Promise<ConsignmentCompanyInfo> => {
+  const response = await API.get<ConsignmentCompanyInfo>(PATH.api.getPartnerCompanyInfo(companyId));
   return response.data;
 };
 
@@ -285,10 +295,10 @@ export const getLog = async ({
   type: SettlementType;
   companyId: string;
   detailId: string;
-}): Promise<any> => {
+}): Promise<SettlementLogItem[]> => {
   const endpoint = type === 'direct' ? PATH.api.getBuyLog : PATH.api.getPartnerLog;
 
-  const response = await API.get(endpoint, {
+  const response = await API.get<SettlementLogItem[]>(endpoint, {
     params: {
       company_id: companyId,
       detail_id: detailId,

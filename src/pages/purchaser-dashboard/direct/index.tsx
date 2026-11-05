@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { useDirectSettlement } from '@/hooks/purchaser-dashboard/useDirectSettlement';
 import DataSelector from '@/components/modules/data-selector';
+import { getDirectCompanyList } from '@/libs/purchaser-dashboard-api';
 import { DateRangePicker } from '@/components/modules/date-range-picker';
 import InfoTable from '@/components/modules/info-table';
 import ColumnStateResetButton from '@/components/modules/column-reset-button';
@@ -60,7 +61,8 @@ export default function DirectSettlement() {
                 className="w-[300px]"
                 placeholder="매입사를 선택해주세요"
                 label="직매입사"
-                type="direct"
+                queryKey="direct-company-list"
+                fetchItems={getDirectCompanyList}
                 valueKey="buy_company_id"
                 displayKey="b_nm"
                 columnDefs={companyColumnDefs}
