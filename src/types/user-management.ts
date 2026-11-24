@@ -122,16 +122,19 @@ export type SalesCompanyDetailResponse = {
   foodist_sales_company_code: string | null;
   is_test: boolean;
   is_confirmed: boolean;
-  sub_business_info: {
-    address: string;
-    b_nm: string;
-    created_at: string;
-    id: number;
-    image: string;
-    serial_number: string;
-  };
+  sub_business_info: SubBusinessDetail | Record<string, never> | null;
   sales_branch_info: Array<SalesCompanyBranchInfo>;
 };
+
+// 판매사업자 상세 조회 응답의 종사업장 정보
+export interface SubBusinessDetail {
+  address: string;
+  b_nm: string;
+  created_at: string;
+  id: number;
+  image: string;
+  serial_number: string;
+}
 
 // 종사업장 정보 (중복 사업자등록증으로 등록된 사업자의 종사업장)
 export interface SubBusinessInfo {

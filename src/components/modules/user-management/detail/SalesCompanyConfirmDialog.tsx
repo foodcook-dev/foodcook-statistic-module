@@ -10,6 +10,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { SalesCompanyDetailResponse } from '@/types/user-management';
+import { hasSubBusinessInfo } from '@/utils/user-management';
 
 interface SalesCompanyConfirmDialogProps {
   open: boolean;
@@ -53,7 +54,7 @@ export function SalesCompanyConfirmDialog({
           <AlertDialogDescription>사업자 승인을 진행하시겠습니까?</AlertDialogDescription>
         </AlertDialogHeader>
 
-        {subBusiness && (
+        {hasSubBusinessInfo(subBusiness) && (
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center gap-2 rounded-md bg-amber-500/10 px-3 py-2.5">
               <TriangleAlert className="h-5 w-5 shrink-0 text-amber-500" />

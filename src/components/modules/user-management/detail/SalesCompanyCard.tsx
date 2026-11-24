@@ -8,6 +8,7 @@ import { SalesCompanyDetailResponse } from '@/types/user-management';
 import { DAYS } from '@/constants/user-management/day';
 import { useAlert } from '@/hooks/useAlert';
 import { useConfirm } from '@/hooks/useConfirm';
+import { hasSubBusinessInfo } from '@/utils/user-management';
 import { InfoRow } from './InfoRow';
 import { BranchItem } from './BranchItem';
 import { SalesCompanyConfirmDialog } from './SalesCompanyConfirmDialog';
@@ -125,7 +126,7 @@ export default function SalesCompanyCard({
       </div>
 
       {/* 종사업장 정보 */}
-      {subBusiness && Object.keys(subBusiness).length > 0 && (
+      {hasSubBusinessInfo(subBusiness) && (
         <div className="border-border border-b px-5 py-4">
           <div className="mb-2.5 flex items-center justify-between">
             <p className="text-contrast/90 text-sm font-medium tracking-widest">종사업장 정보</p>
